@@ -1403,6 +1403,7 @@ def reset_location_state():
     st.session_state["last_prediction"] = None
     st.session_state["last_map_popup"] = None
     st.session_state["searched_point"] = None
+    st.session_state["map_fly_request"] = None
 
 
 def analyze_address(available_states):
@@ -1416,6 +1417,13 @@ def analyze_address(available_states):
     matched_area = None
     match_source = None
     searched_point = None
+
+    # Preserve the currently displayed map view. When a search succeeds we render
+    # this old view first, then let Leaflet smoothly fly to the detected area.
+    # This avoids the "blank frame -> already arrived" feeling caused by rebuilding
+    # the Streamlit/Folium iframe directly at a far-away high zoom level.
+    previous_map_center = list(st.session_state.get("map_center", [4.2105, 108.9758]))
+    previous_map_zoom = int(st.session_state.get("map_zoom", 6))
 
     # Fast offline signals first: area text, state text and postcode ranges.
     postcode_match = re.search(r"\b\d{5}\b", str(addr_raw))
@@ -1478,28 +1486,41 @@ def analyze_address(available_states):
         st.session_state["last_prediction"] = None
         st.session_state["selected_state"] = matched_state
         st.session_state["searched_point"] = searched_point
+
+        target_center = STATE_COORDS.get(matched_state, [4.2105, 108.9758])
+        target_zoom = 8
+
         if matched_area:
             st.session_state["selected_area"] = matched_area
             if searched_point:
-                st.session_state["map_center"] = [searched_point["lat"], searched_point["lon"]]
-                st.session_state["map_zoom"] = 14
+                target_center = [searched_point["lat"], searched_point["lon"]]
+                target_zoom = 14
             else:
                 coords, _ = get_area_map_coords(matched_area, matched_state)
                 if coords:
-                    st.session_state["map_center"] = coords
-                    st.session_state["map_zoom"] = 12
+                    target_center = list(coords)
+                    target_zoom = 12
             st.session_state["address_feedback"] = ("success", f"Matched **{matched_area}, {matched_state}**.")
         else:
             st.session_state["selected_area"] = None
             if searched_point:
-                st.session_state["map_center"] = [searched_point["lat"], searched_point["lon"]]
-                st.session_state["map_zoom"] = 13
-            else:
-                st.session_state["map_center"] = STATE_COORDS.get(matched_state, [4.2105, 108.9758])
-                st.session_state["map_zoom"] = 8
+                target_center = [searched_point["lat"], searched_point["lon"]]
+                target_zoom = 13
             st.session_state["address_feedback"] = (
                 "info", f"Matched state **{matched_state}**. Pick an area on the map below."
             )
+
+        # Save the final view for future reruns, but on the very next render start
+        # from the PREVIOUS view and animate to this target over ~2.8 seconds.
+        st.session_state["map_center"] = list(target_center)
+        st.session_state["map_zoom"] = int(target_zoom)
+        st.session_state["map_fly_request"] = {
+            "from_center": previous_map_center,
+            "from_zoom": previous_map_zoom,
+            "to_center": list(target_center),
+            "to_zoom": int(target_zoom),
+            "duration": 2.8,
+        }
     else:
         st.session_state["searched_point"] = None
         st.session_state["address_feedback"] = (
@@ -1596,8 +1617,8 @@ def render_result(saved, animate=True):
     else:
         warning_html = ""
 
-    duration = 950 if animate else 0
-    entrance_duration = 450 if animate else 0
+    duration = 2300 if animate else 0
+    entrance_duration = 650 if animate else 0
     animation_class = "animate-result" if animate else ""
     should_animate = "true" if animate else "false"
 
@@ -1634,7 +1655,7 @@ def render_result(saved, animate=True):
         .ruler {{ position:relative; height:72px; margin:0 7px; }}
         .track {{ position:absolute; left:0; right:0; top:29px; height:8px; border-radius:999px; background:#E8EDF3; overflow:hidden; }}
         .track-shine {{ position:absolute; inset:0; width:100%; opacity:.55; background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent); transform:translateX(-100%); }}
-        .animate-result .track-shine {{ animation:shine 900ms ease 280ms 1; }}
+        .animate-result .track-shine {{ animation:shine 1900ms ease 520ms 1; }}
         @keyframes shine {{ to {{ transform:translateX(100%); }} }}
         .expected-range {{ position:absolute; top:29px; left:{lower_pct:.4f}%; height:8px; width:{range_width:.4f}%; border-radius:999px; background:linear-gradient(90deg,#99F6E4,#2DD4BF); transform-origin:center; }}
         .animate-result .expected-range {{ animation:rangeExpand {duration}ms cubic-bezier(.22,1,.36,1) both; }}
@@ -1652,11 +1673,11 @@ def render_result(saved, animate=True):
         .stat {{ padding:13px 14px; background:rgba(255,255,255,.94); border:1px solid #DDE3EC; border-radius:14px; }}
         .stat-k {{ color:#667085; font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }}
         .stat-v {{ color:#0F172A; margin-top:5px; font-size:15px; font-weight:850; overflow-wrap:anywhere; }}
-        .animate-result .stat {{ opacity:0; animation:statEntrance 380ms ease forwards; }}
-        .animate-result .stat:nth-child(1) {{ animation-delay:420ms; }}
-        .animate-result .stat:nth-child(2) {{ animation-delay:500ms; }}
-        .animate-result .stat:nth-child(3) {{ animation-delay:580ms; }}
-        .animate-result .stat:nth-child(4) {{ animation-delay:660ms; }}
+        .animate-result .stat {{ opacity:0; animation:statEntrance 520ms ease forwards; }}
+        .animate-result .stat:nth-child(1) {{ animation-delay:900ms; }}
+        .animate-result .stat:nth-child(2) {{ animation-delay:1120ms; }}
+        .animate-result .stat:nth-child(3) {{ animation-delay:1340ms; }}
+        .animate-result .stat:nth-child(4) {{ animation-delay:1560ms; }}
         @keyframes statEntrance {{ from {{ opacity:0; transform:translateY(8px); }} to {{ opacity:1; transform:translateY(0); }} }}
 
         .result-warning {{ display:flex; gap:11px; margin-top:14px; padding:13px 15px; color:#92400E; background:#FFFBEB; border:1px solid #FDE68A; border-radius:13px; font-size:13px; line-height:1.5; }}
@@ -1771,6 +1792,7 @@ def prediction_page(data, results):
         "last_prediction": None,
         "last_map_popup": None,
         "searched_point": None,
+        "map_fly_request": None,
         "saved_scenarios": [],
         "just_predicted": False,
     }
@@ -1849,11 +1871,23 @@ def prediction_page(data, results):
             st.warning(msg, icon="⚠️")
 
     if HAS_INTERACTIVE_MAP:
-        map_center = st.session_state.get(
+        # A successful search/click can request a one-time Leaflet fly animation.
+        # The request is popped here so ordinary Streamlit reruns remain static.
+        fly_request = st.session_state.pop("map_fly_request", None)
+
+        final_map_center = st.session_state.get(
             "map_center",
             [4.2105, 108.9758] if not current_state else STATE_COORDS.get(current_state, [4.2105, 108.9758]),
         )
-        map_zoom = st.session_state.get("map_zoom", 6 if not current_state else 9)
+        final_map_zoom = st.session_state.get("map_zoom", 6 if not current_state else 9)
+
+        if fly_request:
+            map_center = fly_request.get("from_center", final_map_center)
+            map_zoom = fly_request.get("from_zoom", max(6, int(final_map_zoom) - 3))
+        else:
+            map_center = final_map_center
+            map_zoom = final_map_zoom
+
         malaysia_map = folium.Map(
             location=map_center,
             zoom_start=map_zoom,
@@ -1861,6 +1895,9 @@ def prediction_page(data, results):
             control_scale=True,
             zoom_control=True,
             prefer_canvas=True,
+            zoom_animation=True,
+            fade_animation=True,
+            marker_zoom_animation=True,
         )
 
         if not current_state:
@@ -1913,6 +1950,35 @@ def prediction_page(data, results):
                     popup="SEARCHED_POINT",
                 ).add_to(malaysia_map)
 
+        # Smoothly travel from the previous view to the searched/clicked area.
+        # We wait until Leaflet's map variable exists, then use flyTo so tiles can
+        # progressively load instead of flashing blank and jumping instantly.
+        if fly_request:
+            target_center = fly_request.get("to_center", final_map_center)
+            target_zoom = int(fly_request.get("to_zoom", final_map_zoom))
+            fly_duration = float(fly_request.get("duration", 2.8))
+            map_var = malaysia_map.get_name()
+            fly_script = f"""
+            <script>
+            (function waitForHousingMap(attempt) {{
+                if (typeof {map_var} !== 'undefined' && {map_var}) {{
+                    setTimeout(function() {{
+                        {map_var}.flyTo(
+                            [{float(target_center[0]):.7f}, {float(target_center[1]):.7f}],
+                            {target_zoom},
+                            {{animate:true, duration:{fly_duration:.2f}, easeLinearity:0.18, noMoveStart:false}}
+                        );
+                    }}, 500);
+                    return;
+                }}
+                if (attempt < 40) {{
+                    setTimeout(function() {{ waitForHousingMap(attempt + 1); }}, 100);
+                }}
+            }})(0);
+            </script>
+            """
+            malaysia_map.get_root().html.add_child(folium.Element(fly_script))
+
         st.markdown("<div class='mh-map-wrap'>", unsafe_allow_html=True)
         map_kwargs = dict(height=470, use_container_width=True, key="malaysia_map")
         if "returned_objects" in inspect.signature(st_folium).parameters:
@@ -1936,20 +2002,33 @@ def prediction_page(data, results):
             if popup_txt.startswith("STATE:"):
                 clicked_st = popup_txt.split(":", 1)[1]
                 if clicked_st != current_state:
+                    old_center = list(st.session_state.get("map_center", [4.2105, 108.9758]))
+                    old_zoom = int(st.session_state.get("map_zoom", 6))
+                    target = list(STATE_COORDS.get(clicked_st, [4.2105, 108.9758]))
                     st.session_state["pending_location"] = (clicked_st, None)
-                    st.session_state["map_center"] = STATE_COORDS.get(clicked_st, [4.2105, 108.9758])
+                    st.session_state["map_center"] = target
                     st.session_state["map_zoom"] = 9
+                    st.session_state["map_fly_request"] = {
+                        "from_center": old_center, "from_zoom": old_zoom,
+                        "to_center": target, "to_zoom": 9, "duration": 2.4,
+                    }
                     st.session_state["searched_point"] = None
                     clear_last_prediction()
                     st.rerun()
             elif popup_txt.startswith("AREA:"):
                 clicked_area = popup_txt.split(":", 1)[1]
                 if clicked_area != current_area:
+                    old_center = list(st.session_state.get("map_center", STATE_COORDS.get(current_state, [4.2105, 108.9758])))
+                    old_zoom = int(st.session_state.get("map_zoom", 9))
                     st.session_state["pending_location"] = (current_state, clicked_area)
                     coords, _ = get_area_map_coords(clicked_area, current_state)
-                    if coords:
-                        st.session_state["map_center"] = coords
+                    target = list(coords) if coords else old_center
+                    st.session_state["map_center"] = target
                     st.session_state["map_zoom"] = 12
+                    st.session_state["map_fly_request"] = {
+                        "from_center": old_center, "from_zoom": old_zoom,
+                        "to_center": target, "to_zoom": 12, "duration": 2.2,
+                    }
                     st.session_state["searched_point"] = None
                     clear_last_prediction()
                     st.rerun()
