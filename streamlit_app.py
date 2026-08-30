@@ -2,7 +2,7 @@
 BMDS2003 Data Science - Deployment Prototype
 Malaysia Housing Median Price Estimator
 
-Run locally:  streamlit run streamlit_app.py
+Run locally:  streamlit run streamlit_app_location_search_v2.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -1511,37 +1511,168 @@ def validated_geocode_candidates(query: str):
 
 
 def resolve_candidate_state(candidate: dict, available_states):
-    state_norm = normalise_lookup_text(candidate.get("state_raw", ""))
-    if not state_norm:
-        return None
-    for state_name in available_states:
-        state_name_norm = normalise_lookup_text(state_name)
-        if contains_lookup_phrase(state_norm, state_name_norm) or contains_lookup_phrase(state_name_norm, state_norm):
-            return state_name
-    return match_state_text(state_norm)
+    """Resolve state from explicit metadata, address text, or postcode fallback."""
+    forced = candidate.get("forced_state")
+    if forced in available_states:
+        return forced
+
+    text_sources = [
+        candidate.get("state_raw", ""),
+        candidate.get("display_name", ""),
+        candidate.get("area_raw", ""),
+        candidate.get("primary_name", ""),
+    ]
+    for source in text_sources:
+        source_norm = normalise_lookup_text(source)
+        if not source_norm:
+            continue
+        for state_name in available_states:
+            state_norm = normalise_lookup_text(state_name)
+            if (
+                contains_lookup_phrase(source_norm, state_norm)
+                or contains_lookup_phrase(state_norm, source_norm)
+            ):
+                return state_name
+        alias_state = match_state_text(source_norm)
+        if alias_state in available_states:
+            return alias_state
+
+    postcode = re.search(r"\b\d{5}\b", str(candidate.get("postcode") or candidate.get("display_name") or ""))
+    if postcode:
+        postcode_state = get_state_from_postcode(postcode.group())
+        if postcode_state in available_states:
+            return postcode_state
+    return None
 
 
 def resolve_candidate_area(candidate: dict, state_name: str | None):
-    """Translate a geocoder locality into the map/model area vocabulary when possible."""
-    raw_area = str(candidate.get("area_raw", "") or "").strip()
-    if not raw_area:
-        return None
+    """Translate a POI/address into the map/model area vocabulary when possible."""
+    forced = str(candidate.get("forced_area") or "").strip()
+    if forced:
+        return forced
+
     preferred = [state_name] if state_name else []
-    area_state, area_name = match_area_text(normalise_lookup_text(raw_area), preferred_states=preferred)
-    if area_state and area_name and (not state_name or area_state == state_name):
-        return area_name
-    # Preserve nationwide prediction support for a genuine geocoded locality even
-    # when it is not present in our dataset/official lookup tables.
-    return display_name(clean_area_name(raw_area))
+    # Try structured locality first, then the full display label.  The latter is
+    # important for results such as "Chung Kwok ... Sentul, Kuala Lumpur" where
+    # Nominatim may put Chow Kit or another neighbourhood in area_raw.
+    for source in [candidate.get("area_raw", ""), candidate.get("display_name", "")]:
+        source_norm = normalise_lookup_text(source)
+        if not source_norm:
+            continue
+        area_state, area_name = match_area_text(source_norm, preferred_states=preferred)
+        if area_state and area_name and (not state_name or area_state == state_name):
+            return area_name
+
+    raw_area = str(candidate.get("area_raw", "") or "").strip()
+    if raw_area:
+        return display_name(clean_area_name(raw_area))
+    return None
 
 
 def candidate_label(candidate: dict) -> str:
     primary = str(candidate.get("primary_name") or "").strip()
     display_text = str(candidate.get("display_name") or "").strip()
+    if candidate.get("source") == "known_branch":
+        return display_text or primary
     if primary and primary.lower() not in display_text.lower():
         return f"{primary} — {display_text}"
     return display_text or primary or "Possible Malaysia location"
 
+
+
+# ---------------------------------------------------------------------------
+# WELL-KNOWN MULTI-BRANCH POI SEARCHES
+# ---------------------------------------------------------------------------
+# Some organisations have several Malaysian branches but a generic Nominatim
+# search may only return one of them.  Keep a small explicit branch registry for
+# these cases so the user can choose the intended campus before the map moves.
+# TAR UMT branch names/addresses follow the university's official campus list.
+TAR_UMT_BRANCHES = [
+    {
+        "primary_name": "TAR UMT Kuala Lumpur Campus",
+        "display_name": "TAR UMT Kuala Lumpur Campus — Jalan Genting Kelang, Setapak, 53300 Kuala Lumpur",
+        "forced_state": "Kuala Lumpur",
+        "forced_area": "Setapak",
+        "lat": 3.2137,
+        "lon": 101.7263,
+        "source": "known_branch",
+    },
+    {
+        "primary_name": "TAR UMT Penang Branch",
+        "display_name": "TAR UMT Penang Branch — Lorong Lembah Permai Tiga, Tanjong Bungah, Penang",
+        "forced_state": "Penang",
+        "forced_area": "Tanjung Bungah",
+        "lat": 5.4660,
+        "lon": 100.2910,
+        "source": "known_branch",
+    },
+    {
+        "primary_name": "TAR UMT Perak Branch",
+        "display_name": "TAR UMT Perak Branch — Jalan Kolej, Taman Bandar Baru, Kampar, Perak",
+        "forced_state": "Perak",
+        "forced_area": "Kampar",
+        "lat": 4.3300,
+        "lon": 101.1420,
+        "source": "known_branch",
+    },
+    {
+        "primary_name": "TAR UMT Johor Branch",
+        "display_name": "TAR UMT Johor Branch — Jalan Segamat / Labis, Segamat, Johor",
+        "forced_state": "Johor",
+        "forced_area": "Segamat",
+        "lat": 2.5144,
+        "lon": 102.8159,
+        "source": "known_branch",
+    },
+    {
+        "primary_name": "TAR UMT Pahang Branch",
+        "display_name": "TAR UMT Pahang Branch — Indera Mahkota 9, Kuantan, Pahang",
+        "forced_state": "Pahang",
+        "forced_area": "Kuantan",
+        "lat": 3.8077,
+        "lon": 103.3260,
+        "source": "known_branch",
+    },
+    {
+        "primary_name": "TAR UMT Sabah Branch",
+        "display_name": "TAR UMT Sabah Branch — Jalan Alamesra, Alamesra, Kota Kinabalu, Sabah",
+        "forced_state": "Sabah",
+        "forced_area": "Kota Kinabalu",
+        "lat": 5.9804,
+        "lon": 116.0735,
+        "source": "known_branch",
+    },
+]
+
+
+def special_multi_branch_candidates(query: str):
+    """Return a complete branch list for recognised multi-campus organisations."""
+    q = normalise_lookup_text(query)
+    compact = _compact_lookup_text(query)
+    tarumt_aliases = {
+        "tarumt", "taruc", "tarc",
+        "tunkuabdulrahmanuniversityofmanagementandtechnology",
+        "tunkuabdulrahmanuniversitycollege",
+    }
+    phrase_match = (
+        "tunku abdul rahman university of management and technology" in q
+        or "tunku abdul rahman university college" in q
+    )
+    if compact in tarumt_aliases or phrase_match:
+        result = []
+        for idx, branch in enumerate(TAR_UMT_BRANCHES):
+            item = dict(branch)
+            item.update({
+                "query_score": 100.0,
+                "importance": 1.0,
+                "state_raw": branch["forced_state"],
+                "area_raw": branch["forced_area"],
+                "namedetails": {"name": branch["primary_name"]},
+                "candidate_id": f"tarumt_{idx}",
+            })
+            result.append(item)
+        return result
+    return []
 
 def model_default_name(results: pd.DataFrame) -> str:
     model_options = results["Model"].astype(str).tolist()
@@ -1569,6 +1700,7 @@ def reset_location_state():
     st.session_state["map_fly_request"] = None
     st.session_state["location_candidates"] = []
     st.session_state["location_candidate_query"] = ""
+    st.session_state.pop("location_candidate_choice", None)
 
 
 def _apply_location_match(
@@ -1587,6 +1719,7 @@ def _apply_location_match(
     st.session_state["searched_point"] = searched_point
     st.session_state["location_candidates"] = []
     st.session_state["location_candidate_query"] = ""
+    st.session_state.pop("location_candidate_choice", None)
 
     target_center = STATE_COORDS.get(matched_state, [4.2105, 108.9758])
     target_zoom = 8
@@ -1617,7 +1750,7 @@ def _apply_location_match(
 
 
 def apply_geocode_candidate(candidate: dict, available_states):
-    """Apply a candidate that has already passed query relevance validation."""
+    """Apply a validated candidate selected by the user."""
     previous_map_center = list(st.session_state.get("map_center", [4.2105, 108.9758]))
     previous_map_zoom = int(st.session_state.get("map_zoom", 6))
 
@@ -1625,9 +1758,9 @@ def apply_geocode_candidate(candidate: dict, available_states):
     if not matched_state:
         st.session_state["address_feedback"] = (
             "warning",
-            "The place looks relevant, but its Malaysian state could not be verified. Please choose the location on the map.",
+            "This search result could not be linked to a Malaysian state. Please choose another result or select the location on the map.",
         )
-        return
+        return False
 
     matched_area = resolve_candidate_area(candidate, matched_state)
     searched_point = {
@@ -1656,6 +1789,7 @@ def apply_geocode_candidate(candidate: dict, available_states):
         previous_map_zoom=previous_map_zoom,
         feedback_message=message,
     )
+    return True
 
 
 def analyze_address(available_states):
@@ -1705,7 +1839,21 @@ def analyze_address(available_states):
         )
         return
 
-    # 2) POI/building/free-text search: get several Malaysia candidates, then reject
+    # 2) Known multi-branch organisations are handled before general geocoding.
+    # A generic search for TAR UMT often returns only the Penang branch, so a
+    # search for "tarumt" intentionally shows all six official campuses.
+    branch_candidates = special_multi_branch_candidates(addr_raw)
+    if branch_candidates:
+        st.session_state["location_candidates"] = branch_candidates
+        st.session_state["location_candidate_query"] = str(addr_raw)
+        st.session_state["location_candidate_choice"] = branch_candidates[0]["candidate_id"]
+        st.session_state["address_feedback"] = (
+            "info",
+            "TAR UMT has multiple Malaysian campuses. Please choose the campus you mean before the map moves.",
+        )
+        return
+
+    # 3) POI/building/free-text search: get several Malaysia candidates, then reject
     # results whose returned name does not actually resemble what the user typed.
     candidates = validated_geocode_candidates(addr_raw) if HAS_GEOPY else []
     if not candidates:
@@ -1735,8 +1883,14 @@ def analyze_address(available_states):
             distinct.append(candidate)
 
     if len(distinct) > 1:
-        st.session_state["location_candidates"] = distinct[:5]
+        shortlist = []
+        for idx, candidate in enumerate(distinct[:5]):
+            item = dict(candidate)
+            item["candidate_id"] = item.get("candidate_id") or f"geo_{idx}_{round(float(item['lat']), 5)}_{round(float(item['lon']), 5)}"
+            shortlist.append(item)
+        st.session_state["location_candidates"] = shortlist
         st.session_state["location_candidate_query"] = str(addr_raw)
+        st.session_state["location_candidate_choice"] = shortlist[0]["candidate_id"]
         st.session_state["address_feedback"] = (
             "info",
             "Several believable locations were found. Please choose the correct one below before the map moves.",
@@ -1816,23 +1970,7 @@ def render_result(saved, animate=True):
     prediction_pct = max(0.0, min(100.0, ((prediction - ruler_min) / ruler_span) * 100))
     range_width = max(0.0, upper_pct - lower_pct)
 
-    if not saved["dataset_supported"]:
-        warning_html = (
-            '<div class="result-warning"><div class="warning-icon">!</div><div>'
-            '<strong>Lower-confidence area.</strong><br>'
-            'This area is outside the 2025 training dataset. The model uses '
-            'unseen/infrequent-area handling, so prediction accuracy may be lower.'
-            '</div></div>'
-        )
-    elif not saved["model_supported"]:
-        warning_html = (
-            '<div class="result-warning"><div class="warning-icon">i</div><div>'
-            'This area exists in the dataset but was outside this model\'s training '
-            'areas during evaluation. Unseen-area handling is used.'
-            '</div></div>'
-        )
-    else:
-        warning_html = ""
+    warning_html = ""
 
     duration = 2300 if animate else 0
     entrance_duration = 650 if animate else 0
@@ -1987,7 +2125,7 @@ def render_result(saved, animate=True):
     </div>
     """
 
-    component_height = 525 if warning_html else 455
+    component_height = 455
     st.components.v1.html(html, height=component_height, scrolling=False)
 
 
@@ -2376,6 +2514,7 @@ def prediction_page(data, results):
         "map_fly_request": None,
         "location_candidates": [],
         "location_candidate_query": "",
+        "location_candidate_choice": None,
         "saved_scenarios": [],
         "just_predicted": False,
     }
@@ -2453,28 +2592,47 @@ def prediction_page(data, results):
         else:
             st.warning(msg, icon="⚠️")
 
-    # Ambiguous POI/building searches are never auto-accepted.  The user chooses
-    # the intended result first; only then does Spider-Man fly to that location.
+    # Ambiguous POI/building searches are never auto-accepted. The candidate
+    # list lives in session_state, so changing the selectbox does not rerun the
+    # search or lose the selected option.
     candidates = st.session_state.get("location_candidates", [])
     if candidates:
         st.markdown("**Choose the correct location:**")
-        candidate_indexes = list(range(len(candidates)))
-        chosen_index = st.radio(
+        candidate_by_id = {}
+        candidate_ids = []
+        for idx, candidate in enumerate(candidates):
+            candidate_id = candidate.get("candidate_id") or f"candidate_{idx}"
+            candidate_by_id[candidate_id] = candidate
+            candidate_ids.append(candidate_id)
+
+        current_choice = st.session_state.get("location_candidate_choice")
+        if current_choice not in candidate_by_id:
+            st.session_state["location_candidate_choice"] = candidate_ids[0]
+
+        chosen_id = st.selectbox(
             "Possible locations",
-            candidate_indexes,
-            format_func=lambda i: candidate_label(candidates[i]),
+            candidate_ids,
+            format_func=lambda candidate_id: candidate_label(candidate_by_id[candidate_id]),
             key="location_candidate_choice",
             label_visibility="collapsed",
         )
+
         choose_col, cancel_col = st.columns([1.35, 1])
         with choose_col:
-            if st.button("Use selected location", type="primary", use_container_width=True, key="use_location_candidate"):
-                apply_geocode_candidate(candidates[int(chosen_index)], available_states)
-                st.rerun()
+            if st.button(
+                "Use selected location",
+                type="primary",
+                use_container_width=True,
+                key="use_location_candidate",
+            ):
+                chosen_candidate = candidate_by_id.get(chosen_id)
+                if chosen_candidate and apply_geocode_candidate(chosen_candidate, available_states):
+                    st.rerun()
         with cancel_col:
             if st.button("Cancel search", use_container_width=True, key="cancel_location_candidates"):
                 st.session_state["location_candidates"] = []
                 st.session_state["location_candidate_query"] = ""
+                st.session_state.pop("location_candidate_choice", None)
                 st.session_state["address_feedback"] = None
                 st.rerun()
 
@@ -2714,7 +2872,6 @@ def prediction_page(data, results):
         help="Do not derive PSF from the Median Price being predicted.",
         on_change=clear_last_prediction,
     )
-    st.caption(f"PSF reference: RM {reference['psf']:,}/sq ft from the {reference['label']} ({reference['rows']:,} record(s)).")
 
     # The fitted pipelines still require Transactions. It is intentionally not
     # a user input: the app supplies the median from the closest matching
