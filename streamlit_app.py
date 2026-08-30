@@ -2,7 +2,7 @@
 BMDS2003 Data Science - Deployment Prototype
 Malaysia Housing Median Price Estimator
 
-Run locally:  streamlit run my_UI_latestfinal_live.py
+Run locally:  streamlit run my_UI_latestfinal_live_mapfixed.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -2148,13 +2148,14 @@ def attach_spider_fly_marker(
     from branca.element import MacroElement, Template
     import json as _json
 
+    malaysia_center = [4.2105, 108.9758]
+    default_center = list(getattr(malaysia_map, "location", None) or malaysia_center)
+
     if not current_state:
-        return
-
-    has_flight = bool(fly_request)
-    default_center = list(getattr(malaysia_map, "location", None) or STATE_COORDS.get(current_state, [4.2105, 108.9758]))
-
-    if current_area:
+        fixed_center = malaysia_center
+        destination_label = "Malaysia"
+        arrived_message = "Search or choose a state to begin."
+    elif current_area:
         fixed_coords, _ = get_area_map_coords(current_area, current_state)
         fixed_center = list(fixed_coords) if fixed_coords else default_center
         destination_label = str(current_area)
@@ -2164,16 +2165,14 @@ def attach_spider_fly_marker(
         destination_label = str(current_state)
         arrived_message = f"I have arrived {current_state}! Pick an area."
 
-    if has_flight:
-        start_center = list(fly_request.get("from_center", default_center))
-        target_center = list(fly_request.get("to_center", fixed_center))
-        target_zoom = int(fly_request.get("to_zoom", 9))
-        duration = max(1.2, float(fly_request.get("duration", 3.0)))
-    else:
-        start_center = fixed_center
-        target_center = fixed_center
-        target_zoom = int(getattr(malaysia_map, "options", {}).get("zoom", 9) or 9)
-        duration = 0.0
+    # Keep Spider-Man anchored to the real state/area coordinate.  The map now
+    # opens directly on the selected location so the character never appears to
+    # float at the screen centre or disappear off-screen during Streamlit reruns.
+    has_flight = False
+    start_center = fixed_center
+    target_center = fixed_center
+    target_zoom = int(getattr(malaysia_map, "options", {}).get("zoom", 9) or 9)
+    duration = 0.0
 
     initial_message = (
         f"Flying to {destination_label}..."
@@ -2466,6 +2465,7 @@ def prediction_page(data, results):
         st.session_state["selected_state"] = pending_state
         st.session_state["selected_area"] = pending_area
         st.session_state["searched_point"] = None
+        st.session_state["last_map_popup"] = None
 
     current_state = st.session_state["selected_state"]
     current_area = st.session_state["selected_area"]
@@ -2582,8 +2582,8 @@ def prediction_page(data, results):
         final_map_zoom = st.session_state.get("map_zoom", 6 if not current_state else 9)
 
         if fly_request:
-            map_center = fly_request.get("from_center", final_map_center)
-            map_zoom = fly_request.get("from_zoom", max(6, int(final_map_zoom) - 3))
+            map_center = final_map_center
+            map_zoom = final_map_zoom
         else:
             map_center = final_map_center
             map_zoom = final_map_zoom
@@ -2614,7 +2614,20 @@ def prediction_page(data, results):
                     popup=f"STATE:{state_name}",
                 ).add_to(malaysia_map)
         else:
-            # Area markers are added directly so one click selects the area.
+            # Area markers use clustering again so dense state views stay usable.
+            # At close zoom levels the cluster opens into individual clickable pins.
+            area_cluster = MarkerCluster(
+                name="Areas",
+                options={
+                    "chunkedLoading": True,
+                    "spiderfyOnMaxZoom": True,
+                    "showCoverageOnHover": False,
+                    "zoomToBoundsOnClick": True,
+                    "disableClusteringAtZoom": 12,
+                    "maxClusterRadius": 42,
+                },
+            ).add_to(malaysia_map)
+
             marker_rows = list(get_area_marker_data(current_state))
             if current_area and current_area not in {row[0] for row in marker_rows}:
                 coords, approx = get_area_map_coords(current_area, current_state)
@@ -2624,17 +2637,18 @@ def prediction_page(data, results):
             for disp_area, lat, lon, is_approx, area_kind in marker_rows:
                 is_sel = disp_area == current_area
                 pin_note = "Approximate position · click to select" if is_approx else "Click to select"
+                target_layer = malaysia_map if is_sel else area_cluster
                 folium.CircleMarker(
                     location=[lat, lon],
-                    radius=12 if is_sel else 8,
+                    radius=13 if is_sel else 8,
                     color="#18875D" if is_sel else ("#98A2B3" if is_approx else "#C47A10"),
-                    weight=3 if is_sel else 2,
+                    weight=4 if is_sel else 2,
                     fill=True,
                     fill_color="#10B981" if is_sel else ("#D0D5DD" if is_approx else "#F59E0B"),
-                    fill_opacity=0.9 if is_sel else 0.75,
+                    fill_opacity=0.94 if is_sel else 0.78,
                     tooltip=folium.Tooltip(f"<b>{disp_area}</b><br>{area_kind} · {pin_note}", sticky=True),
                     popup=f"AREA:{disp_area}",
-                ).add_to(malaysia_map)
+                ).add_to(target_layer)
 
             searched_point = st.session_state.get("searched_point")
             if searched_point and current_state:
@@ -2694,6 +2708,7 @@ def prediction_page(data, results):
                         "to_center": target, "to_zoom": 9, "duration": 3.0,
                     }
                     st.session_state["searched_point"] = None
+                    st.session_state["last_map_popup"] = None
                     clear_last_prediction()
                     st.rerun()
             elif popup_txt.startswith("AREA:"):
@@ -2711,6 +2726,7 @@ def prediction_page(data, results):
                         "to_center": target, "to_zoom": 12, "duration": 2.8,
                     }
                     st.session_state["searched_point"] = None
+                    st.session_state["last_map_popup"] = None
                     clear_last_prediction()
                     st.rerun()
     else:
