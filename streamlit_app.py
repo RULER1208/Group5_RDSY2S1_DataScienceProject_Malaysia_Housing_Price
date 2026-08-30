@@ -2,7 +2,7 @@
 BMDS2003 Data Science - Deployment Prototype
 Malaysia Housing Median Price Estimator
 
-Run locally:  streamlit run my_UI_latestfinal_live_flyingrestored.py
+Run locally:  streamlit run my_UI_latestfinal_live_spiderfly_sync.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -2144,41 +2144,46 @@ def attach_spider_fly_marker(
     current_state,
     current_area,
 ):
-    """Add a fixed-location Spider-Man marker to the selected state or area."""
+    """Add a reliable Spider-Man-style navigator to the Folium map.
+
+    The mascot itself is created as a REAL Folium ``Marker``/``DivIcon`` in
+    Python, so it is visible even if the optional movement JavaScript fails.
+    JavaScript is used only for the smooth flight, speech updates, camera
+    ``flyTo`` motion, and keeping the idle mascot at the map centre.
+
+    This is intentionally different from the previous implementation, which
+    tried to create the marker from injected JavaScript.  In Streamlit/Folium
+    that can race the Leaflet map initialisation and leave the mascot missing.
+    """
     from branca.element import MacroElement, Template
     import json as _json
 
-    malaysia_center = [4.2105, 108.9758]
-    default_center = list(getattr(malaysia_map, "location", None) or malaysia_center)
-
-    if not current_state:
-        fixed_center = malaysia_center
-        destination_label = "Malaysia"
-        arrived_message = "Search or choose a state to begin."
-    elif current_area:
-        fixed_coords, _ = get_area_map_coords(current_area, current_state)
-        fixed_center = list(fixed_coords) if fixed_coords else default_center
-        destination_label = str(current_area)
-        arrived_message = f"I have arrived {current_area}!"
-    else:
-        fixed_center = list(STATE_COORDS.get(current_state, default_center))
-        destination_label = str(current_state)
-        arrived_message = f"I have arrived {current_state}! Pick an area."
-
-    # Keep Spider-Man anchored to real map coordinates, but restore the one-time
-    # fly animation when the user searches, clicks a state, or clicks an area.
     has_flight = bool(fly_request)
 
+    # The Folium map is deliberately rendered at the OLD view for one run when
+    # a flight is requested.  The real marker starts there as well, then the
+    # macro below moves both the camera and Spider-Man toward the destination.
+    default_center = list(getattr(malaysia_map, "location", None) or [4.2105, 108.9758])
     if has_flight:
         start_center = list(fly_request.get("from_center", default_center))
-        target_center = list(fly_request.get("to_center", fixed_center))
+        target_center = list(fly_request.get("to_center", default_center))
         target_zoom = int(fly_request.get("to_zoom", 9))
         duration = max(1.2, float(fly_request.get("duration", 3.0)))
     else:
-        start_center = fixed_center
-        target_center = fixed_center
+        start_center = default_center
+        target_center = default_center
         target_zoom = int(getattr(malaysia_map, "options", {}).get("zoom", 9) or 9)
         duration = 0.0
+
+    if current_area:
+        destination_label = str(current_area)
+        arrived_message = f"I have arrived {current_area}!"
+    elif current_state:
+        destination_label = str(current_state)
+        arrived_message = f"I have arrived {current_state}! Pick an area."
+    else:
+        destination_label = ""
+        arrived_message = "Where do we want to go?"
 
     initial_message = (
         f"Flying to {destination_label}..."
@@ -2186,6 +2191,9 @@ def attach_spider_fly_marker(
         else arrived_message
     )
 
+    # ------------------------------------------------------------------
+    # REAL FOLIUM MARKER - this exists even without custom JavaScript.
+    # ------------------------------------------------------------------
     spider_html = f"""
     <div class="mh-spider-wrap">
       <div class="mh-spider-bubble">{escape(initial_message)}</div>
@@ -2196,12 +2204,27 @@ def attach_spider_fly_marker(
             <stop offset="1" stop-color="#C4143C"></stop>
           </linearGradient>
         </defs>
+
+        <!-- subtle blue outer ring so the icon still reads as Spider-Man on a map -->
         <circle cx="36" cy="36" r="31" fill="#173B7A" opacity=".98"></circle>
-        <circle cx="36" cy="36" r="27.5" fill="url(#mhSpiderMaskGradient)" stroke="#172554" stroke-width="2.2"></circle>
-        <path d="M36 9v54M9 36h54 M15 21c13 6 29 6 42 0 M15 51c13-6 29-6 42 0 M21 13c2.5 13 2.5 33 0 46 M51 13c-2.5 13-2.5 33 0 46" fill="none" stroke="#172554" stroke-width="1.25" opacity=".68"></path>
-        <path d="M15 15L57 57M57 15L15 57" fill="none" stroke="#172554" stroke-width="1.05" opacity=".38"></path>
-        <path d="M19 31c5-8.7 10.7-11.6 16.1-12.1-.8 10-5.3 17-13.4 21.3z" fill="#FFFFFF" stroke="#172554" stroke-width="2.4"></path>
-        <path d="M53 31c-5-8.7-10.7-11.6-16.1-12.1.8 10 5.3 17 13.4 21.3z" fill="#FFFFFF" stroke="#172554" stroke-width="2.4"></path>
+        <circle cx="36" cy="36" r="27.5" fill="url(#mhSpiderMaskGradient)"
+                stroke="#172554" stroke-width="2.2"></circle>
+
+        <!-- web pattern -->
+        <path d="M36 9v54M9 36h54
+                 M15 21c13 6 29 6 42 0
+                 M15 51c13-6 29-6 42 0
+                 M21 13c2.5 13 2.5 33 0 46
+                 M51 13c-2.5 13-2.5 33 0 46"
+              fill="none" stroke="#172554" stroke-width="1.25" opacity=".68"></path>
+        <path d="M15 15L57 57M57 15L15 57"
+              fill="none" stroke="#172554" stroke-width="1.05" opacity=".38"></path>
+
+        <!-- eyes -->
+        <path d="M19 31c5-8.7 10.7-11.6 16.1-12.1-.8 10-5.3 17-13.4 21.3z"
+              fill="#FFFFFF" stroke="#172554" stroke-width="2.4"></path>
+        <path d="M53 31c-5-8.7-10.7-11.6-16.1-12.1.8 10 5.3 17 13.4 21.3z"
+              fill="#FFFFFF" stroke="#172554" stroke-width="2.4"></path>
       </svg>
     </div>
     """
@@ -2212,7 +2235,6 @@ def attach_spider_fly_marker(
         icon_anchor=(36, 36),
         class_name="mh-spider-divicon",
     )
-
     spider_marker = folium.Marker(
         location=start_center,
         icon=spider_icon,
@@ -2223,6 +2245,8 @@ def attach_spider_fly_marker(
         rise_on_hover=False,
     ).add_to(malaysia_map)
 
+    # Put styling in the document head.  The real marker above will use it even
+    # if the animation macro cannot run for any reason.
     css = r"""
     <style>
       .mh-spider-divicon,
@@ -2247,8 +2271,6 @@ def attach_spider_fly_marker(
         display:block;
         width:72px;
         height:72px;
-        transform:rotate(180deg);
-        transform-origin:50% 50%;
       }
       .mh-spider-bubble {
         position:absolute;
@@ -2311,6 +2333,9 @@ def attach_spider_fly_marker(
     """
     malaysia_map.get_root().header.add_child(folium.Element(css))
 
+    # ------------------------------------------------------------------
+    # MOTION MACRO - runs AFTER Leaflet, the map, and this real marker exist.
+    # ------------------------------------------------------------------
     map_var = malaysia_map.get_name()
     marker_var = spider_marker.get_name()
     destination_js = _json.dumps(destination_label)
@@ -2330,8 +2355,10 @@ def attach_spider_fly_marker(
       const durationMs = Math.max(700, durationSec * 1000);
       const destination = {destination_js};
       const arrivedMessage = {arrived_message_js};
+
       let flying = false;
       let trail = null;
+      let frameId = null;
 
       function markerElement() {{
         return spiderMarker && spiderMarker.getElement ? spiderMarker.getElement() : null;
@@ -2348,11 +2375,23 @@ def attach_spider_fly_marker(
         const bubble = bubbleElement();
         if (bubble) bubble.textContent = value;
       }}
-      function easeInOutCubic(t) {{
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      function keepSpiderAtCentre() {{
+        if (!flying && spiderMarker) spiderMarker.setLatLng(mapObj.getCenter());
       }}
+
+      // When idle, Spider-Man stays visually centred while the user pans/zooms.
+      mapObj.on('move', keepSpiderAtCentre);
+      mapObj.on('zoom', keepSpiderAtCentre);
+
+      function easeInOutCubic(t) {{
+        return t < 0.5
+          ? 4 * t * t * t
+          : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }}
+
       function startFlight() {{
         if (!hasFlight || flying || !spiderMarker) return;
+
         flying = true;
         const start = spiderMarker.getLatLng();
         const deltaLat = target.lat - start.lat;
@@ -2361,46 +2400,71 @@ def attach_spider_fly_marker(
         const arc = Math.min(0.65, Math.max(0.035, distance * 0.075));
         const started = performance.now();
         let lastTrailBucket = -1;
+
         const wrap = wrapElement();
         if (wrap) {{
           wrap.classList.remove('mh-arrived');
           wrap.classList.add('mh-flying');
         }}
         setMessage(destination ? ('Flying to ' + destination + '...') : 'Here we go!');
+
         trail = L.polyline([start], {{
-          color:'#E11D48', weight:3, opacity:.52, dashArray:'6 10', lineCap:'round', interactive:false
+          color:'#E11D48',
+          weight:3,
+          opacity:.52,
+          dashArray:'6 10',
+          lineCap:'round',
+          interactive:false
         }}).addTo(mapObj);
+
+        // The camera begins just after the mascot launches.  This macro runs in
+        // Folium's script phase, so mapObj is already available and there is no
+        // loading race / wait loop.
         window.setTimeout(function() {{
           try {{
             mapObj.stop();
             mapObj.flyTo(target, targetZoom, {{
-              animate:true, duration:durationSec, easeLinearity:0.16, noMoveStart:false
+              animate:true,
+              duration:durationSec,
+              easeLinearity:0.16,
+              noMoveStart:false
             }});
-          }} catch (e) {{}}
+          }} catch (e) {{
+            // The real marker and normal map remain usable even if flyTo fails.
+          }}
         }}, 180);
+
         function tick(now) {{
           const raw = Math.min((now - started) / durationMs, 1);
           const eased = easeInOutCubic(raw);
           const lift = Math.sin(Math.PI * raw) * arc;
-          const point = L.latLng(start.lat + deltaLat * eased + lift, start.lng + deltaLng * eased);
+          const lat = start.lat + deltaLat * eased + lift;
+          const lng = start.lng + deltaLng * eased;
+          const point = L.latLng(lat, lng);
+
           spiderMarker.setLatLng(point);
+
           const bucket = Math.floor(raw * 40);
           if (trail && bucket !== lastTrailBucket) {{
             trail.addLatLng(point);
             lastTrailBucket = bucket;
           }}
+
           if (raw < 1) {{
-            requestAnimationFrame(tick);
+            frameId = requestAnimationFrame(tick);
             return;
           }}
+
           spiderMarker.setLatLng(target);
           flying = false;
+
           const arrivedWrap = wrapElement();
           if (arrivedWrap) {{
             arrivedWrap.classList.remove('mh-flying');
             arrivedWrap.classList.add('mh-arrived');
           }}
           setMessage(arrivedMessage);
+
           window.setTimeout(function() {{
             if (trail) {{
               try {{ mapObj.removeLayer(trail); }} catch (e) {{}}
@@ -2408,12 +2472,17 @@ def attach_spider_fly_marker(
             }}
           }}, 1200);
         }}
-        requestAnimationFrame(tick);
+
+        frameId = requestAnimationFrame(tick);
       }}
+
       if (hasFlight) {{
+        // Marker already exists; this delay is just for the user to see the
+        // starting position before Spider-Man launches.
         window.setTimeout(startFlight, 650);
       }} else {{
-        spiderMarker.setLatLng(target);
+        // Static fallback / idle state: keep him in the visible map centre.
+        keepSpiderAtCentre();
         setMessage(arrivedMessage);
       }}
     }})();
