@@ -3755,10 +3755,7 @@ def insights_page(data):
                     ("Matching records", f"{len(exact_match):,}", "Exact matches"),
                 ])
 
-                st.caption(
-                    f"Historical matched-price range: RM {historical_min:,.0f} – RM {historical_max:,.0f}. "
-                    "This comparison uses historical records only; it does not retrain the model."
-                )
+                
 
                 if HAS_PLOTLY:
                     comparison_chart = go.Figure(go.Bar(
