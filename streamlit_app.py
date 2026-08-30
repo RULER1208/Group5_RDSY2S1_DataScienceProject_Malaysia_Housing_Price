@@ -2757,14 +2757,13 @@ def prediction_page(data, results):
             searched_point = st.session_state.get("searched_point")
 
             for disp_area, lat, lon, is_approx, area_kind in marker_rows:
-                # When a building/POI search gives an exact coordinate, keep the
-                # generic housing-area pin as a normal reference pin.  The exact
-                # searched coordinate becomes the selected point instead.  This
-                # avoids showing two different green "selected" locations.
-                is_sel = (
-                    disp_area == current_area
-                    and not searched_point
-                )
+                # If a building/POI search produced an exact coordinate, do not
+                # draw the generic housing-area centroid as a second selected pin.
+                # The Spider-Man marker itself represents the exact searched point.
+                if searched_point and disp_area == current_area:
+                    continue
+
+                is_sel = disp_area == current_area
                 pin_note = "Approximate position · click to select" if is_approx else "Click to select"
                 folium.CircleMarker(
                     location=[lat, lon],
@@ -2778,22 +2777,8 @@ def prediction_page(data, results):
                     popup=f"AREA:{disp_area}",
                 ).add_to(marker_cluster)
 
-            if searched_point and current_state:
-                folium.CircleMarker(
-                    location=[searched_point["lat"], searched_point["lon"]],
-                    radius=8,
-                    color="#0F766E",
-                    weight=3,
-                    fill=True,
-                    fill_color="#10B981",
-                    fill_opacity=0.95,
-                    tooltip=folium.Tooltip(
-                        f"<b>Selected searched location</b><br>{escape(str(searched_point.get('label', '')))}"
-                        + (f"<br>Housing area: {escape(str(current_area))}, {escape(str(current_state))}" if current_area else ""),
-                        sticky=True,
-                    ),
-                    popup="SEARCHED_POINT",
-                ).add_to(malaysia_map)
+            # For an exact POI/building search, Spider-Man is already anchored to
+            # the exact coordinate, so a second green dot is intentionally omitted.
 
         # Spider-Man-style navigator lives INSIDE the Leaflet map. It is
         # non-interactive, so all original state/area pins remain clickable.
@@ -3708,62 +3693,41 @@ def insights_page(data):
         ])
 
         if HAS_PLOTLY:
-            st.caption("These live views use the same chart logic and axes as Figures 13, 14, 15 and 19, but respond to the filters above.")
+            st.caption("These interactive charts use the same filtering, category order, axes and display rules as the matching figures in Latest_FINAL.")
 
             left, right = st.columns(2)
             with left:
-                counts = subset["State"].value_counts()
-                valid_states = counts[counts >= 1].index
-                frame = subset[subset["State"].isin(valid_states)].copy()
-                order = frame.groupby("State")["Median_Price"].median().sort_values(ascending=False).index.tolist()
-                frame["State label"] = frame["State"].map(lambda s: f"{s} (n={counts[s]:,})")
-                fig = px.box(frame, x="Median_Price", y="State label", points=False,
-                             category_orders={"State label": [f"{s} (n={counts[s]:,})" for s in order]},
-                             title="Price distribution by State", labels={"Median_Price": "Median price (RM)", "State label": ""})
-                fig.update_yaxes(autorange="reversed")
-                render_plotly(fig)
-                st.caption("Shows the spread of median prices for the currently filtered states.")
-
-            with right:
-                counts = subset["Primary_Type"].value_counts()
-                order = subset.groupby("Primary_Type")["Median_Price"].median().sort_values(ascending=False).index.tolist()
-                frame = subset.copy()
-                frame["Type label"] = frame["Primary_Type"].map(lambda t: f"{t} (n={counts[t]:,})")
-                fig = px.box(frame, x="Median_Price", y="Type label", points=False,
-                             category_orders={"Type label": [f"{t} (n={counts[t]:,})" for t in order]},
-                             title="Price distribution by Property Type", labels={"Median_Price": "Median price (RM)", "Type label": ""})
-                fig.update_yaxes(autorange="reversed")
-                render_plotly(fig)
-                st.caption("Compares price distributions across the property types left by the filters.")
-
-            left, right = st.columns(2)
-            with left:
-                fig = px.scatter(subset, x="Median_PSF", y="Median_Price", color="Category",
-                                 hover_data=["State", "Area_Clean", "Primary_Type"],
-                                 title="Median PSF against Median Price",
-                                 labels={"Median_PSF": "Median PSF (RM)", "Median_Price": "Median price (RM, log display scale)"})
-                fig.update_yaxes(type="log")
-                render_plotly(fig)
-                st.caption("Hover over a point to inspect how PSF and price move together for the filtered records.")
-
-            with right:
-                min_area_n = 15
-                area_counts = subset["Area_Key"].value_counts()
-                area_keys = area_counts[area_counts >= min_area_n].head(10).index
-                if len(area_keys):
-                    frame = subset[subset["Area_Key"].isin(area_keys)].copy()
-                    frame["Area display"] = frame["Area_Key"].map(lambda v: display_name(str(v).replace(" | ", " — ")))
-                    area_n = frame["Area display"].value_counts()
-                    order = frame.groupby("Area display")["Median_Price"].median().sort_values(ascending=False).index.tolist()
-                    frame["Area label"] = frame["Area display"].map(lambda a: f"{a} (n={area_n[a]})")
-                    fig = px.box(frame, x="Median_Price", y="Area label", points=False,
-                                 category_orders={"Area label": [f"{a} (n={area_n[a]})" for a in order]},
-                                 title="Price distribution by Area (n >= 15)", labels={"Median_Price": "Median price (RM)", "Area label": ""})
-                    fig.update_yaxes(autorange="reversed")
+                fig = build_live_notebook_figure(13, subset, subset)
+                if fig is not None:
                     render_plotly(fig)
-                    st.caption("Matches the Area comparison logic in Figure 14 and only shows better-represented Areas.")
+                    st.caption("Compares state price distributions using the same n ≥ 10 rule and whisker-based x-axis as Figure 13.")
                 else:
-                    st.info("The current filters do not leave any Area with at least 15 records for the Figure 14-style comparison.")
+                    st.info("The current filters do not leave enough records for the Figure 13 comparison.")
+
+            with right:
+                fig = build_live_notebook_figure(15, subset, subset)
+                if fig is not None:
+                    render_plotly(fig)
+                    st.caption("Compares property-type price distributions using the same n ≥ 10 rule and ordering as Figure 15.")
+                else:
+                    st.info("The current filters do not leave enough records for the Figure 15 comparison.")
+
+            left, right = st.columns(2)
+            with left:
+                fig = build_live_notebook_figure(19, subset, subset)
+                if fig is not None:
+                    render_plotly(fig)
+                    st.caption("Shows the PSF-price relationship with the same category split and log-price axis as Figure 19.")
+                else:
+                    st.info("The current filters do not leave enough records for the Figure 19 comparison.")
+
+            with right:
+                fig = build_live_notebook_figure(14, subset, subset)
+                if fig is not None:
+                    render_plotly(fig)
+                    st.caption("Shows the same top-Area comparison rule as Figure 14: up to 10 Areas with at least 15 records.")
+                else:
+                    st.info("The current filters do not leave any Area with at least 15 records for the Figure 14 comparison.")
         else:
             st.info("Plotly is unavailable, so interactive Market Explorer charts cannot be displayed.")
 
