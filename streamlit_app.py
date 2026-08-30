@@ -3426,12 +3426,12 @@ def build_live_notebook_figure(figure_number, data, raw):
         state_n = data['State'].value_counts()
         major_states = state_n[state_n >= 10].index
         frame = data[data['State'].isin(major_states)].copy()
-        order = frame.groupby('State')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        order = frame.groupby('State')['Median_Price'].median().sort_values(ascending=True).index.tolist()
         frame['State label'] = frame['State'].map(lambda s: f'{s} (n={state_n[s]:,})')
         label_order = [f'{s} (n={state_n[s]:,})' for s in order]
         fig = px.box(frame, x='Median_Price', y='State label', points=False, category_orders={'State label': label_order}, title='Figure 13 — Price distribution by State (states with n ≥ 10)', labels={'Median_Price': 'Median price (RM)', 'State label': ''})
         fig.update_traces(fillcolor='#D5E4FF', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
-        fig.update_yaxes(autorange='reversed')
+        fig.update_yaxes(categoryorder='array', categoryarray=label_order)
         _apply_box_axis_range(fig, [(s, frame[frame['State'].eq(s)]) for s in order], 'Median_Price')
         return fig
 
@@ -3442,13 +3442,13 @@ def build_live_notebook_figure(figure_number, data, raw):
         area_keys = area_counts[area_counts >= min_area_n].head(top_areas).index
         frame = data[data['Area_Key'].isin(area_keys)].copy()
         frame['Area display'] = frame['Area_Key'].map(lambda v: display_name(str(v).replace(' | ', ' — ')))
-        order = frame.groupby('Area display')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        order = frame.groupby('Area display')['Median_Price'].median().sort_values(ascending=True).index.tolist()
         area_n = frame['Area display'].value_counts()
         frame['Area label'] = frame['Area display'].map(lambda a: f'{a} (n={area_n[a]})')
         label_order = [f'{a} (n={area_n[a]})' for a in order]
         fig = px.box(frame, x='Median_Price', y='Area label', points=False, category_orders={'Area label': label_order}, title=f'Figure 14 — Price distribution by Area (top {top_areas} Areas with n ≥ {min_area_n})', labels={'Median_Price': 'Median price (RM)', 'Area label': ''})
         fig.update_traces(fillcolor='#D7F1E5', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
-        fig.update_yaxes(autorange='reversed')
+        fig.update_yaxes(categoryorder='array', categoryarray=label_order)
         _apply_box_axis_range(fig, [(a, frame[frame['Area display'].eq(a)]) for a in order], 'Median_Price')
         return fig
 
@@ -3456,36 +3456,36 @@ def build_live_notebook_figure(figure_number, data, raw):
         counts = data['Primary_Type'].value_counts()
         major = counts[counts >= 10].index
         frame = data[data['Primary_Type'].isin(major)].copy()
-        order = frame.groupby('Primary_Type')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        order = frame.groupby('Primary_Type')['Median_Price'].median().sort_values(ascending=True).index.tolist()
         frame['Type label'] = frame['Primary_Type'].map(lambda t: f'{t} (n={counts[t]:,})')
         label_order = [f'{t} (n={counts[t]:,})' for t in order]
         fig = px.box(frame, x='Median_Price', y='Type label', points=False, category_orders={'Type label': label_order}, title='Figure 15 — Price by property type (types with n ≥ 10)', labels={'Median_Price': 'Median price (RM)', 'Type label': ''})
         fig.update_traces(fillcolor='#FFE7C2', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
-        fig.update_yaxes(autorange='reversed')
+        fig.update_yaxes(categoryorder='array', categoryarray=label_order)
         _apply_box_axis_range(fig, [(t, frame[frame['Primary_Type'].eq(t)]) for t in order], 'Median_Price')
         return fig
 
     if figure_number == 16:
         counts = data['Tenure'].value_counts()
-        order = data.groupby('Tenure')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        order = data.groupby('Tenure')['Median_Price'].median().sort_values(ascending=True).index.tolist()
         frame = data.copy()
         frame['Tenure label'] = frame['Tenure'].map(lambda t: f'{t} (n={counts[t]:,})')
         label_order = [f'{t} (n={counts[t]:,})' for t in order]
         fig = px.box(frame, x='Median_Price', y='Tenure label', points=False, category_orders={'Tenure label': label_order}, title='Figure 16 — Price distribution by tenure', labels={'Median_Price': 'Median price (RM)', 'Tenure label': ''})
         fig.update_traces(fillcolor='#E4DCFB', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
-        fig.update_yaxes(autorange='reversed')
+        fig.update_yaxes(categoryorder='array', categoryarray=label_order)
         _apply_box_axis_range(fig, [(t, frame[frame['Tenure'].eq(t)]) for t in order], 'Median_Price')
         return fig
 
     if figure_number == 17:
         counts = data['Category'].value_counts()
-        order = data.groupby('Category')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        order = data.groupby('Category')['Median_Price'].median().sort_values(ascending=True).index.tolist()
         frame = data.copy()
         frame['Category label'] = frame['Category'].map(lambda c: f'{c} (n={counts[c]:,})')
         label_order = [f'{c} (n={counts[c]:,})' for c in order]
         fig = px.box(frame, x='Median_Price', y='Category label', points=False, category_orders={'Category label': label_order}, title='Figure 17 — Price by broad property category', labels={'Median_Price': 'Median price (RM)', 'Category label': ''})
         fig.update_traces(fillcolor='#CFE9E0', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
-        fig.update_yaxes(autorange='reversed')
+        fig.update_yaxes(categoryorder='array', categoryarray=label_order)
         _apply_box_axis_range(fig, [(c, frame[frame['Category'].eq(c)]) for c in order], 'Median_Price')
         return fig
 
@@ -3493,12 +3493,12 @@ def build_live_notebook_figure(figure_number, data, raw):
         state_n = data['State'].value_counts()
         major_states = state_n[state_n >= 10].index
         frame = data[data['State'].isin(major_states)].copy()
-        order = frame.groupby('State')['Median_PSF'].median().sort_values(ascending=False).index.tolist()
+        order = frame.groupby('State')['Median_PSF'].median().sort_values(ascending=True).index.tolist()
         frame['State label'] = frame['State'].map(lambda s: f'{s} (n={state_n[s]:,})')
         label_order = [f'{s} (n={state_n[s]:,})' for s in order]
         fig = px.box(frame, x='Median_PSF', y='State label', points=False, category_orders={'State label': label_order}, title='Figure 18 — Median PSF distribution by State (states with n ≥ 10)', labels={'Median_PSF': 'Median price per square foot (RM)', 'State label': ''})
         fig.update_traces(fillcolor='#FBD7DC', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median PSF: RM %{x:,.0f}<extra></extra>')
-        fig.update_yaxes(autorange='reversed')
+        fig.update_yaxes(categoryorder='array', categoryarray=label_order)
         _apply_box_axis_range(fig, [(s, frame[frame['State'].eq(s)]) for s in order], 'Median_PSF')
         return fig
 
@@ -3559,6 +3559,7 @@ def build_live_notebook_figure(figure_number, data, raw):
         fig = go.Figure(go.Heatmap(z=z, x=corr.columns, y=corr.index, zmin=-1, zmax=1, zmid=0, colorscale='RdBu', reversescale=True, text=text_values, texttemplate='%{text}', hovertemplate='%{y} vs %{x}<br>r=%{z:.3f}<extra></extra>', colorbar=dict(title='r')))
         fig.update_layout(title='Figure 21 — Correlation matrix (lower triangle)<br><sup>Numeric + Tenure + Primary_Type; |r| ≥ 0.10 annotated</sup>', height=760)
         fig.update_xaxes(tickangle=45)
+        fig.update_yaxes(autorange='reversed')
         return fig
 
     # Figure 22 ------------------------------------------------------------
@@ -3600,7 +3601,7 @@ def build_live_notebook_figure(figure_number, data, raw):
         fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale='YlOrRd', text=text_values, texttemplate='%{text}', customdata=hover_values, hovertemplate='%{customdata}<extra></extra>', colorbar=dict(title='Median price (RM)')))
         fig.update_layout(title=f'Figure 23 — Median price by State × Category<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>', height=690, plot_bgcolor='#E7E9EE')
         fig.update_xaxes(title_text='')
-        fig.update_yaxes(title_text='')
+        fig.update_yaxes(title_text='', autorange='reversed')
         return fig
 
     # Figure 24 ------------------------------------------------------------
@@ -3632,7 +3633,7 @@ def build_live_notebook_figure(figure_number, data, raw):
         fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale='YlGnBu', text=text_values, texttemplate='%{text}', customdata=hover_values, hovertemplate='%{customdata}<extra></extra>', colorbar=dict(title='Median price (RM)')))
         fig.update_layout(title=f'Figure 24 — Median price by Primary_Type × Tenure<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>', height=600, plot_bgcolor='#E7E9EE')
         fig.update_xaxes(title_text='')
-        fig.update_yaxes(title_text='')
+        fig.update_yaxes(title_text='', autorange='reversed')
         return fig
 
     return None
