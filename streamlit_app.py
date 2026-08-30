@@ -3060,48 +3060,48 @@ def prediction_page(data, results):
 # PAGE 2 - MARKET INSIGHTS
 # ---------------------------------------------------------------------------
 LIVE_INSIGHT_GROUPS = {
-    "Data quality": [
-        (1, "Raw Median Price distribution", "House prices are strongly right-skewed; the log view makes the same 2,000 records easier to read."),
-        (2, "Raw numerical distributions", "Price, PSF and Transactions contain long right tails and potential IQR outliers."),
-        (3, "Raw categorical labels", "Tenure and Type contain inconsistent raw labels that need standardisation before modelling."),
-        (7, "Extreme values flagged and retained", "Extreme price and PSF records are flagged but kept so the model still covers the full market range."),
-        (8, "Retained price distribution", "The original and log views contain the same records; only the display scale changes."),
+    "Data Understanding": [
+        (1, "Raw Median Price distribution", "Most homes are in the lower-to-middle price range, while a few very expensive homes create a long right tail."),
+        (2, "Raw numerical distributions", "Price, PSF and Transactions are right-skewed and contain some extreme values."),
+        (3, "Raw categorical labels", "Tenure and property type labels are inconsistent in the raw data, so they need cleaning before modelling."),
     ],
-    "Data preparation and coverage": [
-        (4, "Tenure before and after standardisation", "Equivalent mixed-tenure labels are combined into one consistent Mixed category."),
-        (5, "Property Type before and after processing", "Raw Type combinations are converted into a consistent Primary_Type for modelling."),
-        (6, "Area labels before and after standardisation", "State-qualified Area_Key keeps same-named locations in different states separate."),
-        (9, "Area record-frequency bands", "Many Areas have limited observations, so rare and unseen locations require cautious interpretation."),
+    "Data Preparation": [
+        (4, "Tenure before and after standardisation", "Different mixed-tenure labels are combined into one consistent Mixed category."),
+        (5, "Property Type before and after processing", "Raw property type labels are cleaned into consistent property categories for modelling."),
+        (6, "Area labels before and after standardisation", "Area names are cleaned and combined with State so locations with the same name are kept separate."),
+        (7, "Extreme values flagged and retained", "Extreme values were checked and kept because they represent valid parts of the housing market."),
+        (8, "Retained price distribution", "The full price range is still kept after preprocessing, including expensive properties."),
+        (9, "Area record-frequency bands", "Many areas have only a small number of records, so predictions for rare areas may be less stable."),
     ],
-    "Market composition": [
-        (10, "Record count by State", "Selangor and Johor contain the most records, while several states have much smaller samples."),
-        (11, "Record count by Property Type", "Terrace House has the strongest representation; niche property types have less training evidence."),
-        (12, "Landed versus High-Rise composition", "The dataset contains more Landed than High-Rise records; this describes this dataset only."),
+    "Market Composition": [
+        (10, "Record count by State", "Selangor and Johor have the most records, while several states have much smaller samples."),
+        (11, "Record count by Property Type", "Terrace House has the most records, while less common property types have less data for learning."),
+        (12, "Landed versus High-Rise composition", "The dataset contains more Landed than High-Rise properties."),
     ],
-    "Price patterns": [
-        (13, "Price distribution by State", "Price levels differ by state, but large within-state spreads show that State alone is not enough."),
-        (14, "Price distribution by Area", "Area reveals finer location differences and supports using Area_Key as a model input."),
-        (15, "Price by Property Type", "Property types occupy different price bands, although their distributions still overlap."),
-        (16, "Price distribution by Tenure", "Leasehold tends to have a lower median price, while the small Mixed group should be read carefully."),
-        (17, "Price by broad property category", "Landed properties generally have higher prices, but Category alone cannot explain all variation."),
-        (18, "Median PSF distribution by State", "Median PSF differs clearly across states and provides useful location-related market information."),
+    "Price Patterns": [
+        (13, "Price distribution by State", "Kuala Lumpur has the highest typical house price and a wide price range, showing that State is an important price factor."),
+        (14, "Price distribution by Area", "House prices differ clearly across areas, showing that local location is important for price prediction."),
+        (15, "Price by Property Type", "Bungalows have higher typical prices, while flats and apartments are generally lower priced."),
+        (16, "Price distribution by Tenure", "Freehold and Leasehold properties have different price patterns, while the Mixed group has fewer records."),
+        (17, "Price by broad property category", "Landed properties generally have higher prices than High-Rise properties."),
+        (18, "Median PSF distribution by State", "Median PSF varies across states, showing that the value per square foot also depends on location."),
     ],
-    "Relationships and combined effects": [
-        (19, "Median PSF against Median Price", "Median PSF has a strong positive relationship with price for both Landed and High-Rise properties."),
-        (20, "Transactions against Median Price", "Transactions has only a very weak relationship with price compared with PSF and location."),
-        (21, "Correlation matrix", "Median_PSF has the strongest numeric relationship with price, while Transactions contributes very little."),
-        (22, "Final feature association with price", "Median PSF is strongest, followed by Area and Property Type; Transactions is weakest."),
-        (23, "Median price by State and Category", "The Landed versus High-Rise price difference changes across states, showing a combined effect."),
-        (24, "Median price by Property Type and Tenure", "Price varies across Property Type and Tenure combinations; thin groups are masked."),
+    "Relationships and Combined Effects": [
+        (19, "Median PSF against Median Price", "Higher Median PSF is strongly linked with higher house prices for both Landed and High-Rise properties."),
+        (20, "Transactions against Median Price", "Transaction count has only a weak relationship with house price compared with PSF and location."),
+        (21, "Correlation matrix", "Median PSF has the strongest numeric relationship with price, while Transactions has a much weaker relationship."),
+        (22, "Final feature association with price", "Median PSF has the strongest association with price, followed by Area and Property Type."),
+        (23, "Median price by State and Category", "The price difference between Landed and High-Rise properties changes from one state to another."),
+        (24, "Median price by Property Type and Tenure", "Price changes across different Property Type and Tenure combinations, so both features add useful information."),
     ],
 }
 
 LIVE_INSIGHT_TAKEAWAYS = {
-    "Data quality": "The market contains a long premium tail, so the model must be evaluated on the full price range instead of only the middle of the market.",
-    "Data preparation and coverage": "Cleaning preserves all valid records while making Tenure, Type and Area labels consistent for modelling.",
-    "Market composition": "The dataset is not evenly distributed across states and property types, so small groups should be interpreted carefully.",
-    "Price patterns": "Location and property characteristics clearly separate price levels, but no single categorical feature explains price by itself.",
-    "Relationships and combined effects": "Median PSF is the strongest relationship, while Area and Property Type add important structural information.",
+    "Data Understanding": "The raw data contains skewed prices and inconsistent labels that must be understood before modelling.",
+    "Data Preparation": "The data is cleaned without removing valid expensive properties, while location and category labels are standardised.",
+    "Market Composition": "The dataset is not evenly distributed across states and property types, so smaller groups need more careful interpretation.",
+    "Price Patterns": "Location and property characteristics clearly affect house prices.",
+    "Relationships and Combined Effects": "Median PSF is the strongest relationship with price, while Area and Property Type add important extra information.",
 }
 
 
@@ -3654,23 +3654,46 @@ def _render_live_insight_card(figure_number, title, description, data, raw):
 
 def insights_page(data):
     st.markdown(
-        f'<div class="mh-hero"><div><h1>Market Insights</h1><p>Filter the 2025 housing dataset, '
-        'compare market segments, and interact with the same analytical views used in Latest_FINAL.</p></div>'
+        f'<div class="mh-hero"><div><h1>Market Insights</h1><p>Explore the 2025 housing dataset and review the main market patterns used in the project.</p></div>'
         f'<div class="mh-hero-icon">{svg_icon("chart",34)}</div></div>', unsafe_allow_html=True,
     )
-    view = st.radio("Insight view", ["Market Explorer", "Visual Insights"], horizontal=True,
-                    label_visibility="collapsed", key="insights_view")
+    view = st.radio(
+        "Insight view",
+        ["Market Explorer", "Visual Insights"],
+        horizontal=True,
+        label_visibility="collapsed",
+        key="insights_view",
+    )
 
     if view == "Market Explorer":
-        st.markdown(f'<div class="mh-panel-title">{svg_icon("filter",19)} Filter market records</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="mh-panel-title">{svg_icon("filter",19)} Filter market records</div>',
+            unsafe_allow_html=True,
+        )
         state_col, area_col, type_col, tenure_col = st.columns(4)
-        state = state_col.selectbox("State", ["All"] + sorted(data["State"].dropna().unique()), key="explorer_state")
+        state = state_col.selectbox(
+            "State",
+            ["All"] + sorted(data["State"].dropna().unique()),
+            key="explorer_state",
+        )
         state_pool = data if state == "All" else data[data["State"].eq(state)]
         areas = sorted(state_pool["Area_Clean"].dropna().unique())
         area_labels = {display_name(value): value for value in areas}
-        area = area_col.selectbox("Area", ["All"] + list(area_labels), key="explorer_area")
-        ptype = type_col.selectbox("Property type", ["All"] + sorted(data["Primary_Type"].dropna().unique()), key="explorer_type")
-        tenure = tenure_col.selectbox("Tenure", ["All"] + sorted(data["Tenure"].dropna().unique()), key="explorer_tenure")
+        area = area_col.selectbox(
+            "Area",
+            ["All"] + list(area_labels),
+            key="explorer_area",
+        )
+        ptype = type_col.selectbox(
+            "Property type",
+            ["All"] + sorted(data["Primary_Type"].dropna().unique()),
+            key="explorer_type",
+        )
+        tenure = tenure_col.selectbox(
+            "Tenure",
+            ["All"] + sorted(data["Tenure"].dropna().unique()),
+            key="explorer_tenure",
+        )
 
         subset = data.copy()
         if state != "All":
@@ -3693,48 +3716,18 @@ def insights_page(data):
             ("Median transactions", f"{subset['Transactions'].median():,.0f}", "Observed volume"),
         ])
 
-        if HAS_PLOTLY:
-            st.caption("These interactive charts use the same filtering, category order, axes and display rules as the matching figures in Latest_FINAL.")
-
-            left, right = st.columns(2)
-            with left:
-                fig = build_live_notebook_figure(13, subset, subset)
-                if fig is not None:
-                    render_plotly(fig)
-                    st.caption("Compares state price distributions using the same n ≥ 10 rule and whisker-based x-axis as Figure 13.")
-                else:
-                    st.info("The current filters do not leave enough records for the Figure 13 comparison.")
-
-            with right:
-                fig = build_live_notebook_figure(15, subset, subset)
-                if fig is not None:
-                    render_plotly(fig)
-                    st.caption("Compares property-type price distributions using the same n ≥ 10 rule and ordering as Figure 15.")
-                else:
-                    st.info("The current filters do not leave enough records for the Figure 15 comparison.")
-
-            left, right = st.columns(2)
-            with left:
-                fig = build_live_notebook_figure(19, subset, subset)
-                if fig is not None:
-                    render_plotly(fig)
-                    st.caption("Shows the PSF-price relationship with the same category split and log-price axis as Figure 19.")
-                else:
-                    st.info("The current filters do not leave enough records for the Figure 19 comparison.")
-
-            with right:
-                fig = build_live_notebook_figure(14, subset, subset)
-                if fig is not None:
-                    render_plotly(fig)
-                    st.caption("Shows the same top-Area comparison rule as Figure 14: up to 10 Areas with at least 15 records.")
-                else:
-                    st.info("The current filters do not leave any Area with at least 15 records for the Figure 14 comparison.")
-        else:
-            st.info("Plotly is unavailable, so interactive Market Explorer charts cannot be displayed.")
-
-        export_columns = [c for c in ["Township", "Area_Clean", "State", "Primary_Type", "Tenure", "Median_Price", "Median_PSF", "Transactions"] if c in subset.columns]
+        export_columns = [
+            c for c in [
+                "Township", "Area_Clean", "State", "Primary_Type", "Tenure",
+                "Median_Price", "Median_PSF", "Transactions"
+            ] if c in subset.columns
+        ]
         with st.expander("View filtered records"):
-            st.dataframe(subset[export_columns], use_container_width=True, hide_index=True)
+            st.dataframe(
+                subset[export_columns],
+                use_container_width=True,
+                hide_index=True,
+            )
         st.download_button(
             "Download filtered records (CSV)",
             data=subset[export_columns].to_csv(index=False).encode("utf-8"),
@@ -3745,25 +3738,35 @@ def insights_page(data):
         return
 
     raw = load_raw_insight_data()
-    category = st.selectbox("Insight category", list(LIVE_INSIGHT_GROUPS), key="insight_category")
+    category = st.selectbox(
+        "Insight category",
+        list(LIVE_INSIGHT_GROUPS),
+        key="insight_category",
+    )
     st.markdown(
-        f'<div class="mh-takeaway"><strong>Key takeaway from this category</strong><br>'
+        f'<div class="mh-takeaway"><strong>Key takeaway</strong><br>'
         f'{escape(LIVE_INSIGHT_TAKEAWAYS[category])}</div>',
         unsafe_allow_html=True,
     )
-    st.caption("All charts below are live Plotly versions of Figures 1–24 in Latest_FINAL. Hover, zoom, pan and use the chart toolbar during presentation.")
 
     for figure_number, title, description in LIVE_INSIGHT_GROUPS[category]:
-        _render_live_insight_card(figure_number, title, description, data, raw)
+        _render_live_insight_card(
+            figure_number,
+            title,
+            description,
+            data,
+            raw,
+        )
+
 
 MODEL_FIGURE_DESCRIPTIONS = {
-    25: 'Compares Group CV RMSE with final test RMSE for all four models.',
-    26: 'Shows how RMSE changes across the four unseen-Area validation folds.',
-    27: 'Compares training and test RMSE to make overfitting easy to see.',
-    28: 'Shows how much validation error changes when Median_PSF is removed.',
-    29: 'Checks predicted-versus-actual values and the residual pattern of the selected model.',
-    30: 'Shows how much test R² falls when each input is shuffled.',
-    31: 'Shows the selected model’s native importance grouped back to the six original inputs.',
+    25: "Random Forest has the lowest test RMSE, while XGBoost has a slightly lower Group CV RMSE.",
+    26: "Some unseen-Area folds are harder than others, so model error changes across the folds.",
+    27: "The Decision Tree has very low training error but much higher test error, showing strong overfitting.",
+    28: "Removing Median PSF increases validation error, showing that PSF is an important model input.",
+    29: "Most predictions are close to the actual prices, but some high-price properties have larger errors.",
+    30: "Median PSF has the biggest effect on test R², followed by Property Type.",
+    31: "Random Forest also gives most of its native importance to Median PSF, supporting the permutation result.",
 }
 
 
@@ -3878,62 +3881,258 @@ def build_live_model_figure(figure_number, results):
 def model_report_page(results):
     recommended_name = selected_model_name(results)
     recommended = results.loc[results["Model"].eq(recommended_name)].iloc[0]
+
+    best_cv_rmse = float(results["Group_CV_RMSE_mean"].min())
+    practical_limit = best_cv_rmse * 1.01
+
     st.markdown(
-        f'<div class="mh-model-hero"><span class="mh-badge">Recommended model</span>'
+        f'<div class="mh-model-hero"><span class="mh-badge">Selected model</span>'
         f'<div class="mh-model-name">{escape(recommended_name)}</div>'
-        '<div class="mh-help">Recommended from unseen-area Group CV performance and stability, then evaluated '
-        'on a held-out test split. This prioritises generalisation to locations the model has not memorised.</div></div>',
+        '<div class="mh-help">The final model was selected using training Group CV only. '
+        'Models within 1% of the best CV RMSE were treated as a practical tie, and the more stable model was preferred. '
+        'Test results were checked only after the model choice was locked.</div></div>',
         unsafe_allow_html=True,
     )
+
     metric_cards([
-        ("Best CV RMSE", f"RM {recommended['Group_CV_RMSE_mean']/1000:,.1f}K", "Lower is better"),
-        ("Test RMSE", f"RM {recommended['RMSE_test']/1000:,.1f}K", "Penalises large misses"),
-        ("Test MAE", f"RM {recommended['MAE_test']/1000:,.1f}K", "Typical absolute error"),
+        ("Selected CV RMSE", f"RM {recommended['Group_CV_RMSE_mean']/1000:,.1f}K", "Lower is better"),
+        ("CV RMSE variation", f"RM {recommended['Group_CV_RMSE_std']/1000:,.1f}K", "Lower is more stable"),
+        ("Test RMSE", f"RM {recommended['RMSE_test']/1000:,.1f}K", "Final test error"),
         ("Test R²", f"{recommended['R2_test']:.3f}", "Higher is better"),
     ])
-    st.markdown("### Model leaderboard")
-    leaderboard = results.copy()
-    leaderboard.insert(0, "Rank", range(1, len(leaderboard) + 1))
-    leaderboard["Recommended"] = leaderboard["Model"].eq(recommended_name).map({True: "Best", False: ""})
-    leaderboard = leaderboard[["Rank", "Model", "Recommended", "Group_CV_RMSE_mean", "RMSE_test", "MAE_test", "R2_test"]]
-    st.dataframe(
-        leaderboard.style.apply(lambda row: ["background-color:#EFF6FF;font-weight:700" if row["Recommended"] == "Best" else "" for _ in row], axis=1)
-        .format({"Group_CV_RMSE_mean":"RM {:,.0f}", "RMSE_test":"RM {:,.0f}", "MAE_test":"RM {:,.0f}", "R2_test":"{:.3f}"}),
-        use_container_width=True, hide_index=True,
+
+    st.info(
+        f"{recommended_name} is within 1% of the best Group CV RMSE "
+        f"(best: RM {best_cv_rmse:,.0f}; selected: RM {recommended['Group_CV_RMSE_mean']:,.0f}). "
+        "Its lower fold-to-fold variation supports the final selection."
     )
-    st.markdown("### Interactive model comparison")
-    st.caption("Lower RMSE and MAE indicate smaller errors. Higher R² indicates more explained price variation.")
-    if HAS_PLOTLY:
-        long = results.melt(id_vars="Model", value_vars=["Group_CV_RMSE_mean", "MAE_test"],
-                            var_name="Metric", value_name="RM")
-        long["Metric"] = long["Metric"].map({"Group_CV_RMSE_mean":"Group CV RMSE", "MAE_test":"Test MAE"})
-        render_plotly(px.bar(long, x="Model", y="RM", color="Metric", barmode="group",
-            title="Error comparison", color_discrete_map={"Group CV RMSE":"#2563EB", "Test MAE":"#0D9488"}))
-        render_plotly(px.bar(results, x="Model", y="R2_test", title="Test R² comparison",
-            color="R2_test", color_continuous_scale=["#DBEAFE", "#2563EB"], labels={"R2_test":"Test R²"}))
-    else:
-        st.bar_chart(results.set_index("Model")[["Group_CV_RMSE_mean", "MAE_test"]])
-        st.bar_chart(results.set_index("Model")[["R2_test"]])
+
+    st.markdown("### Model leaderboard")
+    leaderboard = results.sort_values(
+        ["Group_CV_RMSE_mean", "Group_CV_RMSE_std"]
+    ).copy()
+    leaderboard.insert(0, "CV Rank", range(1, len(leaderboard) + 1))
+    leaderboard["Selected"] = leaderboard["Model"].eq(recommended_name).map(
+        {True: "Yes", False: ""}
+    )
+    leaderboard = leaderboard[[
+        "CV Rank", "Model", "Selected",
+        "Group_CV_RMSE_mean", "Group_CV_RMSE_std",
+        "Group_CV_MAE_mean", "Group_CV_R2_mean",
+        "RMSE_train", "RMSE_test", "MAE_test",
+        "MAPE_test_pct", "R2_test",
+    ]]
+
+    st.dataframe(
+        leaderboard.style.apply(
+            lambda row: [
+                "background-color:#EFF6FF;font-weight:700"
+                if row["Selected"] == "Yes" else ""
+                for _ in row
+            ],
+            axis=1,
+        ).format({
+            "Group_CV_RMSE_mean": "RM {:,.0f}",
+            "Group_CV_RMSE_std": "RM {:,.0f}",
+            "Group_CV_MAE_mean": "RM {:,.0f}",
+            "Group_CV_R2_mean": "{:.3f}",
+            "RMSE_train": "RM {:,.0f}",
+            "RMSE_test": "RM {:,.0f}",
+            "MAE_test": "RM {:,.0f}",
+            "MAPE_test_pct": "{:.1f}%",
+            "R2_test": "{:.3f}",
+        }),
+        use_container_width=True,
+        hide_index=True,
+    )
+
     with st.expander("Metric explanation"):
-        st.markdown(
-            "- **RMSE:** average error size that penalises large errors more heavily.\n"
-            "- **MAE:** average absolute error; this is easier to interpret directly in RM.\n"
-            "- **R²:** the share of price variation explained by the model; higher is better."
+        st.markdown("""
+- **CV RMSE:** average prediction error across the validation folds. Lower is better.
+- **CV RMSE variation:** how much the error changes between folds. Lower means more stable.
+- **CV MAE:** average price difference during cross-validation. Lower is better.
+- **CV R²:** how much price variation the model explains during cross-validation. Higher is better.
+- **Training RMSE:** error on the training data. If it is much lower than test RMSE, the model may be overfitting.
+- **Test RMSE:** final test error. Bigger mistakes have more effect on this value. Lower is better.
+- **Test MAE:** average difference between predicted and actual price in RM. Lower is better.
+- **Test MAPE:** average prediction error as a percentage. Lower is better.
+- **Test R²:** how much test-set price variation the model explains. Higher is better.
+        """)
+
+    st.markdown("### Model Comparison")
+    st.caption(
+        "Choose the models you want to compare. The model was selected using Group CV results; test metrics are shown for final evaluation."
+    )
+
+    model_options = results["Model"].tolist()
+    chosen_models = st.multiselect(
+        "Models to compare",
+        model_options,
+        default=model_options,
+        key="model_compare_selection",
+    )
+
+    if not chosen_models:
+        st.info("Select at least one model to compare.")
+    else:
+        compare = results[results["Model"].isin(chosen_models)].copy()
+        compare["Model"] = pd.Categorical(
+            compare["Model"],
+            categories=chosen_models,
+            ordered=True,
         )
+        compare = compare.sort_values("Model")
+
+        if HAS_PLOTLY:
+            fig_cv = go.Figure()
+            fig_cv.add_trace(go.Bar(
+                x=compare["Model"].astype(str),
+                y=compare["Group_CV_RMSE_mean"],
+                error_y=dict(
+                    type="data",
+                    array=compare["Group_CV_RMSE_std"],
+                    visible=True,
+                ),
+                name="Group CV RMSE",
+                hovertemplate="%{x}<br>CV RMSE: RM %{y:,.0f}<extra></extra>",
+            ))
+            fig_cv.update_layout(
+                title="Training CV performance and stability",
+                showlegend=False,
+            )
+            fig_cv.update_xaxes(title_text="Model")
+            fig_cv.update_yaxes(title_text="RMSE (RM)")
+            render_plotly(fig_cv)
+            st.caption(
+                "Lower CV RMSE is better. Shorter error bars mean the model is more stable across folds."
+            )
+
+            rmse_long = compare.melt(
+                id_vars="Model",
+                value_vars=["RMSE_train", "RMSE_test"],
+                var_name="Metric",
+                value_name="RM",
+            )
+            rmse_long["Metric"] = rmse_long["Metric"].map({
+                "RMSE_train": "Training RMSE",
+                "RMSE_test": "Test RMSE",
+            })
+            fig_rmse = px.bar(
+                rmse_long,
+                x="Model",
+                y="RM",
+                color="Metric",
+                barmode="group",
+                title="Training vs test RMSE",
+            )
+            fig_rmse.update_yaxes(title_text="RMSE (RM)")
+            render_plotly(fig_rmse)
+            st.caption(
+                "A very low training RMSE but much higher test RMSE suggests overfitting."
+            )
+
+            mae_long = compare.melt(
+                id_vars="Model",
+                value_vars=["Group_CV_MAE_mean", "MAE_test"],
+                var_name="Metric",
+                value_name="RM",
+            )
+            mae_long["Metric"] = mae_long["Metric"].map({
+                "Group_CV_MAE_mean": "Group CV MAE",
+                "MAE_test": "Test MAE",
+            })
+            fig_mae = px.bar(
+                mae_long,
+                x="Model",
+                y="RM",
+                color="Metric",
+                barmode="group",
+                title="MAE comparison",
+            )
+            fig_mae.update_yaxes(title_text="MAE (RM)")
+            render_plotly(fig_mae)
+            st.caption("Lower MAE means a smaller average price difference.")
+
+            r2_long = compare.melt(
+                id_vars="Model",
+                value_vars=["Group_CV_R2_mean", "R2_test"],
+                var_name="Metric",
+                value_name="R²",
+            )
+            r2_long["Metric"] = r2_long["Metric"].map({
+                "Group_CV_R2_mean": "Group CV R²",
+                "R2_test": "Test R²",
+            })
+            fig_r2 = px.bar(
+                r2_long,
+                x="Model",
+                y="R²",
+                color="Metric",
+                barmode="group",
+                title="R² comparison",
+            )
+            fig_r2.update_yaxes(
+                title_text="R²",
+                range=[0, max(1.0, float(r2_long["R²"].max()) * 1.08)],
+            )
+            render_plotly(fig_r2)
+            st.caption(
+                "Higher R² means the model explains more of the price variation."
+            )
+
+            fig_mape = px.bar(
+                compare,
+                x="Model",
+                y="MAPE_test_pct",
+                title="Test MAPE comparison",
+                text="MAPE_test_pct",
+            )
+            fig_mape.update_traces(
+                texttemplate="%{text:.1f}%",
+                textposition="outside",
+            )
+            fig_mape.update_yaxes(title_text="Test MAPE (%)")
+            render_plotly(fig_mape)
+            st.caption(
+                "Lower MAPE means a smaller average percentage error on the test set."
+            )
+        else:
+            st.dataframe(
+                compare[[
+                    "Model", "Group_CV_RMSE_mean", "Group_CV_RMSE_std",
+                    "Group_CV_MAE_mean", "Group_CV_R2_mean",
+                    "RMSE_train", "RMSE_test", "MAE_test",
+                    "MAPE_test_pct", "R2_test",
+                ]],
+                use_container_width=True,
+                hide_index=True,
+            )
+
     sections = {
-        "Performance": [(25, "Cross-validation and test RMSE"),
-                        (26, "Unseen-area fold stability"),
-                        (27, "Train-test overfitting check")],
-        "Diagnostics and dependency": [(28, "Median PSF dependency"),
-                                       (29, "Prediction diagnostics")],
-        "Importance": [(30, "Permutation importance"),
-                       (31, "Grouped native importance")],
+        "Performance": [
+            (25, "Cross-validation and test RMSE"),
+            (26, "Unseen-area fold stability"),
+            (27, "Train-test overfitting check"),
+        ],
+        "Diagnostics and dependency": [
+            (28, "Median PSF dependency"),
+            (29, "Prediction diagnostics"),
+        ],
+        "Importance": [
+            (30, "Permutation importance"),
+            (31, "Grouped native importance"),
+        ],
     }
-    section = st.selectbox("Diagnostic section", list(sections), key="model_report_section")
+    section = st.selectbox(
+        "Diagnostic section",
+        list(sections),
+        key="model_report_section",
+    )
     for figure_number, title in sections[section]:
         description = MODEL_FIGURE_DESCRIPTIONS.get(figure_number, "")
         st.markdown(
-            f'<div class="mh-figure-card"><div class="mh-figure-title">{svg_icon("model",18)} Figure {figure_number} · {escape(title)}</div>'
+            f'<div class="mh-figure-card"><div class="mh-figure-title">'
+            f'{svg_icon("model",18)} Figure {figure_number} · {escape(title)}</div>'
             f'<div class="mh-figure-insight">{escape(description)}</div></div>',
             unsafe_allow_html=True,
         )
@@ -3941,13 +4140,9 @@ def model_report_page(results):
         if figure is not None:
             render_plotly(figure)
         else:
-            st.warning(f"Interactive Figure {figure_number} could not be generated because a required evaluation file is missing.")
-    st.markdown(
-        f'<div class="mh-limitations">{svg_icon("warning",20)} <strong>Limitations</strong><br>'
-        'The app uses a 2025 dataset only; some areas are unseen or infrequent; the estimate depends heavily '
-        'on an independently known PSF input; and the output is not a professional valuation.</div>',
-        unsafe_allow_html=True,
-    )
+            st.warning(
+                f"Figure {figure_number} could not be generated because a required evaluation file is missing."
+            )
 
 # ---------------------------------------------------------------------------
 # MAIN
