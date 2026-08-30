@@ -742,9 +742,6 @@ st.markdown(r"""
     --line:#DDE3EC;
     --surface:#FFFFFF;
     --page:#F6F8FC;
-    --navy:#17233B;
-    --navy-2:#223452;
-    --navy-3:#2D4264;
     --blue:#4F6FEA;
     --blue-dark:#3F5CC7;
     --blue-soft:#EEF2FF;
@@ -769,18 +766,18 @@ div[data-testid="stToolbar"] { display:none!important; }
 #MainMenu { visibility:hidden; }
 footer { visibility:hidden; }
 
-/* ---------- OLD UI DARK HEADER / NAVIGATION ---------- */
+/* ---------- LIGHT UI HEADER / NAVIGATION ---------- */
 .stTabs [role="tablist"] {
     display:flex!important;
     align-items:center!important;
     gap:8px!important;
     min-height:82px;
     padding:14px 18px!important;
-    background:linear-gradient(135deg, #18243B 0%, #22324E 100%)!important;
-    border:1px solid rgba(255,255,255,.07)!important;
+    background:#FFFFFF!important;
+    border:1px solid var(--line)!important;
     border-radius:21px!important;
     margin:10px 0 28px!important;
-    box-shadow:0 14px 30px rgba(23,35,59,.16);
+    box-shadow:0 10px 24px rgba(23,35,59,.06);
 }
 .stTabs [role="tablist"]::before {
     content:"⌂  Malaysia Housing Estimator";
@@ -791,18 +788,18 @@ footer { visibility:hidden; }
     height:42px;
     padding:0 22px 0 10px;
     margin-right:14px;
-    border-right:1px solid rgba(255,255,255,.14);
+    border-right:1px solid var(--line);
     font-size:1.08rem;
     font-weight:800;
     letter-spacing:.01em;
-    color:#FFFFFF;
+    color:var(--ink);
 }
 .stTabs [role="tab"] {
     align-self:stretch!important;
     height:auto!important;
     padding:0 24px!important;
     border-radius:12px!important;
-    color:#C5D0E2!important;
+    color:var(--muted)!important;
     font-weight:650!important;
     font-size:.94rem!important;
     background:transparent!important;
@@ -810,12 +807,12 @@ footer { visibility:hidden; }
     transition:all .16s ease!important;
     cursor:pointer!important;
 }
-.stTabs [role="tab"]:hover { color:#FFFFFF!important; background:rgba(255,255,255,.065)!important; }
+.stTabs [role="tab"]:hover { color:var(--ink)!important; background:#F1F5F9!important; }
 .stTabs [role="tab"][aria-selected="true"] {
-    color:#1E2B43!important;
-    background:#F8FAFC!important;
-    border-color:#DDE4EE!important;
-    box-shadow:0 6px 14px rgba(8,18,36,.15)!important;
+    color:var(--blue-dark)!important;
+    background:var(--blue-soft)!important;
+    border-color:#C7D2FE!important;
+    box-shadow:0 4px 10px rgba(79,111,234,.14)!important;
 }
 .stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] { display:none!important; }
 .stTabs [data-baseweb="tab-panel"] { min-height:60vh; }
@@ -857,7 +854,7 @@ footer { visibility:hidden; }
 .mh-map-legend .legend-title { font-weight:700; color:#475467; margin-right:2px; }
 .mh-map-legend .legend-item { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; }
 .mh-map-legend .legend-dot { width:12px; height:12px; border-radius:50%; display:inline-block; box-sizing:border-box; }
-.mh-map-legend .state-dot { background:#2F6FED; border:2px solid #15243A; }
+.mh-map-legend .state-dot { background:#2F6FED; border:2px solid #93C5FD; }
 .mh-map-legend .verified-dot { background:#F59E0B; border:2px solid #C47A10; }
 .mh-map-legend .approx-dot { background:#D0D5DD; border:2px solid #98A2B3; }
 .mh-map-legend .selected-dot { background:#10B981; border:2px solid #18875D; }
@@ -930,11 +927,11 @@ button[kind="secondary"] { border-radius:14px!important; }
     padding:20px 22px; box-shadow:0 8px 22px rgba(23,35,59,.06); margin-bottom:18px; }
 .mh-panel-title { display:flex; align-items:center; gap:9px; color:var(--ink); font-weight:800; margin-bottom:5px; }
 .mh-metric-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:12px 0 20px; }
-.mh-metric { background:linear-gradient(135deg, #17233B 0%, #22324E 100%); border-radius:16px;
-    padding:15px 17px; border:1px solid rgba(255,255,255,.08); }
-.mh-metric .k { font-family:var(--mono); font-size:.65rem; letter-spacing:.12em; color:#B8C5DD; text-transform:uppercase; }
-.mh-metric .v { font-family:var(--mono); font-size:1.28rem; font-weight:800; color:#FFFFFF; margin-top:6px; }
-.mh-metric .hint { color:#BBC7DB; font-size:.73rem; margin-top:4px; }
+.mh-metric { background:#FFFFFF; border-radius:16px;
+    padding:15px 17px; border:1px solid var(--line); box-shadow:0 6px 16px rgba(23,35,59,.05); }
+.mh-metric .k { font-family:var(--mono); font-size:.65rem; letter-spacing:.12em; color:var(--muted); text-transform:uppercase; }
+.mh-metric .v { font-family:var(--mono); font-size:1.28rem; font-weight:800; color:var(--ink); margin-top:6px; }
+.mh-metric .hint { color:var(--muted); font-size:.73rem; margin-top:4px; }
 .mh-figure-card { margin:15px 0 8px; padding:16px 18px 8px; background:#FFFFFF; border:1px solid var(--line); border-radius:18px; }
 .mh-figure-title { display:flex; align-items:center; gap:8px; color:var(--ink); font-weight:800; }
 .mh-figure-insight { color:#475569; margin:7px 0 4px; font-size:.9rem; }
@@ -946,11 +943,11 @@ button[kind="secondary"] { border-radius:14px!important; }
 .mh-badge { display:inline-block; padding:5px 9px; border-radius:999px; background:#DBEAFE; color:#1D4ED8; font-size:.72rem; font-weight:850; }
 .mh-limitations { padding:18px 20px; margin-top:20px; background:#FFFBEB; border:1px solid #FDE68A; border-radius:17px; color:#78350F; }
 .mh-footer { margin-top:36px; padding:18px 22px; border-radius:18px;
-    background:linear-gradient(135deg, #18243B 0%, #22324E 100%); border:1px solid rgba(255,255,255,.06);
-    color:#DCE4F2; display:flex; align-items:center; justify-content:space-between; gap:18px;
-    box-shadow:0 13px 30px rgba(23,35,59,.14); border-top:3px solid #7188C8; }
-.mh-footer .brand { color:#FFFFFF; font-weight:800; letter-spacing:.01em; }
-.mh-footer .sub { color:#BBC7DB; font-size:.84rem; }
+    background:#FFFFFF; border:1px solid var(--line);
+    color:var(--muted); display:flex; align-items:center; justify-content:space-between; gap:18px;
+    box-shadow:0 8px 22px rgba(23,35,59,.06); border-top:3px solid var(--blue); }
+.mh-footer .brand { color:var(--ink); font-weight:800; letter-spacing:.01em; }
+.mh-footer .sub { color:var(--muted); font-size:.84rem; }
 
 @media (max-width:900px) {
     .stTabs [role="tablist"] { flex-wrap:wrap!important; }
@@ -967,6 +964,23 @@ button[kind="secondary"] { border-radius:14px!important; }
     .mh-hero-icon { display:none; }
     .stTabs [role="tab"] { padding:0 12px!important; font-size:.82rem!important; }
 }
+
+/* ---------- FINAL LIGHT-THEME SAFETY OVERRIDE ---------- */
+/* Keep this block last in the stylesheet: it re-asserts the light theme
+   with !important so no leftover/cached dark-navy rule (top nav, metric
+   cards, footer, map-legend borders) can win the cascade. */
+.stTabs [role="tablist"], .mh-metric, .mh-footer { background-image:none!important; }
+.stTabs [role="tablist"] { background-color:#FFFFFF!important; border-color:var(--line)!important; }
+.stTabs [role="tablist"]::before { color:var(--ink)!important; border-right-color:var(--line)!important; }
+.stTabs [role="tab"] { color:var(--muted)!important; }
+.stTabs [role="tab"][aria-selected="true"] { background-color:var(--blue-soft)!important; color:var(--blue-dark)!important; }
+.mh-metric { background-color:#FFFFFF!important; border-color:var(--line)!important; }
+.mh-metric .k, .mh-metric .hint { color:var(--muted)!important; }
+.mh-metric .v { color:var(--ink)!important; }
+.mh-footer { background-color:#FFFFFF!important; border-color:var(--line)!important; color:var(--muted)!important; }
+.mh-footer .brand { color:var(--ink)!important; }
+.mh-footer .sub { color:var(--muted)!important; }
+.mh-map-legend .state-dot { border-color:#93C5FD!important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -1655,7 +1669,7 @@ def prediction_page(data, results):
                 folium.CircleMarker(
                     location=STATE_COORDS[state_name],
                     radius=11,
-                    color="#15243A",
+                    color="#93C5FD",
                     weight=2,
                     fill=True,
                     fill_color="#2F6FED",
