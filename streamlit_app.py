@@ -3176,6 +3176,58 @@ def _live_correlation_ratio(categories, measurements):
     return math.sqrt(numerator / denominator) if denominator else 0.0
 
 
+def _upper_whisker(series):
+    values = pd.Series(series).dropna().astype(float)
+    if values.empty:
+        return 0.0
+    q1 = values.quantile(0.25)
+    q3 = values.quantile(0.75)
+    iqr = q3 - q1
+    upper_fence = q3 + 1.5 * iqr
+    inside = values[values <= upper_fence]
+    return float(inside.max() if len(inside) else values.max())
+
+
+def _lower_whisker(series):
+    values = pd.Series(series).dropna().astype(float)
+    if values.empty:
+        return 0.0
+    q1 = values.quantile(0.25)
+    q3 = values.quantile(0.75)
+    iqr = q3 - q1
+    lower_fence = q1 - 1.5 * iqr
+    inside = values[values >= lower_fence]
+    return float(inside.min() if len(inside) else values.min())
+
+
+def _apply_box_axis_range(fig, groups, value_col, pad=1.05):
+    maxima = []
+    for _, group in groups:
+        if len(group):
+            maxima.append(_upper_whisker(group[value_col]))
+    if maxima:
+        fig.update_xaxes(range=[0, max(maxima) * pad])
+    return fig
+
+
+def _histogram_trace(values, bins, name, color, opacity=0.85):
+    import numpy as np
+    counts, edges = np.histogram(values, bins=bins)
+    centres = (edges[:-1] + edges[1:]) / 2
+    widths = edges[1:] - edges[:-1]
+    return go.Bar(
+        x=centres,
+        y=counts,
+        width=widths,
+        name=name,
+        marker_color=color,
+        opacity=opacity,
+        hovertemplate='Range: %{customdata[0]:,.0f} – %{customdata[1]:,.0f}<br>Records: %{y:,}<extra></extra>',
+        customdata=np.column_stack([edges[:-1], edges[1:]]),
+        showlegend=False,
+    )
+
+
 def build_live_notebook_figure(figure_number, data, raw):
     if not HAS_PLOTLY:
         return None
@@ -3183,8 +3235,9 @@ def build_live_notebook_figure(figure_number, data, raw):
     import numpy as np
     from plotly.subplots import make_subplots
 
+    # Figure 1 -------------------------------------------------------------
     if figure_number == 1:
-        price = raw["Median_Price"].dropna().astype(float)
+        price = raw['Median_Price'].dropna().astype(float)
         fig = make_subplots(
             rows=1,
             cols=2,
@@ -3193,42 +3246,58 @@ def build_live_notebook_figure(figure_number, data, raw):
                 f"Log scale (log skewness = {np.log(price).skew():.2f})",
             ),
         )
-        fig.add_trace(go.Histogram(x=price / 1000, nbinsx=60, marker_color="#2F6FED", showlegend=False), row=1, col=1)
-        fig.add_trace(go.Histogram(x=price, nbinsx=60, marker_color="#7C3AED", showlegend=False), row=1, col=2)
+        linear_edges = np.histogram_bin_edges(price / 1000, bins=60)
+        log_edges = np.logspace(np.log10(price.min()), np.log10(price.max()), 60)
+        fig.add_trace(_histogram_trace(price / 1000, linear_edges, 'Price', '#2F6FED'), row=1, col=1)
+        fig.add_trace(_histogram_trace(price, log_edges, 'Price', '#7C3AED'), row=1, col=2)
         fig.update_xaxes(title_text="Median price (RM '000)", row=1, col=1)
-        fig.update_xaxes(title_text="Median price (RM, log scale)", type="log", row=1, col=2)
-        fig.update_yaxes(title_text="Records", row=1, col=1)
-        fig.update_layout(title="Figure 1 — Raw Median Price distribution on linear and logarithmic scales", bargap=0.03)
+        fig.update_xaxes(title_text='Median price (RM, log scale)', type='log', row=1, col=2)
+        fig.update_yaxes(title_text='Records', row=1, col=1)
+        fig.update_layout(title='Figure 1 — Raw Median Price distribution on linear and logarithmic scales', bargap=0.02)
         return fig
 
+    # Figure 2 -------------------------------------------------------------
     if figure_number == 2:
-        cols = ["Median_Price", "Median_PSF", "Transactions"]
-        fig = make_subplots(rows=3, cols=1, vertical_spacing=0.12)
+        cols = ['Median_Price', 'Median_PSF', 'Transactions']
+        fig = make_subplots(rows=3, cols=1, vertical_spacing=0.15)
         for row, col in enumerate(cols, start=1):
             values = raw[col].dropna().astype(float)
             flags, _, _ = _live_iqr_flags(values)
             fig.add_trace(
                 go.Box(
                     x=values,
-                    orientation="h",
-                    boxpoints="outliers",
-                    marker=dict(color="#2F6FED", size=4, opacity=0.45),
-                    line=dict(color="#667085"),
-                    name=col,
-                    hovertemplate=f"{col}: %{{x:,.0f}}<extra></extra>",
+                    orientation='h',
+                    boxpoints='outliers',
+                    quartilemethod='linear',
+                    marker=dict(size=4, color='#667085', opacity=0.30),
+                    fillcolor='#FFFFFF',
+                    line=dict(color='#667085'),
                     showlegend=False,
+                    hovertemplate=f'{col}: %{{x:,.0f}}<extra></extra>',
+                    name=col,
                 ),
                 row=row,
                 col=1,
             )
-            fig.update_xaxes(type="log", title_text=f"{col} (log axis)", row=row, col=1)
-            fig.update_yaxes(title_text=f"{int(flags.sum())} IQR flags", row=row, col=1)
-        fig.update_layout(title="Figure 2 — Raw numerical distributions and potential IQR outliers", height=650)
+            fig.update_xaxes(type='log', title_text=f'{col} (log axis)', row=row, col=1)
+            fig.update_yaxes(showticklabels=False, row=row, col=1)
+            fig.add_annotation(
+                x=0,
+                y=1.08,
+                xref=f'x{row if row > 1 else ""} domain',
+                yref=f'y{row if row > 1 else ""} domain',
+                text=f'{col}: {int(flags.sum())} raw-scale IQR flags',
+                showarrow=False,
+                xanchor='left',
+                font=dict(size=12),
+            )
+        fig.update_layout(title='Figure 2 — Raw numerical distributions and potential IQR outliers', height=700)
         return fig
 
+    # Figure 3 -------------------------------------------------------------
     if figure_number == 3:
-        tenure_counts = raw["Tenure"].value_counts().sort_values()
-        type_counts = raw["Type"].value_counts().head(10).sort_values()
+        tenure_counts = raw['Tenure'].value_counts().sort_values()
+        type_counts = raw['Type'].value_counts().head(10).sort_values()
         fig = make_subplots(
             rows=1,
             cols=2,
@@ -3236,55 +3305,59 @@ def build_live_notebook_figure(figure_number, data, raw):
                 f"Tenure: {raw['Tenure'].nunique()} raw labels",
                 f"Top 10 of {raw['Type'].nunique()} raw Type strings",
             ),
+            horizontal_spacing=0.18,
         )
-        fig.add_trace(go.Bar(x=tenure_counts.values, y=tenure_counts.index.astype(str), orientation="h", marker_color="#2F6FED", text=tenure_counts.values, textposition="outside", showlegend=False), row=1, col=1)
-        fig.add_trace(go.Bar(x=type_counts.values, y=type_counts.index.astype(str), orientation="h", marker_color="#C47A10", text=type_counts.values, textposition="outside", showlegend=False), row=1, col=2)
-        fig.update_xaxes(title_text="Records", row=1, col=1)
-        fig.update_xaxes(title_text="Records", row=1, col=2)
-        fig.update_layout(title="Figure 3 — Raw categorical labels", height=500)
+        fig.add_trace(go.Bar(x=tenure_counts.values, y=tenure_counts.index, orientation='h', marker_color='#2F6FED', text=tenure_counts.values, textposition='outside', hovertemplate='%{y}<br>Records: %{x:,}<extra></extra>', showlegend=False), row=1, col=1)
+        fig.add_trace(go.Bar(x=type_counts.values, y=type_counts.index, orientation='h', marker_color='#C47A10', text=type_counts.values, textposition='outside', hovertemplate='%{y}<br>Records: %{x:,}<extra></extra>', showlegend=False), row=1, col=2)
+        fig.update_xaxes(title_text='Records', row=1, col=1)
+        fig.update_xaxes(title_text='Records', row=1, col=2)
+        fig.update_layout(title='Figure 3 — Raw categorical labels', height=520)
         return fig
 
+    # Figure 4 -------------------------------------------------------------
     if figure_number == 4:
-        before = raw["Tenure"].value_counts()
-        after = data["Tenure"].value_counts()
-        fig = make_subplots(rows=1, cols=2, subplot_titles=("Before", "After"))
-        fig.add_trace(go.Bar(x=before.index.astype(str), y=before.values, marker_color="#C47A10", text=before.values, textposition="outside", showlegend=False), row=1, col=1)
-        fig.add_trace(go.Bar(x=after.index.astype(str), y=after.values, marker_color="#18875D", text=after.values, textposition="outside", showlegend=False), row=1, col=2)
-        fig.update_yaxes(title_text="Rows", row=1, col=1)
+        before = raw['Tenure'].value_counts()
+        after = data['Tenure'].value_counts()
+        fig = make_subplots(rows=1, cols=2, subplot_titles=('Before', 'After'))
+        fig.add_trace(go.Bar(x=before.index.astype(str), y=before.values, marker_color='#C47A10', text=before.values, textposition='outside', showlegend=False), row=1, col=1)
+        fig.add_trace(go.Bar(x=after.index.astype(str), y=after.values, marker_color='#18875D', text=after.values, textposition='outside', showlegend=False), row=1, col=2)
+        fig.update_yaxes(title_text='Rows', row=1, col=1)
         fig.update_xaxes(tickangle=20, row=1, col=1)
         fig.update_xaxes(tickangle=20, row=1, col=2)
-        fig.update_layout(title="Figure 4 — Tenure categories before and after standardisation")
+        fig.update_layout(title='Figure 4 — Tenure categories before and after standardisation', height=480)
         return fig
 
+    # Figure 5 -------------------------------------------------------------
     if figure_number == 5:
-        raw_type_counts = data["Type"].value_counts().head(10).sort_values()
-        primary_counts = data["Primary_Type"].value_counts().sort_values()
-        fig = make_subplots(rows=1, cols=2, subplot_titles=("Top 10 raw Type strings", "Deterministic Primary_Type"))
-        fig.add_trace(go.Bar(x=raw_type_counts.values, y=raw_type_counts.index.astype(str), orientation="h", marker_color="#C47A10", text=raw_type_counts.values, textposition="outside", showlegend=False), row=1, col=1)
-        fig.add_trace(go.Bar(x=primary_counts.values, y=primary_counts.index.astype(str), orientation="h", marker_color="#2F6FED", text=primary_counts.values, textposition="outside", showlegend=False), row=1, col=2)
-        fig.update_xaxes(title_text="Rows", row=1, col=1)
-        fig.update_xaxes(title_text="Rows", row=1, col=2)
-        fig.update_layout(title="Figure 5 — Property Type before and after processing", height=520)
+        raw_type_counts = data['Type'].value_counts().head(10).sort_values()
+        primary_counts = data['Primary_Type'].value_counts().sort_values()
+        fig = make_subplots(rows=1, cols=2, subplot_titles=('Top 10 raw Type strings', 'Deterministic Primary_Type'), horizontal_spacing=0.20)
+        fig.add_trace(go.Bar(x=raw_type_counts.values, y=raw_type_counts.index, orientation='h', marker_color='#C47A10', text=raw_type_counts.values, textposition='outside', showlegend=False), row=1, col=1)
+        fig.add_trace(go.Bar(x=primary_counts.values, y=primary_counts.index, orientation='h', marker_color='#2F6FED', text=primary_counts.values, textposition='outside', showlegend=False), row=1, col=2)
+        fig.update_xaxes(title_text='Rows', range=[0, raw_type_counts.max() * 1.14], row=1, col=1)
+        fig.update_xaxes(title_text='Rows', range=[0, primary_counts.max() * 1.14], row=1, col=2)
+        fig.update_layout(title='Figure 5 — Property Type before and after processing', height=560)
         return fig
 
+    # Figure 6 -------------------------------------------------------------
     if figure_number == 6:
         summary = pd.DataFrame({
-            "Stage": ["Raw Area text", "Cleaned Area text", "State-qualified Area_Key"],
-            "Distinct labels": [data["Area_Raw"].nunique(), data["Area_Clean"].nunique(), data["Area_Key"].nunique()],
+            'Stage': ['Raw Area text', 'Cleaned Area text', 'State-qualified Area_Key'],
+            'Distinct labels': [data['Area_Raw'].nunique(), data['Area_Clean'].nunique(), data['Area_Key'].nunique()],
         })
-        fig = px.bar(summary, x="Stage", y="Distinct labels", text="Distinct labels", title="Figure 6 — Distinct Area labels before and after standardisation", color="Stage", color_discrete_sequence=["#667085", "#2F6FED", "#18875D"])
-        fig.update_traces(textposition="outside")
-        fig.update_xaxes(title_text="")
-        fig.update_yaxes(title_text="Distinct values", range=[0, summary["Distinct labels"].max() * 1.15])
-        fig.update_layout(showlegend=False)
+        fig = px.bar(summary, x='Stage', y='Distinct labels', text='Distinct labels', title='Figure 6 — Distinct Area labels before and after standardisation')
+        fig.update_traces(marker_color=['#667085', '#2F6FED', '#18875D'], textposition='outside', hovertemplate='%{x}<br>Distinct values: %{y:,}<extra></extra>')
+        fig.update_yaxes(title_text='Distinct values', range=[0, summary['Distinct labels'].max() * 1.15])
+        fig.update_xaxes(title_text='')
         return fig
 
+    # Figure 7 -------------------------------------------------------------
     if figure_number == 7:
         specs = [
-            ("Median_Price", [50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000], ["50K", "100K", "200K", "500K", "1M", "2M", "5M", "10M"], "Median Price (RM, original-scale labels; log1p used for IQR rule)"),
-            ("Median_PSF", [50, 100, 200, 500, 1000, 2000, 3000], ["50", "100", "200", "500", "1000", "2000", "3000"], "Median PSF (RM, original-scale labels; log1p used for IQR rule)"),
+            ('Median_Price', [50_000, 100_000, 200_000, 500_000, 1_000_000, 2_000_000, 5_000_000, 10_000_000], ['50K', '100K', '200K', '500K', '1M', '2M', '5M', '10M'], 'Median Price (RM, original-scale labels; log1p used for the IQR rule)'),
+            ('Median_PSF', [50, 100, 200, 500, 1000, 2000, 3000], ['50', '100', '200', '500', '1000', '2000', '3000'], 'Median PSF (RM, original-scale labels; log1p used for the IQR rule)'),
         ]
-        fig = make_subplots(rows=2, cols=1, vertical_spacing=0.18)
+        fig = make_subplots(rows=2, cols=1, vertical_spacing=0.20)
         unique_flags = pd.Series(False, index=data.index)
         for row, (col, ticks, tick_labels, xlabel) in enumerate(specs, start=1):
             values = data[col].astype(float)
@@ -3292,242 +3365,251 @@ def build_live_notebook_figure(figure_number, data, raw):
             lower, upper = _live_log_iqr_fences(values)
             flags = (values_log < lower) | (values_log > upper)
             unique_flags = unique_flags | flags
-            fig.add_trace(go.Box(x=values_log, orientation="h", boxpoints=False, marker_color="#667085", line_color="#667085", name="Distribution", showlegend=False), row=row, col=1)
+            fig.add_trace(go.Box(x=values_log, orientation='h', boxpoints=False, quartilemethod='linear', fillcolor='#FFFFFF', line=dict(color='#667085'), showlegend=False, name=col), row=row, col=1)
             if flags.any():
-                fig.add_trace(go.Scatter(x=values_log[flags], y=[0] * int(flags.sum()), mode="markers", marker=dict(size=7, color="#C63C4A", opacity=0.55), name=f"Flagged: {int(flags.sum())}", hovertemplate=f"{col}: %{{customdata:,.0f}}<extra></extra>", customdata=values[flags], showlegend=True), row=row, col=1)
-            fig.add_vline(x=lower, line_dash="dash", line_color="#2F6FED", row=row, col=1)
-            fig.add_vline(x=upper, line_dash="dash", line_color="#2F6FED", row=row, col=1)
+                fig.add_trace(go.Scatter(x=values_log[flags], y=[0] * int(flags.sum()), mode='markers', marker=dict(size=6, color='#C63C4A', opacity=0.45), customdata=values[flags], hovertemplate=f'{col}: %{{customdata:,.0f}}<extra></extra>', name=f'Flagged as extreme (retained): {int(flags.sum())}', showlegend=True), row=row, col=1)
+            fig.add_vline(x=lower, line_dash='dash', line_width=1.4, line_color='#2F6FED', row=row, col=1)
+            fig.add_vline(x=upper, line_dash='dash', line_width=1.4, line_color='#2F6FED', row=row, col=1)
             fig.update_xaxes(tickvals=np.log1p(ticks), ticktext=tick_labels, title_text=xlabel, row=row, col=1)
             fig.update_yaxes(showticklabels=False, row=row, col=1)
-        fig.update_layout(title=f"Figure 7 — Extreme values flagged and retained ({int(unique_flags.sum())} records, 0 removed)", height=650)
+            fig.add_annotation(x=0, y=1.08, xref=f'x{row if row > 1 else ""} domain', yref=f'y{row if row > 1 else ""} domain', text=f'{col} — n={len(data):,}, all records retained', showarrow=False, xanchor='left', font=dict(size=12))
+        fig.update_layout(title=f'Figure 7 — Extreme values flagged and retained ({int(unique_flags.sum())} records, 0 removed)', height=680)
         return fig
 
+    # Figure 8 -------------------------------------------------------------
     if figure_number == 8:
-        price = data["Median_Price"].dropna().astype(float)
-        fig = make_subplots(
-            rows=1,
-            cols=2,
-            subplot_titles=(
-                f"Original scale — skew={price.skew():.2f}",
-                f"Log display scale — log skew={np.log1p(price).skew():.2f}",
-            ),
-        )
-        fig.add_trace(go.Histogram(x=price, nbinsx=60, marker_color="#667085", opacity=0.85, showlegend=False), row=1, col=1)
-        fig.add_trace(go.Histogram(x=price, nbinsx=45, marker_color="#2F6FED", opacity=0.85, showlegend=False), row=1, col=2)
-        fig.update_xaxes(title_text="Median price (RM)", row=1, col=1)
-        fig.update_xaxes(title_text="Median price (RM, log display scale)", type="log", row=1, col=2)
-        fig.update_yaxes(title_text="Records", row=1, col=1)
-        fig.update_layout(title=f"Figure 8 — Price distribution with all {len(data):,} records retained", bargap=0.03)
+        price = data['Median_Price'].dropna().astype(float)
+        fig = make_subplots(rows=1, cols=2, subplot_titles=(f'Original scale — skew={price.skew():.2f}', f'Log display scale — log skew={np.log1p(price).skew():.2f}'))
+        linear_edges = np.histogram_bin_edges(price, bins=60)
+        log_edges = np.logspace(np.log10(price.min()), np.log10(price.max()), 45)
+        fig.add_trace(_histogram_trace(price, linear_edges, 'Price', '#667085'), row=1, col=1)
+        fig.add_trace(_histogram_trace(price, log_edges, 'Price', '#2F6FED'), row=1, col=2)
+        fig.update_xaxes(title_text='Median price (RM)', row=1, col=1)
+        fig.update_xaxes(title_text='Median price (RM, log display scale)', type='log', row=1, col=2)
+        fig.update_yaxes(title_text='Records', row=1, col=1)
+        fig.update_layout(title=f'Figure 8 — Price distribution with all {len(data):,} records retained', bargap=0.02)
         return fig
 
+    # Figure 9 -------------------------------------------------------------
     if figure_number == 9:
-        area_counts = data["Area_Key"].value_counts()
-        bands = pd.cut(area_counts, bins=[0, 1, 4, 9, np.inf], labels=["Singleton Areas (1)", "Low-frequency Areas (2-4)", "Moderate-frequency Areas (5-9)", "Well-represented Areas (10+)"])
-        band_counts = bands.value_counts().reindex(["Singleton Areas (1)", "Low-frequency Areas (2-4)", "Moderate-frequency Areas (5-9)", "Well-represented Areas (10+)"])
-        fig = go.Figure(go.Pie(labels=band_counts.index, values=band_counts.values, hole=0.45, textinfo="percent", hovertemplate="%{label}<br>%{value:,} Areas<br>%{percent}<extra></extra>", marker=dict(colors=["#C63C4A", "#C47A10", "#2F6FED", "#18875D"])))
-        fig.update_layout(title="Figure 9 — Share of Areas by record-frequency band", annotations=[dict(text=f"{int(band_counts.sum()):,}<br>Areas", x=0.5, y=0.5, font_size=15, showarrow=False)])
+        area_counts = data['Area_Key'].value_counts()
+        band_order = ['Singleton Areas (1)', 'Low-frequency Areas (2-4)', 'Moderate-frequency Areas (5-9)', 'Well-represented Areas (10+)']
+        bands = pd.cut(area_counts, bins=[0, 1, 4, 9, np.inf], labels=band_order)
+        band_counts = bands.value_counts().reindex(band_order)
+        fig = go.Figure(go.Pie(labels=band_counts.index, values=band_counts.values, hole=0.45, textinfo='percent', textposition='inside', marker=dict(colors=['#C63C4A', '#C47A10', '#2F6FED', '#18875D']), hovertemplate='%{label}<br>%{value:,} Areas<br>%{percent}<extra></extra>'))
+        fig.update_layout(title='Figure 9 — Share of Areas by record-frequency band', annotations=[dict(text=f'{int(band_counts.sum()):,}<br>Areas', x=0.5, y=0.5, showarrow=False, font=dict(size=15))], legend_title_text='Area frequency band')
         return fig
 
+    # Figure 10 ------------------------------------------------------------
     if figure_number == 10:
-        counts = data["State"].value_counts().sort_values()
-        fig = px.bar(x=counts.values, y=counts.index, orientation="h", text=counts.values, title="Figure 10 — Record count by State", labels={"x": "Records", "y": ""})
-        fig.update_traces(marker_color="#2F6FED", textposition="outside", hovertemplate="%{y}<br>Records: %{x:,}<extra></extra>")
+        counts = data['State'].value_counts().sort_values()
+        fig = px.bar(x=counts.values, y=counts.index, orientation='h', text=counts.values, title='Figure 10 — Record count by State', labels={'x': 'Records', 'y': ''})
+        fig.update_traces(marker_color='#2F6FED', textposition='outside', hovertemplate='%{y}<br>Records: %{x:,}<extra></extra>')
+        fig.update_xaxes(range=[0, counts.max() * 1.12])
         return fig
 
+    # Figure 11 ------------------------------------------------------------
     if figure_number == 11:
-        counts = data["Primary_Type"].value_counts().sort_values()
-        fig = px.bar(x=counts.values, y=counts.index, orientation="h", text=counts.values, title="Figure 11 — Record count by Primary_Type", labels={"x": "Records", "y": ""})
-        fig.update_traces(marker_color="#18875D", textposition="outside", hovertemplate="%{y}<br>Records: %{x:,}<extra></extra>")
+        counts = data['Primary_Type'].value_counts().sort_values()
+        fig = px.bar(x=counts.values, y=counts.index, orientation='h', text=counts.values, title='Figure 11 — Record count by Primary_Type', labels={'x': 'Records', 'y': ''})
+        fig.update_traces(marker_color='#18875D', textposition='outside', hovertemplate='%{y}<br>Records: %{x:,}<extra></extra>')
+        fig.update_xaxes(range=[0, counts.max() * 1.12])
         return fig
 
+    # Figure 12 ------------------------------------------------------------
     if figure_number == 12:
-        counts = data["Category"].value_counts()
-        fig = go.Figure(go.Pie(labels=counts.index, values=counts.values, textinfo="label+value+percent", hovertemplate="%{label}<br>%{value:,} records<br>%{percent}<extra></extra>", marker=dict(colors=["#2F6FED", "#C47A10"])))
-        fig.update_layout(title="Figure 12 — Landed versus High-Rise composition")
+        counts = data['Category'].value_counts()
+        fig = go.Figure(go.Pie(labels=counts.index, values=counts.values, texttemplate='%{label}<br>%{value:,}<br>(%{percent})', textinfo='label+value+percent', marker=dict(colors=['#2F6FED', '#C47A10']), hovertemplate='%{label}<br>%{value:,} records<br>%{percent}<extra></extra>'))
+        fig.update_layout(title='Figure 12 — Landed versus High-Rise composition', showlegend=False)
         return fig
 
+    # Figures 13-18: exact filters/order from Latest_FINAL -----------------
     if figure_number == 13:
-        state_n = data["State"].value_counts()
+        state_n = data['State'].value_counts()
         major_states = state_n[state_n >= 10].index
-        frame = data[data["State"].isin(major_states)].copy()
-        order = frame.groupby("State")["Median_Price"].median().sort_values(ascending=False).index.tolist()
-        frame["State label"] = frame["State"].map(lambda s: f"{s} (n={state_n[s]:,})")
-        label_order = [f"{s} (n={state_n[s]:,})" for s in order]
-        fig = px.box(frame, x="Median_Price", y="State label", points=False, category_orders={"State label": label_order}, title="Figure 13 — Price distribution by State (states with n >= 10)", labels={"Median_Price": "Median price (RM)", "State label": ""})
-        fig.update_traces(marker_color="#D5E4FF", line_color="#2F6FED", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
-        fig.update_yaxes(autorange="reversed")
+        frame = data[data['State'].isin(major_states)].copy()
+        order = frame.groupby('State')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        frame['State label'] = frame['State'].map(lambda s: f'{s} (n={state_n[s]:,})')
+        label_order = [f'{s} (n={state_n[s]:,})' for s in order]
+        fig = px.box(frame, x='Median_Price', y='State label', points=False, category_orders={'State label': label_order}, title='Figure 13 — Price distribution by State (states with n ≥ 10)', labels={'Median_Price': 'Median price (RM)', 'State label': ''})
+        fig.update_traces(fillcolor='#D5E4FF', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
+        fig.update_yaxes(autorange='reversed')
+        _apply_box_axis_range(fig, [(s, frame[frame['State'].eq(s)]) for s in order], 'Median_Price')
         return fig
 
     if figure_number == 14:
         min_area_n = 15
         top_areas = 10
-        area_counts = data["Area_Key"].value_counts()
+        area_counts = data['Area_Key'].value_counts()
         area_keys = area_counts[area_counts >= min_area_n].head(top_areas).index
-        frame = data[data["Area_Key"].isin(area_keys)].copy()
-        frame["Area display"] = frame["Area_Key"].map(lambda v: display_name(str(v).replace(" | ", " — ")))
-        order = frame.groupby("Area display")["Median_Price"].median().sort_values(ascending=False).index.tolist()
-        area_n = frame["Area display"].value_counts()
-        frame["Area label"] = frame["Area display"].map(lambda a: f"{a} (n={area_n[a]})")
-        label_order = [f"{a} (n={area_n[a]})" for a in order]
-        fig = px.box(frame, x="Median_Price", y="Area label", points=False, category_orders={"Area label": label_order}, title=f"Figure 14 — Price distribution by Area (top {top_areas} Areas with n >= {min_area_n})", labels={"Median_Price": "Median price (RM)", "Area label": ""})
-        fig.update_traces(marker_color="#D7F1E5", line_color="#18875D", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
-        fig.update_yaxes(autorange="reversed")
+        frame = data[data['Area_Key'].isin(area_keys)].copy()
+        frame['Area display'] = frame['Area_Key'].map(lambda v: display_name(str(v).replace(' | ', ' — ')))
+        order = frame.groupby('Area display')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        area_n = frame['Area display'].value_counts()
+        frame['Area label'] = frame['Area display'].map(lambda a: f'{a} (n={area_n[a]})')
+        label_order = [f'{a} (n={area_n[a]})' for a in order]
+        fig = px.box(frame, x='Median_Price', y='Area label', points=False, category_orders={'Area label': label_order}, title=f'Figure 14 — Price distribution by Area (top {top_areas} Areas with n ≥ {min_area_n})', labels={'Median_Price': 'Median price (RM)', 'Area label': ''})
+        fig.update_traces(fillcolor='#D7F1E5', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
+        fig.update_yaxes(autorange='reversed')
+        _apply_box_axis_range(fig, [(a, frame[frame['Area display'].eq(a)]) for a in order], 'Median_Price')
         return fig
 
     if figure_number == 15:
-        counts = data["Primary_Type"].value_counts()
+        counts = data['Primary_Type'].value_counts()
         major = counts[counts >= 10].index
-        frame = data[data["Primary_Type"].isin(major)].copy()
-        order = frame.groupby("Primary_Type")["Median_Price"].median().sort_values(ascending=False).index.tolist()
-        frame["Type label"] = frame["Primary_Type"].map(lambda t: f"{t} (n={counts[t]:,})")
-        label_order = [f"{t} (n={counts[t]:,})" for t in order]
-        fig = px.box(frame, x="Median_Price", y="Type label", points=False, category_orders={"Type label": label_order}, title="Figure 15 — Price by property type (types with n >= 10)", labels={"Median_Price": "Median price (RM)", "Type label": ""})
-        fig.update_traces(marker_color="#FFE7C2", line_color="#C47A10", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
-        fig.update_yaxes(autorange="reversed")
+        frame = data[data['Primary_Type'].isin(major)].copy()
+        order = frame.groupby('Primary_Type')['Median_Price'].median().sort_values(ascending=False).index.tolist()
+        frame['Type label'] = frame['Primary_Type'].map(lambda t: f'{t} (n={counts[t]:,})')
+        label_order = [f'{t} (n={counts[t]:,})' for t in order]
+        fig = px.box(frame, x='Median_Price', y='Type label', points=False, category_orders={'Type label': label_order}, title='Figure 15 — Price by property type (types with n ≥ 10)', labels={'Median_Price': 'Median price (RM)', 'Type label': ''})
+        fig.update_traces(fillcolor='#FFE7C2', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
+        fig.update_yaxes(autorange='reversed')
+        _apply_box_axis_range(fig, [(t, frame[frame['Primary_Type'].eq(t)]) for t in order], 'Median_Price')
         return fig
 
     if figure_number == 16:
-        counts = data["Tenure"].value_counts()
-        order = data.groupby("Tenure")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+        counts = data['Tenure'].value_counts()
+        order = data.groupby('Tenure')['Median_Price'].median().sort_values(ascending=False).index.tolist()
         frame = data.copy()
-        frame["Tenure label"] = frame["Tenure"].map(lambda t: f"{t} (n={counts[t]:,})")
-        label_order = [f"{t} (n={counts[t]:,})" for t in order]
-        fig = px.box(frame, x="Median_Price", y="Tenure label", points=False, category_orders={"Tenure label": label_order}, title="Figure 16 — Price distribution by tenure", labels={"Median_Price": "Median price (RM)", "Tenure label": ""})
-        fig.update_traces(marker_color="#E4DCFB", line_color="#7C3AED", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
-        fig.update_yaxes(autorange="reversed")
+        frame['Tenure label'] = frame['Tenure'].map(lambda t: f'{t} (n={counts[t]:,})')
+        label_order = [f'{t} (n={counts[t]:,})' for t in order]
+        fig = px.box(frame, x='Median_Price', y='Tenure label', points=False, category_orders={'Tenure label': label_order}, title='Figure 16 — Price distribution by tenure', labels={'Median_Price': 'Median price (RM)', 'Tenure label': ''})
+        fig.update_traces(fillcolor='#E4DCFB', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
+        fig.update_yaxes(autorange='reversed')
+        _apply_box_axis_range(fig, [(t, frame[frame['Tenure'].eq(t)]) for t in order], 'Median_Price')
         return fig
 
     if figure_number == 17:
-        counts = data["Category"].value_counts()
-        order = data.groupby("Category")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+        counts = data['Category'].value_counts()
+        order = data.groupby('Category')['Median_Price'].median().sort_values(ascending=False).index.tolist()
         frame = data.copy()
-        frame["Category label"] = frame["Category"].map(lambda c: f"{c} (n={counts[c]:,})")
-        label_order = [f"{c} (n={counts[c]:,})" for c in order]
-        fig = px.box(frame, x="Median_Price", y="Category label", points=False, category_orders={"Category label": label_order}, title="Figure 17 — Price by broad property category", labels={"Median_Price": "Median price (RM)", "Category label": ""})
-        fig.update_traces(marker_color="#CFE9E0", line_color="#18875D", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
-        fig.update_yaxes(autorange="reversed")
+        frame['Category label'] = frame['Category'].map(lambda c: f'{c} (n={counts[c]:,})')
+        label_order = [f'{c} (n={counts[c]:,})' for c in order]
+        fig = px.box(frame, x='Median_Price', y='Category label', points=False, category_orders={'Category label': label_order}, title='Figure 17 — Price by broad property category', labels={'Median_Price': 'Median price (RM)', 'Category label': ''})
+        fig.update_traces(fillcolor='#CFE9E0', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median price: RM %{x:,.0f}<extra></extra>')
+        fig.update_yaxes(autorange='reversed')
+        _apply_box_axis_range(fig, [(c, frame[frame['Category'].eq(c)]) for c in order], 'Median_Price')
         return fig
 
     if figure_number == 18:
-        state_n = data["State"].value_counts()
+        state_n = data['State'].value_counts()
         major_states = state_n[state_n >= 10].index
-        frame = data[data["State"].isin(major_states)].copy()
-        order = frame.groupby("State")["Median_PSF"].median().sort_values(ascending=False).index.tolist()
-        frame["State label"] = frame["State"].map(lambda s: f"{s} (n={state_n[s]:,})")
-        label_order = [f"{s} (n={state_n[s]:,})" for s in order]
-        fig = px.box(frame, x="Median_PSF", y="State label", points=False, category_orders={"State label": label_order}, title="Figure 18 — Median PSF distribution by State (states with n >= 10)", labels={"Median_PSF": "Median price per square foot (RM)", "State label": ""})
-        fig.update_traces(marker_color="#FBD7DC", line_color="#C63C4A", hovertemplate="Median PSF: RM %{x:,.0f}<extra></extra>")
-        fig.update_yaxes(autorange="reversed")
+        frame = data[data['State'].isin(major_states)].copy()
+        order = frame.groupby('State')['Median_PSF'].median().sort_values(ascending=False).index.tolist()
+        frame['State label'] = frame['State'].map(lambda s: f'{s} (n={state_n[s]:,})')
+        label_order = [f'{s} (n={state_n[s]:,})' for s in order]
+        fig = px.box(frame, x='Median_PSF', y='State label', points=False, category_orders={'State label': label_order}, title='Figure 18 — Median PSF distribution by State (states with n ≥ 10)', labels={'Median_PSF': 'Median price per square foot (RM)', 'State label': ''})
+        fig.update_traces(fillcolor='#FBD7DC', line_color='#9CA3AF', quartilemethod='linear', hovertemplate='%{y}<br>Median PSF: RM %{x:,.0f}<extra></extra>')
+        fig.update_yaxes(autorange='reversed')
+        _apply_box_axis_range(fig, [(s, frame[frame['State'].eq(s)]) for s in order], 'Median_PSF')
         return fig
 
+    # Figure 19 ------------------------------------------------------------
     if figure_number == 19:
-        categories = ["Landed", "High-Rise"]
-        colors = ["#2F6FED", "#C47A10"]
-        titles = []
+        categories = ['Landed', 'High-Rise']
+        colours = ['#2F6FED', '#C47A10']
+        subplot_titles = []
         for category in categories:
-            part = data[data["Category"].eq(category)]
-            titles.append(f"{category} (n={len(part):,}, r={part['Median_PSF'].corr(part['Median_Price']):.2f})")
-        fig = make_subplots(rows=1, cols=2, subplot_titles=titles, shared_xaxes=True, shared_yaxes=True)
-        for col, (category, color) in enumerate(zip(categories, colors), start=1):
-            part = data[data["Category"].eq(category)].copy()
-            fig.add_trace(go.Scatter(x=part["Median_PSF"], y=part["Median_Price"], mode="markers", marker=dict(size=6, color=color, opacity=0.32), customdata=part[["State", "Area_Clean", "Primary_Type"]], hovertemplate="PSF: RM %{x:,.0f}<br>Price: RM %{y:,.0f}<br>State: %{customdata[0]}<br>Area: %{customdata[1]}<br>Type: %{customdata[2]}<extra></extra>", showlegend=False), row=1, col=col)
+            part = data[data['Category'].eq(category)]
+            subplot_titles.append(f"{category} (n={len(part):,}, r={part['Median_PSF'].corr(part['Median_Price']):.2f})")
+        fig = make_subplots(rows=1, cols=2, subplot_titles=subplot_titles, shared_xaxes=True, shared_yaxes=True)
+        for col, (category, colour) in enumerate(zip(categories, colours), start=1):
+            part = data[data['Category'].eq(category)].copy()
+            fig.add_trace(go.Scatter(x=part['Median_PSF'], y=part['Median_Price'], mode='markers', marker=dict(size=6, color=colour, opacity=0.25), customdata=part[['State', 'Area_Clean', 'Primary_Type']], hovertemplate='PSF: RM %{x:,.0f}<br>Price: RM %{y:,.0f}<br>State: %{customdata[0]}<br>Area: %{customdata[1]}<br>Type: %{customdata[2]}<extra></extra>', showlegend=False), row=1, col=col)
             if len(part) > 1:
-                slope, intercept = np.polyfit(part["Median_PSF"], part["Median_Price"], 1)
-                xs = np.linspace(part["Median_PSF"].min(), part["Median_PSF"].max(), 100)
-                fig.add_trace(go.Scatter(x=xs, y=slope * xs + intercept, mode="lines", line=dict(color="#C63C4A", width=2), hoverinfo="skip", showlegend=False), row=1, col=col)
-            fig.update_xaxes(title_text="Median PSF (RM)", row=1, col=col)
-            fig.update_yaxes(type="log", row=1, col=col)
-        fig.update_yaxes(title_text="Median price (RM, log display scale)", row=1, col=1)
-        fig.update_layout(title="Figure 19 — Median PSF against Median Price, by category", height=520)
+                slope, intercept = np.polyfit(part['Median_PSF'], part['Median_Price'], 1)
+                xs = np.linspace(part['Median_PSF'].min(), part['Median_PSF'].max(), 100)
+                fig.add_trace(go.Scatter(x=xs, y=slope * xs + intercept, mode='lines', line=dict(color='#C63C4A', width=2), hoverinfo='skip', showlegend=False), row=1, col=col)
+            fig.update_xaxes(title_text='Median PSF (RM)', row=1, col=col)
+            fig.update_yaxes(type='log', row=1, col=col)
+        fig.update_yaxes(title_text='Median price (RM, log display scale)', row=1, col=1)
+        fig.update_layout(title='Figure 19 — Median PSF against Median Price, by category', height=520)
         return fig
 
+    # Figure 20 ------------------------------------------------------------
     if figure_number == 20:
-        x = data["Transactions"].astype(float)
-        y = data["Median_Price"].astype(float)
+        x = data['Transactions'].astype(float)
+        y = data['Median_Price'].astype(float)
         slope, intercept = np.polyfit(x, y, 1)
         xs = np.linspace(x.min(), x.max(), 100)
         pearson = x.corr(y)
-        spearman = x.corr(y, method="spearman")
+        spearman = x.corr(y, method='spearman')
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=x, y=y, mode="markers", marker=dict(size=6, color="#667085", opacity=0.3), customdata=data[["State", "Area_Clean", "Primary_Type"]], hovertemplate="Transactions: %{x:,.0f}<br>Price: RM %{y:,.0f}<br>State: %{customdata[0]}<br>Area: %{customdata[1]}<br>Type: %{customdata[2]}<extra></extra>", name="Records"))
-        fig.add_trace(go.Scatter(x=xs, y=slope * xs + intercept, mode="lines", line=dict(color="#C63C4A", width=2), name="Linear trend"))
-        fig.update_xaxes(title_text="Transactions")
-        fig.update_yaxes(title_text="Median price (RM, log display scale)", type="log")
-        fig.update_layout(title=f"Figure 20 — Transactions against Median Price (Pearson r={pearson:.3f}, Spearman={spearman:.3f})")
+        fig.add_trace(go.Scatter(x=x, y=y, mode='markers', marker=dict(size=6, color='#667085', opacity=0.25), customdata=data[['State', 'Area_Clean', 'Primary_Type']], hovertemplate='Transactions: %{x:,.0f}<br>Price: RM %{y:,.0f}<br>State: %{customdata[0]}<br>Area: %{customdata[1]}<br>Type: %{customdata[2]}<extra></extra>', name='Records'))
+        fig.add_trace(go.Scatter(x=xs, y=slope * xs + intercept, mode='lines', line=dict(color='#C63C4A', width=2), name='Linear trend'))
+        fig.update_xaxes(title_text='Transactions')
+        fig.update_yaxes(title_text='Median price (RM, log display scale)', type='log')
+        fig.update_layout(title=f'Figure 20 — Transactions against Median Price (Pearson r={pearson:.3f}, Spearman={spearman:.3f})')
         return fig
 
+    # Figure 21 ------------------------------------------------------------
     if figure_number == 21:
-        encoded = pd.get_dummies(data[["Tenure", "Primary_Type"]], prefix=["Tenure", "Primary_Type"], dtype=float)
-        encoded = pd.concat([encoded.reset_index(drop=True), data[["Median_PSF", "Transactions"]].reset_index(drop=True)], axis=1)
-        encoded["Median_Price"] = data["Median_Price"].values
-        target_corr = encoded.corr(numeric_only=True)["Median_Price"].drop("Median_Price")
-        tenure_cols = target_corr[[c for c in target_corr.index if c.startswith("Tenure_")]].abs().sort_values(ascending=False).index.tolist()
-        type_cols = target_corr[[c for c in target_corr.index if c.startswith("Primary_Type_")]].abs().sort_values(ascending=False).index.tolist()
-        ordered = ["Median_PSF", "Transactions"] + tenure_cols + type_cols + ["Median_Price"]
+        encoded = pd.get_dummies(data[['Tenure', 'Primary_Type']], prefix=['Tenure', 'Primary_Type'], dtype=float)
+        encoded = pd.concat([encoded.reset_index(drop=True), data[['Median_PSF', 'Transactions']].reset_index(drop=True)], axis=1)
+        encoded['Median_Price'] = data['Median_Price'].values
+        target_corr = encoded.corr(numeric_only=True)['Median_Price'].drop('Median_Price')
+        tenure_cols = target_corr[[c for c in target_corr.index if c.startswith('Tenure_')]].abs().sort_values(ascending=False).index.tolist()
+        type_cols = target_corr[[c for c in target_corr.index if c.startswith('Primary_Type_')]].abs().sort_values(ascending=False).index.tolist()
+        ordered = ['Median_PSF', 'Transactions'] + tenure_cols + type_cols + ['Median_Price']
         corr = encoded[ordered].corr()
         z = corr.to_numpy(dtype=float)
         upper = np.triu(np.ones_like(z, dtype=bool), k=1)
         z[upper] = np.nan
         text_values = []
         for r in range(len(corr.index)):
-            row_text = []
-            for c in range(len(corr.columns)):
-                value = corr.iloc[r, c]
-                row_text.append(f"{value:.2f}" if (not upper[r, c] and abs(value) >= 0.10) else "")
-            text_values.append(row_text)
-        fig = go.Figure(go.Heatmap(z=z, x=corr.columns, y=corr.index, zmin=-1, zmax=1, zmid=0, colorscale="RdBu", reversescale=True, text=text_values, texttemplate="%{text}", hovertemplate="%{y} vs %{x}<br>r=%{z:.3f}<extra></extra>", colorbar=dict(title="r")))
-        fig.update_layout(title="Figure 21 — Correlation matrix (lower triangle)<br><sup>Numeric + Tenure + Primary_Type; |r| >= 0.10 labelled</sup>", height=760)
+            text_values.append([f'{corr.iloc[r, c]:.2f}' if (not upper[r, c] and abs(corr.iloc[r, c]) >= 0.10) else '' for c in range(len(corr.columns))])
+        fig = go.Figure(go.Heatmap(z=z, x=corr.columns, y=corr.index, zmin=-1, zmax=1, zmid=0, colorscale='RdBu', reversescale=True, text=text_values, texttemplate='%{text}', hovertemplate='%{y} vs %{x}<br>r=%{z:.3f}<extra></extra>', colorbar=dict(title='r')))
+        fig.update_layout(title='Figure 21 — Correlation matrix (lower triangle)<br><sup>Numeric + Tenure + Primary_Type; |r| ≥ 0.10 annotated</sup>', height=760)
         fig.update_xaxes(tickangle=45)
         return fig
 
+    # Figure 22 ------------------------------------------------------------
     if figure_number == 22:
-        association = pd.Series({
-            "Median PSF": abs(data["Median_PSF"].corr(data["Median_Price"])),
-            "Transactions": abs(data["Transactions"].corr(data["Median_Price"])),
-        })
-        for col, label in [("State", "State"), ("Area_Key", "Area"), ("Tenure", "Tenure"), ("Primary_Type", "Property type")]:
-            association[label] = _live_correlation_ratio(data[col], data["Median_Price"])
+        association = pd.Series({'Median PSF': abs(data['Median_PSF'].corr(data['Median_Price'])), 'Transactions': abs(data['Transactions'].corr(data['Median_Price']))})
+        for col, label in [('State', 'State'), ('Area_Key', 'Area'), ('Tenure', 'Tenure'), ('Primary_Type', 'Property type')]:
+            association[label] = _live_correlation_ratio(data[col], data['Median_Price'])
         association = association.sort_values()
-        fig = px.bar(x=association.values, y=association.index, orientation="h", text=[f"{v:.3f}" for v in association.values], title="Figure 22 — Association of each final model feature with price", labels={"x": "Association strength with Median_Price", "y": ""})
-        fig.update_traces(marker_color="#2F6FED", textposition="outside", hovertemplate="%{y}<br>Association: %{x:.3f}<extra></extra>")
-        fig.update_xaxes(title_text="Association strength with Median_Price (|Pearson r| numeric; correlation ratio eta categorical)", range=[0, association.max() * 1.18])
+        fig = px.bar(x=association.values, y=association.index, orientation='h', text=[f'{v:.3f}' for v in association.values], title='Figure 22 — Association of each final model feature with price', labels={'x': 'Association strength with Median_Price', 'y': ''})
+        fig.update_traces(marker_color='#2F6FED', textposition='outside', hovertemplate='%{y}<br>Association: %{x:.3f}<extra></extra>')
+        fig.update_xaxes(title_text='Association strength with Median_Price<br>(|Pearson r| for numeric variables; correlation ratio η for categorical)', range=[0, association.max() * 1.18])
         return fig
 
+    # Figure 23 ------------------------------------------------------------
     if figure_number == 23:
         min_cell_n = 10
-        price_matrix = data.pivot_table(index="State", columns="Category", values="Median_Price", aggfunc="median")
-        count_matrix = data.pivot_table(index="State", columns="Category", values="Median_Price", aggfunc="size")
+        price_matrix = data.pivot_table(index='State', columns='Category', values='Median_Price', aggfunc='median')
+        count_matrix = data.pivot_table(index='State', columns='Category', values='Median_Price', aggfunc='size')
         thin = count_matrix.isna() | (count_matrix < min_cell_n)
-        keep = ~thin.all(axis=1)
-        price_matrix = price_matrix.loc[keep]
-        count_matrix = count_matrix.loc[keep]
-        thin = thin.loc[keep]
+        price_matrix = price_matrix.loc[~thin.all(axis=1)]
+        count_matrix = count_matrix.loc[price_matrix.index]
+        thin = thin.loc[price_matrix.index]
         z = price_matrix.to_numpy(dtype=float)
         z[thin.to_numpy()] = np.nan
-        text_values = []
-        hover_values = []
-        for r, state in enumerate(price_matrix.index):
-            text_row = []
-            hover_row = []
-            for c, category in enumerate(price_matrix.columns):
+        text_values, hover_values = [], []
+        for state in price_matrix.index:
+            text_row, hover_row = [], []
+            for category in price_matrix.columns:
                 n = count_matrix.loc[state, category]
                 if pd.isna(n) or n < min_cell_n:
-                    text_row.append("—")
-                    hover_row.append(f"{state} · {category}<br>Fewer than {min_cell_n} records")
+                    text_row.append('—')
+                    hover_row.append(f'{state} · {category}<br>Fewer than {min_cell_n} records')
                 else:
                     value = price_matrix.loc[state, category]
-                    text_row.append(f"RM{value/1000:,.0f}K<br>n={int(n)}")
-                    hover_row.append(f"{state} · {category}<br>Median price: RM {value:,.0f}<br>n={int(n)}")
+                    text_row.append(f'RM{value/1000:,.0f}K<br>n={int(n)}')
+                    hover_row.append(f'{state} · {category}<br>Median price: RM {value:,.0f}<br>n={int(n)}')
             text_values.append(text_row)
             hover_values.append(hover_row)
-        fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale="YlOrRd", text=text_values, texttemplate="%{text}", customdata=hover_values, hovertemplate="%{customdata}<extra></extra>", colorbar=dict(title="Median price (RM)")))
-        fig.update_layout(title=f"Figure 23 — Median price by State x Category<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>", height=690, plot_bgcolor="#E7E9EE")
+        fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale='YlOrRd', text=text_values, texttemplate='%{text}', customdata=hover_values, hovertemplate='%{customdata}<extra></extra>', colorbar=dict(title='Median price (RM)')))
+        fig.update_layout(title=f'Figure 23 — Median price by State × Category<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>', height=690, plot_bgcolor='#E7E9EE')
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
         return fig
 
+    # Figure 24 ------------------------------------------------------------
     if figure_number == 24:
         min_cell_n = 10
-        price_matrix = data.pivot_table(index="Primary_Type", columns="Tenure", values="Median_Price", aggfunc="median")
-        count_matrix = data.pivot_table(index="Primary_Type", columns="Tenure", values="Median_Price", aggfunc="size")
+        price_matrix = data.pivot_table(index='Primary_Type', columns='Tenure', values='Median_Price', aggfunc='median')
+        count_matrix = data.pivot_table(index='Primary_Type', columns='Tenure', values='Median_Price', aggfunc='size')
         thin = count_matrix.isna() | (count_matrix < min_cell_n)
         keep = ~thin.all(axis=1)
         price_matrix = price_matrix.loc[keep]
@@ -3535,28 +3617,27 @@ def build_live_notebook_figure(figure_number, data, raw):
         thin = thin.loc[keep]
         z = price_matrix.to_numpy(dtype=float)
         z[thin.to_numpy()] = np.nan
-        text_values = []
-        hover_values = []
-        for r, ptype in enumerate(price_matrix.index):
-            text_row = []
-            hover_row = []
-            for c, tenure in enumerate(price_matrix.columns):
+        text_values, hover_values = [], []
+        for ptype in price_matrix.index:
+            text_row, hover_row = [], []
+            for tenure in price_matrix.columns:
                 n = count_matrix.loc[ptype, tenure]
                 if pd.isna(n) or n < min_cell_n:
-                    text_row.append("—")
-                    hover_row.append(f"{ptype} · {tenure}<br>Fewer than {min_cell_n} records")
+                    text_row.append('—')
+                    hover_row.append(f'{ptype} · {tenure}<br>Fewer than {min_cell_n} records')
                 else:
                     value = price_matrix.loc[ptype, tenure]
-                    text_row.append(f"RM{value/1000:,.0f}K<br>n={int(n)}")
-                    hover_row.append(f"{ptype} · {tenure}<br>Median price: RM {value:,.0f}<br>n={int(n)}")
+                    text_row.append(f'RM{value/1000:,.0f}K<br>n={int(n)}')
+                    hover_row.append(f'{ptype} · {tenure}<br>Median price: RM {value:,.0f}<br>n={int(n)}')
             text_values.append(text_row)
             hover_values.append(hover_row)
-        fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale="YlGnBu", text=text_values, texttemplate="%{text}", customdata=hover_values, hovertemplate="%{customdata}<extra></extra>", colorbar=dict(title="Median price (RM)")))
-        fig.update_layout(title=f"Figure 24 — Median price by Primary_Type x Tenure<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>", height=600, plot_bgcolor="#E7E9EE")
+        fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale='YlGnBu', text=text_values, texttemplate='%{text}', customdata=hover_values, hovertemplate='%{customdata}<extra></extra>', colorbar=dict(title='Median price (RM)')))
+        fig.update_layout(title=f'Figure 24 — Median price by Primary_Type × Tenure<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>', height=600, plot_bgcolor='#E7E9EE')
+        fig.update_xaxes(title_text='')
+        fig.update_yaxes(title_text='')
         return fig
 
     return None
-
 
 def _render_live_insight_card(figure_number, title, description, data, raw):
     st.markdown(
@@ -3697,6 +3778,122 @@ def insights_page(data):
     for figure_number, title, description in LIVE_INSIGHT_GROUPS[category]:
         _render_live_insight_card(figure_number, title, description, data, raw)
 
+MODEL_FIGURE_DESCRIPTIONS = {
+    25: 'Compares Group CV RMSE with final test RMSE for all four models.',
+    26: 'Shows how RMSE changes across the four unseen-Area validation folds.',
+    27: 'Compares training and test RMSE to make overfitting easy to see.',
+    28: 'Shows how much validation error changes when Median_PSF is removed.',
+    29: 'Checks predicted-versus-actual values and the residual pattern of the selected model.',
+    30: 'Shows how much test R² falls when each input is shuffled.',
+    31: 'Shows the selected model’s native importance grouped back to the six original inputs.',
+}
+
+
+def build_live_model_figure(figure_number, results):
+    if not HAS_PLOTLY:
+        return None
+
+    import numpy as np
+    from plotly.subplots import make_subplots
+
+    selected_name = selected_model_name(results)
+    selected_mask = results['Model'].eq(selected_name)
+
+    if figure_number == 25:
+        ordered_cv = results.sort_values('Group_CV_RMSE_mean')
+        ordered_test = results.sort_values('RMSE_test')
+        fig = make_subplots(rows=1, cols=2, subplot_titles=('Training-set cross-validation', 'Test set'), horizontal_spacing=0.16)
+        cv_colors = ['#18875D' if m == selected_name else '#2F6FED' for m in ordered_cv['Model']]
+        test_colors = ['#18875D' if m == selected_name else '#2F6FED' for m in ordered_test['Model']]
+        fig.add_trace(go.Bar(x=ordered_cv['Group_CV_RMSE_mean']/1000, y=ordered_cv['Model'], orientation='h', marker_color=cv_colors, error_x=dict(type='data', array=ordered_cv['Group_CV_RMSE_std']/1000, visible=True, color='#667085', thickness=1.2), text=[f'RM {v/1000:,.1f}K' for v in ordered_cv['Group_CV_RMSE_mean']], textposition='outside', hovertemplate='%{y}<br>Group CV RMSE: RM %{x:,.1f}K<extra></extra>', showlegend=False), row=1, col=1)
+        fig.add_trace(go.Bar(x=ordered_test['RMSE_test']/1000, y=ordered_test['Model'], orientation='h', marker_color=test_colors, text=[f'RM {v/1000:,.1f}K' for v in ordered_test['RMSE_test']], textposition='outside', hovertemplate='%{y}<br>Test RMSE: RM %{x:,.1f}K<extra></extra>', showlegend=False), row=1, col=2)
+        fig.update_xaxes(title_text="Group CV RMSE (RM '000), lower is better", row=1, col=1)
+        fig.update_xaxes(title_text="Test RMSE (RM '000), lower is better", row=1, col=2)
+        fig.update_layout(title='Figure 25 — Model RMSE comparison', height=520)
+        return fig
+
+    if figure_number == 26:
+        path = APP_DIR / 'fold_scores.csv'
+        if not path.exists():
+            return None
+        folds = pd.read_csv(path)
+        fig = go.Figure()
+        for model_name in folds['Model'].drop_duplicates():
+            part = folds[folds['Model'].eq(model_name)]
+            fig.add_trace(go.Scatter(x=part['Fold'], y=part['RMSE (RM)']/1000, mode='lines+markers', name=model_name, line=dict(width=3 if model_name == selected_name else 1.8), marker=dict(size=8 if model_name == selected_name else 6), hovertemplate=f'{model_name}<br>Fold %{{x}}<br>RMSE: RM %{{y:,.1f}}K<extra></extra>'))
+        fig.update_xaxes(title_text='Group CV fold', dtick=1)
+        fig.update_yaxes(title_text="RMSE (RM '000), lower is better")
+        fig.update_layout(title='Figure 26 — Group CV RMSE by fold', height=520, legend_title_text='Model')
+        return fig
+
+    if figure_number == 27:
+        ordered = results.sort_values('RMSE_test')
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=ordered['Model'], y=ordered['RMSE_train']/1000, name='Training RMSE', text=[f'{v/1000:,.1f}K' for v in ordered['RMSE_train']], textposition='outside', hovertemplate='%{x}<br>Training RMSE: RM %{y:,.1f}K<extra></extra>'))
+        fig.add_trace(go.Bar(x=ordered['Model'], y=ordered['RMSE_test']/1000, name='Test RMSE', text=[f'{v/1000:,.1f}K' for v in ordered['RMSE_test']], textposition='outside', hovertemplate='%{x}<br>Test RMSE: RM %{y:,.1f}K<extra></extra>'))
+        fig.update_yaxes(title_text="RMSE (RM '000), lower is better")
+        fig.update_xaxes(tickangle=25)
+        fig.update_layout(title='Figure 27 — Training versus test RMSE', barmode='group', height=520)
+        return fig
+
+    if figure_number == 28:
+        path = APP_DIR / 'median_psf_ablation_results.csv'
+        if not path.exists():
+            return None
+        check = pd.read_csv(path)
+        fig = go.Figure(go.Bar(x=check['Feature set'], y=check['Validation RMSE (RM)']/1000, text=[f'RM {v/1000:,.1f}K' for v in check['Validation RMSE (RM)']], textposition='outside', hovertemplate='%{x}<br>Validation RMSE: RM %{y:,.1f}K<extra></extra>'))
+        fig.update_yaxes(title_text="Validation RMSE (RM '000), lower is better")
+        fig.update_layout(title=f'Figure 28 — Median_PSF dependency ({selected_name})', height=500)
+        return fig
+
+    if figure_number == 29:
+        path = APP_DIR / 'test_predictions.csv'
+        if not path.exists():
+            return None
+        preds = pd.read_csv(path)
+        preds = preds.loc[:, ~preds.columns.str.startswith('Unnamed:')]
+        if selected_name not in preds.columns or 'Actual' not in preds.columns:
+            return None
+        actual = preds['Actual'].astype(float)
+        predicted = preds[selected_name].astype(float)
+        residual = actual - predicted
+        limits = [min(actual.min(), predicted.min()), max(actual.max(), predicted.max())]
+        fig = make_subplots(rows=1, cols=2, subplot_titles=('Predicted versus actual', 'Residual pattern'), horizontal_spacing=0.13)
+        fig.add_trace(go.Scatter(x=actual, y=predicted, mode='markers', marker=dict(size=6, opacity=0.5, color='#2F6FED'), hovertemplate='Actual: RM %{x:,.0f}<br>Predicted: RM %{y:,.0f}<extra></extra>', showlegend=False), row=1, col=1)
+        fig.add_trace(go.Scatter(x=limits, y=limits, mode='lines', line=dict(dash='dash', width=2, color='#667085'), hoverinfo='skip', showlegend=False), row=1, col=1)
+        fig.add_trace(go.Scatter(x=predicted, y=residual, mode='markers', marker=dict(size=6, opacity=0.5, color='#2F6FED'), hovertemplate='Predicted: RM %{x:,.0f}<br>Residual: RM %{y:,.0f}<extra></extra>', showlegend=False), row=1, col=2)
+        fig.add_hline(y=0, line_dash='dash', line_width=2, line_color='#667085', row=1, col=2)
+        fig.update_xaxes(title_text='Actual median price (RM)', row=1, col=1)
+        fig.update_yaxes(title_text='Predicted median price (RM)', row=1, col=1)
+        fig.update_xaxes(title_text='Predicted median price (RM)', row=1, col=2)
+        fig.update_yaxes(title_text='Residual (RM)', row=1, col=2)
+        fig.update_layout(title=f'Figure 29 — Prediction diagnostics for {selected_name}', height=520)
+        return fig
+
+    if figure_number == 30:
+        table = pd.DataFrame({
+            'Feature': ['State', 'Transactions', 'Tenure', 'Area', 'Primary_Type', 'Median_PSF'],
+            'Mean drop in R²': [-0.0015, -0.0011, -0.0009, 0.0000, 0.3233, 1.8032],
+            'Standard deviation': [0.0026, 0.0121, 0.0037, 0.0000, 0.0391, 0.1056],
+        })
+        fig = go.Figure(go.Bar(x=table['Mean drop in R²'], y=table['Feature'], orientation='h', error_x=dict(type='data', array=table['Standard deviation'], visible=True, color='#667085', thickness=1.2), text=[f'{v:.4f}' for v in table['Mean drop in R²']], textposition='outside', hovertemplate='%{y}<br>Mean drop in R²: %{x:.4f}<extra></extra>'))
+        fig.update_xaxes(title_text='Mean decrease in test R² when shuffled')
+        fig.update_layout(title=f'Figure 30 — Test-set permutation importance ({selected_name})', height=520)
+        return fig
+
+    if figure_number == 31:
+        table = pd.DataFrame({
+            'Feature': ['Tenure', 'State', 'Transactions', 'Area', 'Primary Type', 'Median PSF'],
+            'Share (%)': [0.4678, 2.0985, 6.2133, 7.5356, 16.9120, 66.7729],
+        })
+        fig = go.Figure(go.Bar(x=table['Share (%)'], y=table['Feature'], orientation='h', text=[f'{v:.1f}%' for v in table['Share (%)']], textposition='outside', hovertemplate='%{y}<br>Share: %{x:.1f}%<extra></extra>'))
+        fig.update_xaxes(title_text=f'Share of {selected_name} native importance (%)')
+        fig.update_layout(title=f'Figure 31 — Aggregated native importance ({selected_name})', height=520)
+        return fig
+
+    return None
+
+
 # ---------------------------------------------------------------------------
 # PAGE 3 - MODEL REPORT
 # ---------------------------------------------------------------------------
@@ -3746,22 +3943,27 @@ def model_report_page(results):
             "- **R²:** the share of price variation explained by the model; higher is better."
         )
     sections = {
-        "Performance": [("fig25_model_rmse_comparison.png", "Cross-validation and test RMSE"),
-                        ("fig26_group_cv_fold_rmse.png", "Unseen-area fold stability"),
-                        ("fig27_train_test_overfitting.png", "Train-test overfitting check")],
-        "Diagnostics and dependency": [("fig28_median_psf_dependency.png", "Median PSF dependency"),
-                                       ("fig29_prediction_diagnostics.png", "Prediction diagnostics")],
-        "Importance": [("fig30_permutation_importance.png", "Permutation importance"),
-                       ("fig31_native_importance.png", "Grouped native importance")],
+        "Performance": [(25, "Cross-validation and test RMSE"),
+                        (26, "Unseen-area fold stability"),
+                        (27, "Train-test overfitting check")],
+        "Diagnostics and dependency": [(28, "Median PSF dependency"),
+                                       (29, "Prediction diagnostics")],
+        "Importance": [(30, "Permutation importance"),
+                       (31, "Grouped native importance")],
     }
     section = st.selectbox("Diagnostic section", list(sections), key="model_report_section")
-    for filename, title in sections[section]:
-        figure_path = FIGURES_DIR / filename
-        st.markdown(f'<div class="mh-figure-card"><div class="mh-figure-title">{svg_icon("model",18)} {escape(title)}</div></div>', unsafe_allow_html=True)
-        if figure_path.exists():
-            st.image(str(figure_path), use_container_width=True)
+    for figure_number, title in sections[section]:
+        description = MODEL_FIGURE_DESCRIPTIONS.get(figure_number, "")
+        st.markdown(
+            f'<div class="mh-figure-card"><div class="mh-figure-title">{svg_icon("model",18)} Figure {figure_number} · {escape(title)}</div>'
+            f'<div class="mh-figure-insight">{escape(description)}</div></div>',
+            unsafe_allow_html=True,
+        )
+        figure = build_live_model_figure(figure_number, results)
+        if figure is not None:
+            render_plotly(figure)
         else:
-            st.warning(f"Missing figure file: {filename}")
+            st.warning(f"Interactive Figure {figure_number} could not be generated because a required evaluation file is missing.")
     st.markdown(
         f'<div class="mh-limitations">{svg_icon("warning",20)} <strong>Limitations</strong><br>'
         'The app uses a 2025 dataset only; some areas are unseen or infrequent; the estimate depends heavily '
