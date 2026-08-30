@@ -737,133 +737,205 @@ def metric_cards(items) -> None:
 st.markdown(r"""
 <style>
 :root {
-    --page:#F8FAFC; --surface:#FFFFFF; --surface-2:#F1F5F9;
-    --ink:#0F172A; --muted:#64748B; --line:#E2E8F0;
-    --blue:#2563EB; --blue-soft:#DBEAFE; --teal:#0D9488;
-    --green-soft:#CCFBF1; --amber:#F59E0B; --amber-soft:#FFFBEB;
-    --red:#EF4444; --shadow:0 10px 30px rgba(15,23,42,.06);
+    --ink:#1E293B;
+    --muted:#667085;
+    --line:#DDE3EC;
+    --surface:#FFFFFF;
+    --page:#F6F8FC;
+    --navy:#17233B;
+    --navy-2:#223452;
+    --navy-3:#2D4264;
+    --blue:#4F6FEA;
+    --blue-dark:#3F5CC7;
+    --blue-soft:#EEF2FF;
+    --green:#2F8F68;
+    --green-dark:#247653;
+    --green-soft:#EAF7F0;
+    --green-pale:#F4FBF7;
+    --teal:#0D9488;
+    --teal-soft:#CCFBF1;
+    --amber:#F59E0B;
+    --amber-soft:#FFFBEB;
+    --red:#EF4444;
+    --mono:ui-monospace,"SF Mono",monospace;
+    --shadow:0 12px 30px rgba(23,35,59,.10);
     --radius:20px;
 }
+
 .stApp { background:var(--page); color:var(--ink); }
-.block-container { max-width:1240px; padding-top:1rem!important; padding-bottom:2.5rem; }
+.block-container { max-width:1240px; padding-top:14px!important; padding-bottom:2.2rem; }
 header[data-testid="stHeader"] { background:transparent!important; }
-div[data-testid="stToolbar"], #MainMenu { display:none!important; }
+div[data-testid="stToolbar"] { display:none!important; }
+#MainMenu { visibility:hidden; }
 footer { visibility:hidden; }
 
-/* Light product navigation. The logo is an inline SVG data image. */
+/* ---------- OLD UI DARK HEADER / NAVIGATION ---------- */
 .stTabs [role="tablist"] {
-    display:flex!important; align-items:center!important; gap:8px!important;
-    min-height:76px; padding:12px 14px!important; margin:8px 0 26px!important;
-    background:#FFFFFF!important; border:1px solid var(--line)!important;
-    border-radius:20px!important; box-shadow:var(--shadow);
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    min-height:82px;
+    padding:14px 18px!important;
+    background:linear-gradient(135deg, #18243B 0%, #22324E 100%)!important;
+    border:1px solid rgba(255,255,255,.07)!important;
+    border-radius:21px!important;
+    margin:10px 0 28px!important;
+    box-shadow:0 14px 30px rgba(23,35,59,.16);
 }
 .stTabs [role="tablist"]::before {
-    content:"Malaysia Housing Estimator"; white-space:nowrap; min-width:296px;
-    padding:11px 20px 11px 46px; margin-right:8px; color:var(--ink);
-    font-weight:800; border-right:1px solid var(--line);
-    background-repeat:no-repeat; background-position:12px center; background-size:24px;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 11 9-7 9 7'/%3E%3Cpath d='M5 10v10h14V10'/%3E%3Cpath d='M9 20v-6h6v6'/%3E%3C/svg%3E");
+    content:"⌂  Malaysia Housing Estimator";
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+    min-width:320px;
+    height:42px;
+    padding:0 22px 0 10px;
+    margin-right:14px;
+    border-right:1px solid rgba(255,255,255,.14);
+    font-size:1.08rem;
+    font-weight:800;
+    letter-spacing:.01em;
+    color:#FFFFFF;
 }
 .stTabs [role="tab"] {
-    min-height:46px!important; padding:0 22px!important; border-radius:12px!important;
-    color:#475569!important; font-weight:700!important; border:1px solid transparent!important;
-    background:transparent!important; transition:.16s ease!important;
+    align-self:stretch!important;
+    height:auto!important;
+    padding:0 24px!important;
+    border-radius:12px!important;
+    color:#C5D0E2!important;
+    font-weight:650!important;
+    font-size:.94rem!important;
+    background:transparent!important;
+    border:1px solid transparent!important;
+    transition:all .16s ease!important;
+    cursor:pointer!important;
 }
-.stTabs [role="tab"]:hover { background:#F8FAFC!important; color:var(--blue)!important; }
+.stTabs [role="tab"]:hover { color:#FFFFFF!important; background:rgba(255,255,255,.065)!important; }
 .stTabs [role="tab"][aria-selected="true"] {
-    background:#EFF6FF!important; color:#1D4ED8!important; border-color:#BFDBFE!important;
+    color:#1E2B43!important;
+    background:#F8FAFC!important;
+    border-color:#DDE4EE!important;
+    box-shadow:0 6px 14px rgba(8,18,36,.15)!important;
 }
 .stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] { display:none!important; }
+.stTabs [data-baseweb="tab-panel"] { min-height:60vh; }
 
+/* ---------- HERO / REPORT PANELS USED ON OTHER TABS ---------- */
 .mh-hero { display:flex; justify-content:space-between; align-items:center; gap:24px;
     padding:26px 28px; margin-bottom:20px; background:linear-gradient(135deg,#FFF,#EFF6FF);
     border:1px solid #DBEAFE; border-radius:24px; box-shadow:var(--shadow); }
 .mh-hero h1 { margin:0; font-size:clamp(1.65rem,3vw,2.35rem); color:var(--ink); }
 .mh-hero p { margin:.55rem 0 0; color:var(--muted); max-width:700px; line-height:1.55; }
 .mh-hero-icon { width:64px; height:64px; flex:0 0 64px; display:grid; place-items:center;
-    border-radius:18px; color:var(--blue); background:var(--blue-soft); }
+    border-radius:18px; color:#2563EB; background:#DBEAFE; }
 
-.mh-stepper { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:0 0 28px; }
-.mh-step-card { display:flex; align-items:center; gap:12px; padding:14px 16px; background:#FFF;
-    border:1px solid var(--line); border-radius:16px; color:#475569; box-shadow:0 4px 14px rgba(15,23,42,.035); }
-.mh-step-card.active { border-color:#93C5FD; background:#EFF6FF; color:#1D4ED8; }
-.mh-step-num { width:28px; height:28px; border-radius:50%; display:grid; place-items:center;
-    font-weight:800; background:var(--surface-2); }
-.mh-step-card.active .mh-step-num { background:var(--blue); color:#FFF; }
-.mh-step-text strong { display:block; color:var(--ink); font-size:.9rem; }
-.mh-step-text span { font-size:.76rem; color:var(--muted); }
+/* ---------- OLD UI SECTION HEADERS ---------- */
+.mh-section-head { display:flex; align-items:flex-start; gap:13px; margin:2px 0 16px; }
+.mh-step {
+    width:38px; height:38px; flex:0 0 38px; border-radius:12px;
+    background:var(--blue-soft); color:var(--blue-dark);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-weight:800; border:1px solid #D9E0F7;
+}
+.mh-section-icon { display:none; }
+.mh-section-title { margin:0!important; color:#1E293B; font-size:1.38rem; line-height:1.2; }
+.mh-section-note { color:var(--muted); font-size:.94rem; margin:.3rem 0 0; }
+.mh-label { font-family:var(--mono); font-size:.75rem; letter-spacing:.16em; color:#667085; margin:6px 0 8px; text-transform:uppercase; }
+.mh-rule { border:none; border-top:1px solid var(--line); margin:26px 0 22px; }
+.mh-help { color:var(--muted); font-size:.82rem; line-height:1.45; margin-top:6px; }
 
-.mh-section-head { display:flex; align-items:flex-start; gap:11px; margin:8px 0 16px; }
-.mh-step { width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center; border-radius:11px;
-    color:#1D4ED8; background:#EFF6FF; border:1px solid #BFDBFE; font-weight:800; }
-.mh-section-icon { width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center;
-    color:var(--teal); background:#F0FDFA; border:1px solid #99F6E4; border-radius:11px; }
-.mh-section-title { margin:0!important; font-size:1.3rem; color:var(--ink); line-height:1.25; }
-.mh-section-note { color:var(--muted); margin:.25rem 0 0; font-size:.91rem; }
-.mh-label { font-size:.75rem; font-weight:800; letter-spacing:.09em; color:#475569; margin:8px 0; text-transform:uppercase; }
-.mh-rule { border:none; border-top:1px solid var(--line); margin:28px 0 24px; }
-.mh-panel, .mh-filter-card { background:#FFF; border:1px solid var(--line); border-radius:var(--radius);
-    padding:20px 22px; box-shadow:var(--shadow); margin-bottom:18px; }
-.mh-panel-title { display:flex; align-items:center; gap:9px; color:var(--ink); font-weight:800; margin-bottom:5px; }
-.mh-help { color:var(--muted); font-size:.84rem; line-height:1.5; }
+/* ---------- MAP / LOCATION ---------- */
+.mh-map-wrap { border:1px solid var(--line); border-radius:20px; overflow:hidden;
+    box-shadow:0 10px 26px rgba(23,35,59,.08); background:#FFFFFF; }
+.mh-chiprow { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.mh-chip { display:inline-flex; align-items:center; gap:8px; background:#FFFFFF; border:1px solid #DDE3EC;
+    padding:10px 15px; min-height:48px; border-radius:14px; color:#475569; font-size:.95rem;
+    box-shadow:0 3px 10px rgba(23,35,59,.04); }
+.mh-chip strong { color:#1E293B; }
+.mh-map-legend { display:flex; align-items:center; flex-wrap:wrap; gap:10px 18px; margin-top:10px;
+    color:#667085; font-size:.82rem; }
+.mh-map-legend .legend-title { font-weight:700; color:#475467; margin-right:2px; }
+.mh-map-legend .legend-item { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; }
+.mh-map-legend .legend-dot { width:12px; height:12px; border-radius:50%; display:inline-block; box-sizing:border-box; }
+.mh-map-legend .state-dot { background:#2F6FED; border:2px solid #15243A; }
+.mh-map-legend .verified-dot { background:#F59E0B; border:2px solid #C47A10; }
+.mh-map-legend .approx-dot { background:#D0D5DD; border:2px solid #98A2B3; }
+.mh-map-legend .selected-dot { background:#10B981; border:2px solid #18875D; }
 
-.mh-map-wrap { overflow:hidden; border:1px solid var(--line); border-radius:18px; background:#FFF; }
-.mh-map-legend { display:flex; flex-wrap:wrap; gap:10px 16px; margin:10px 0 2px; color:var(--muted); font-size:.79rem; }
-.legend-item { display:inline-flex; align-items:center; gap:6px; }
-.legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
-.state-dot{background:#2563EB}.verified-dot{background:#F59E0B}.approx-dot{background:#CBD5E1}.selected-dot{background:#0D9488}
-.mh-chiprow { display:flex; flex-wrap:wrap; gap:9px; margin:12px 0; }
-.mh-chip { display:inline-flex; align-items:center; gap:7px; padding:9px 12px; background:#FFF;
-    border:1px solid var(--line); border-radius:999px; color:#475569; font-size:.88rem; }
-.mh-chip svg { color:var(--blue); }
-
+/* ---------- OLD UI PROPERTY BUTTONS ---------- */
+div[class*="st-key-btn_"] button[kind="secondary"],
+div[class*="st-key-btn_"] button[kind="primary"] {
+    min-height:82px!important; border-radius:17px!important; white-space:pre-line!important;
+    line-height:1.24!important; padding:9px 5px!important; font-weight:650!important;
+    font-size:.76rem!important; text-align:center!important; transition:all .16s ease!important;
+}
+div[class*="st-key-btn_"] button[kind="secondary"] { background:#FFFFFF!important; color:#334155!important;
+    border:1px solid #DDE3EC!important; box-shadow:0 5px 14px rgba(23,35,59,.05)!important; }
+div[class*="st-key-btn_"] button[kind="secondary"]:hover { background:#F8FAFC!important; border-color:#B8C5D8!important;
+    color:#243A5A!important; transform:translateY(-1px); }
+div[class*="st-key-btn_"] button[kind="primary"] { background:var(--green-soft)!important; color:var(--green-dark)!important;
+    border:1.5px solid #76BE9E!important; box-shadow:0 7px 16px rgba(47,143,104,.12)!important; }
+div[class*="st-key-btn_"] button p { margin:0!important; white-space:pre-line!important; overflow-wrap:anywhere!important; }
 .mh-property-card { min-height:96px; text-align:center; padding:13px 7px 7px; border:1px solid var(--line);
     border-radius:16px 16px 5px 5px; background:#FFF; color:#475569; transition:.16s ease; }
 .mh-property-card:hover { transform:translateY(-1px); border-color:#93C5FD; }
-.mh-property-card.selected { background:#EFF6FF; border:2px solid var(--blue); color:#1D4ED8; }
-.mh-property-card .icon { margin:auto; width:34px; height:34px; display:grid; place-items:center;
-    border-radius:10px; background:#F1F5F9; }
+.mh-property-card.selected { background:#EFF6FF; border:2px solid #2563EB; color:#1D4ED8; }
+.mh-property-card .icon { margin:auto; width:34px; height:34px; display:grid; place-items:center; border-radius:10px; background:#F1F5F9; }
 .mh-property-card.selected .icon { background:#DBEAFE; }
 .mh-property-card .label { margin-top:8px; font-size:.78rem; font-weight:800; line-height:1.2; }
-div[class*="st-key-btn_"] button { border-radius:5px 5px 14px 14px!important; min-height:36px!important; font-size:.76rem!important; }
-div[class*="st-key-tenure_btn_"] button { border-radius:999px!important; min-height:42px!important; font-weight:750!important; }
-.tenure-hint { color:var(--muted); font-size:.79rem; margin:-2px 0 8px; }
 
-div[data-testid="stNumberInputContainer"], div[data-baseweb="input"] { background:#FFF; border-radius:12px; }
-.stButton>button { transition:.16s ease; }
-.stButton>button[kind="primary"] { min-height:48px; border-radius:13px; font-weight:800;
-    background:var(--blue); border-color:var(--blue); box-shadow:0 8px 18px rgba(37,99,235,.16); }
-.stButton>button[kind="primary"]:hover { background:#1D4ED8; border-color:#1D4ED8; transform:translateY(-1px); }
-button[kind="secondary"] { border-radius:12px!important; }
+/* ---------- TENURE ---------- */
+.tenure-hint { color:#8A94A6; font-size:.78rem; margin:-2px 0 7px; }
+div[class*="st-key-tenure_btn_"] button { width:100%!important; min-height:40px!important; padding:6px 12px!important;
+    border-radius:999px!important; font-size:.86rem!important; font-weight:650!important; line-height:1.1!important;
+    transition:all .15s ease!important; box-shadow:none!important; }
+div[class*="st-key-tenure_btn_"] button[kind="secondary"] { background:#FFFFFF!important; color:#5A6475!important; border:1px solid #D9E0EA!important; }
+div[class*="st-key-tenure_btn_"] button[kind="secondary"]:hover { background:#F8FAFC!important; border-color:#BCC7D6!important; color:#263852!important; }
+div[class*="st-key-tenure_btn_"] button[kind="primary"] { background:var(--green-soft)!important; color:var(--green-dark)!important;
+    border:1.5px solid #76BE9E!important; box-shadow:0 3px 9px rgba(47,143,104,.10)!important; }
+div[class*="st-key-tenure_btn_"] button p { margin:0!important; white-space:nowrap!important; }
 
-.mh-result { margin-top:22px; padding:28px; background:linear-gradient(135deg,#FFF,#F0FDFA);
+/* ---------- INPUTS / BUTTONS ---------- */
+div[data-testid="stNumberInputContainer"], div[data-baseweb="input"] { background:#FFFFFF; border:1px solid #DDE3EC; border-radius:14px; }
+.stButton>button[kind="primary"] { background:linear-gradient(180deg, #5876E8 0%, var(--blue) 100%);
+    border-color:var(--blue); border-radius:14px; min-height:50px; font-weight:750; box-shadow:0 10px 20px rgba(79,111,234,.18); }
+.stButton>button[kind="primary"]:hover { background:var(--blue-dark); border-color:var(--blue-dark); }
+button[kind="secondary"] { border-radius:14px!important; }
+
+/* ---------- NEW UI RESULT CARD KEPT ---------- */
+.mh-result { margin-top:22px; padding:28px; background:linear-gradient(135deg,#FFFFFF,#F0FDFA);
     border:1px solid #99F6E4; border-left:5px solid var(--teal); border-radius:24px; box-shadow:var(--shadow); }
 .mh-result-top { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; }
 .mh-result .cap { color:var(--teal); font-size:.73rem; font-weight:850; letter-spacing:.1em; text-transform:uppercase; }
-.mh-result .price { color:var(--ink); font-size:clamp(2.35rem,6vw,3.65rem); line-height:1; font-weight:850; margin:11px 0 9px; }
+.mh-result .price { color:#0F172A; font-size:clamp(2.35rem,6vw,3.65rem); line-height:1; font-weight:850; margin:11px 0 9px; }
 .mh-result .sub { color:#475569; line-height:1.5; }
 .mh-range { display:inline-block; margin-top:13px; padding:8px 12px; border-radius:10px; color:#0F766E; background:#CCFBF1; font-weight:800; }
-.mh-result-badge { min-width:210px; padding:14px 16px; background:#FFF; border:1px solid var(--line); border-radius:15px; }
+.mh-result-badge { min-width:210px; padding:14px 16px; background:#FFFFFF; border:1px solid var(--line); border-radius:15px; }
 .mh-result-badge .kicker { color:var(--muted); font-size:.68rem; letter-spacing:.09em; text-transform:uppercase; }
-.mh-result-badge .model { color:var(--ink); font-size:1.04rem; font-weight:800; margin-top:5px; }
+.mh-result-badge .model { color:#0F172A; font-size:1.04rem; font-weight:800; margin-top:5px; }
 .mh-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:20px; padding-top:18px; border-top:1px solid var(--line); }
-.mh-stat { padding:13px 14px; background:#FFF; border:1px solid var(--line); border-radius:14px; }
+.mh-stat { padding:13px 14px; background:#FFFFFF; border:1px solid var(--line); border-radius:14px; }
 .mh-stat .k { color:var(--muted); font-size:.68rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
-.mh-stat .v { color:var(--ink); font-size:1rem; font-weight:850; margin-top:5px; }
+.mh-stat .v { color:#0F172A; font-size:1rem; font-weight:850; margin-top:5px; }
 .mh-warning { display:flex; gap:10px; margin-top:14px; padding:13px 15px; color:#92400E;
     background:var(--amber-soft); border:1px solid #FDE68A; border-radius:13px; font-size:.86rem; line-height:1.5; }
 .mh-disclaimer { color:var(--muted); margin-top:13px; font-size:.82rem; }
-.mh-empty { padding:38px 24px; margin-top:20px; text-align:center; color:var(--muted); background:#FFF;
-    border:1px dashed #CBD5E1; border-radius:20px; }
+.mh-empty { padding:38px 24px; margin-top:20px; text-align:center; color:var(--muted); background:#FFFFFF;
+    border:1px dashed #CBD5E1; border-radius:20px; box-shadow:0 5px 18px rgba(23,35,59,.05); }
 .mh-empty .icon { width:42px; height:42px; margin:0 auto 10px; display:grid; place-items:center;
     border-radius:13px; color:var(--blue); background:#EFF6FF; }
 
-.mh-metric-row { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; margin:12px 0 20px; }
-.mh-metric { padding:16px 17px; background:#FFF; border:1px solid var(--line); border-radius:16px; box-shadow:0 5px 18px rgba(15,23,42,.035); }
-.mh-metric .k { color:var(--muted); font-size:.68rem; font-weight:850; letter-spacing:.08em; text-transform:uppercase; }
-.mh-metric .v { color:var(--ink); font-size:1.27rem; font-weight:850; margin-top:6px; }
-.mh-metric .hint { color:#94A3B8; font-size:.73rem; margin-top:4px; }
-.mh-figure-card { margin:15px 0 8px; padding:16px 18px 8px; background:#FFF; border:1px solid var(--line); border-radius:18px; }
+/* ---------- INSIGHTS / REPORT ---------- */
+.mh-panel, .mh-filter-card { background:#FFFFFF; border:1px solid var(--line); border-radius:20px;
+    padding:20px 22px; box-shadow:0 8px 22px rgba(23,35,59,.06); margin-bottom:18px; }
+.mh-panel-title { display:flex; align-items:center; gap:9px; color:var(--ink); font-weight:800; margin-bottom:5px; }
+.mh-metric-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:12px 0 20px; }
+.mh-metric { background:linear-gradient(135deg, #17233B 0%, #22324E 100%); border-radius:16px;
+    padding:15px 17px; border:1px solid rgba(255,255,255,.08); }
+.mh-metric .k { font-family:var(--mono); font-size:.65rem; letter-spacing:.12em; color:#B8C5DD; text-transform:uppercase; }
+.mh-metric .v { font-family:var(--mono); font-size:1.28rem; font-weight:800; color:#FFFFFF; margin-top:6px; }
+.mh-metric .hint { color:#BBC7DB; font-size:.73rem; margin-top:4px; }
+.mh-figure-card { margin:15px 0 8px; padding:16px 18px 8px; background:#FFFFFF; border:1px solid var(--line); border-radius:18px; }
 .mh-figure-title { display:flex; align-items:center; gap:8px; color:var(--ink); font-weight:800; }
 .mh-figure-insight { color:#475569; margin:7px 0 4px; font-size:.9rem; }
 .mh-why { color:var(--muted); font-size:.82rem; margin-bottom:2px; }
@@ -873,22 +945,24 @@ button[kind="secondary"] { border-radius:12px!important; }
 .mh-model-name { color:var(--ink); font-size:1.75rem; font-weight:850; margin:4px 0 8px; }
 .mh-badge { display:inline-block; padding:5px 9px; border-radius:999px; background:#DBEAFE; color:#1D4ED8; font-size:.72rem; font-weight:850; }
 .mh-limitations { padding:18px 20px; margin-top:20px; background:#FFFBEB; border:1px solid #FDE68A; border-radius:17px; color:#78350F; }
-.mh-footer { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-top:34px; padding:18px 20px;
-    color:#475569; background:#FFF; border:1px solid var(--line); border-radius:18px; }
-.mh-footer .brand { display:flex; align-items:center; gap:8px; color:var(--ink); font-weight:800; }
-.mh-footer .sub { color:var(--muted); font-size:.82rem; }
+.mh-footer { margin-top:36px; padding:18px 22px; border-radius:18px;
+    background:linear-gradient(135deg, #18243B 0%, #22324E 100%); border:1px solid rgba(255,255,255,.06);
+    color:#DCE4F2; display:flex; align-items:center; justify-content:space-between; gap:18px;
+    box-shadow:0 13px 30px rgba(23,35,59,.14); border-top:3px solid #7188C8; }
+.mh-footer .brand { color:#FFFFFF; font-weight:800; letter-spacing:.01em; }
+.mh-footer .sub { color:#BBC7DB; font-size:.84rem; }
 
 @media (max-width:900px) {
     .stTabs [role="tablist"] { flex-wrap:wrap!important; }
-    .stTabs [role="tablist"]::before { width:100%; min-width:0; border-right:0; border-bottom:1px solid var(--line); }
-    .mh-stepper, .mh-metric-row { grid-template-columns:1fr 1fr; }
-    .mh-stats { grid-template-columns:1fr 1fr; }
+    .stTabs [role="tablist"]::before { width:100%; min-width:0; }
+    .mh-stats, .mh-metric-row { grid-template-columns:1fr 1fr; }
+    .mh-chip { width:100%; justify-content:center; }
     .mh-result-top, .mh-footer { flex-direction:column; align-items:flex-start; }
-    .mh-result-badge { width:100%; min-width:0; }
+    .mh-result-badge { width:100%; min-width:auto; }
 }
 @media (max-width:600px) {
     .block-container { padding-left:1rem!important; padding-right:1rem!important; }
-    .mh-stepper, .mh-metric-row, .mh-stats { grid-template-columns:1fr; }
+    .mh-stats, .mh-metric-row { grid-template-columns:1fr; }
     .mh-hero { padding:20px; }
     .mh-hero-icon { display:none; }
     .stTabs [role="tab"] { padding:0 12px!important; font-size:.82rem!important; }
@@ -1060,8 +1134,17 @@ def get_area_map_coords(area_name: str, state_name: str):
 def field_label(text: str) -> None:
     st.markdown(f'<div class="mh-label">{text}</div>', unsafe_allow_html=True)
 
+def get_property_icon(ptype: str) -> str:
+    ptype_icons = {
+        "Bungalow": "🏠", "Semi D": "🏘️", "Cluster House": "🏡",
+        "Terrace House": "🏘️", "Town House": "🏠", "Condominium": "🏢",
+        "Service Residence": "🏙️", "Apartment": "🏢", "Flat": "🏬",
+    }
+    return ptype_icons.get(str(ptype), "🏠")
+
+
 def get_property_label(ptype: str) -> str:
-    return str(ptype)
+    return f"{get_property_icon(ptype)}\n{ptype}"
 
 
 @st.cache_data(show_spinner=False)
@@ -1127,6 +1210,131 @@ def map_coverage_summary():
         "dataset_pairs_missing_from_map": len(dataset_pairs - nationwide_pairs),
     }
 
+
+# ---------------------------------------------------------------------------
+# FAST MALAYSIA-WIDE LOCATION SEARCH HELPERS
+# ---------------------------------------------------------------------------
+STATE_ALIASES = {
+    "kl": "Kuala Lumpur", "k l": "Kuala Lumpur", "wpkl": "Kuala Lumpur",
+    "w p kuala lumpur": "Kuala Lumpur", "wilayah persekutuan kuala lumpur": "Kuala Lumpur",
+    "kuala lumpur": "Kuala Lumpur", "selangor": "Selangor", "johor": "Johor",
+    "johor bahru": "Johor", "penang": "Penang", "pulau pinang": "Penang",
+    "melaka": "Melaka", "malacca": "Melaka", "negeri sembilan": "Negeri Sembilan",
+    "ns": "Negeri Sembilan", "pahang": "Pahang", "perak": "Perak", "perlis": "Perlis",
+    "kedah": "Kedah", "kelantan": "Kelantan", "terengganu": "Terengganu",
+    "sabah": "Sabah", "sarawak": "Sarawak", "putrajaya": "Putrajaya", "labuan": "Labuan",
+}
+
+AREA_ALIASES = {
+    ("Kuala Lumpur", "Jalan Klang Lama (Old Klang Road)"): ["old klang road", "jalan klang lama", "okr"],
+    ("Kuala Lumpur", "Kampung Kerinchi (Bangsar South)"): ["bangsar south", "kampung kerinchi"],
+    ("Kuala Lumpur", "KLCC"): ["klcc", "kuala lumpur city centre"],
+    ("Kuala Lumpur", "KL City"): ["kl city", "kuala lumpur city"],
+    ("Johor", "Iskandar Puteri (Nusajaya)"): ["iskandar puteri", "nusajaya"],
+    ("Penang", "Georgetown"): ["george town", "georgetown"],
+    ("Selangor", "Petaling Jaya"): ["pj", "petaling jaya"],
+    ("Selangor", "Subang Jaya"): ["subang jaya", "usj"],
+    ("Selangor", "Bandar Sunway"): ["sunway", "bandar sunway"],
+}
+
+
+def normalise_lookup_text(value: str) -> str:
+    value = str(value or "").lower()
+    value = value.replace("w.p.", "wilayah persekutuan")
+    value = re.sub(r"[^a-z0-9]+", " ", value)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def contains_lookup_phrase(haystack: str, needle: str) -> bool:
+    haystack = normalise_lookup_text(haystack)
+    needle = normalise_lookup_text(needle)
+    if not haystack or not needle:
+        return False
+    return re.search(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", haystack) is not None
+
+
+@st.cache_data(show_spinner=False)
+def build_area_lookup_index():
+    rows = []
+    for state_name in sorted(STATE_COORDS):
+        for area_name in get_areas_for_state(state_name):
+            variants = {area_name, clean_area_name(area_name), display_name(clean_area_name(area_name))}
+            variants.update(AREA_ALIASES.get((state_name, area_name), []))
+            for variant in variants:
+                norm = normalise_lookup_text(variant)
+                if norm:
+                    rows.append({
+                        "state": state_name,
+                        "area": area_name,
+                        "variant": norm,
+                        "score": len(norm) + (8 if area_name in VALIDATED_DATASET_AREAS.get(state_name, []) else 0),
+                    })
+    rows.sort(key=lambda item: (item["score"], len(item["variant"])), reverse=True)
+    return rows
+
+
+def match_state_text(addr_norm: str):
+    matches = []
+    for alias, state_name in STATE_ALIASES.items():
+        alias_norm = normalise_lookup_text(alias)
+        if contains_lookup_phrase(addr_norm, alias_norm):
+            matches.append((len(alias_norm), state_name))
+    if matches:
+        return sorted(matches, reverse=True)[0][1]
+    return None
+
+
+def match_area_text(addr_norm: str, preferred_states=None):
+    preferred_states = [state for state in (preferred_states or []) if state]
+    matches = []
+    for row in build_area_lookup_index():
+        if contains_lookup_phrase(addr_norm, row["variant"]):
+            preference_bonus = 0
+            if row["state"] in preferred_states:
+                preference_bonus = 45 - preferred_states.index(row["state"])
+            matches.append((row["score"] + preference_bonus, row["state"], row["area"]))
+    if matches:
+        _, state_name, area_name = sorted(matches, reverse=True)[0]
+        return state_name, area_name
+    return None, None
+
+
+@st.cache_data(show_spinner=False, ttl=60 * 60 * 24 * 14)
+def geocode_malaysia_location(query: str):
+    if not HAS_GEOPY or not query:
+        return None
+    try:
+        geolocator = Nominatim(user_agent="malaysia_housing_estimator_student", timeout=2)
+        loc = geolocator.geocode(f"{query}, Malaysia", country_codes="my", addressdetails=True, exactly_one=True, limit=1)
+        if not loc:
+            return None
+        raw = getattr(loc, "raw", {}) or {}
+        details = raw.get("address", {}) or {}
+        return {
+            "lat": float(loc.latitude),
+            "lon": float(loc.longitude),
+            "display_name": raw.get("display_name") or query,
+            "state_raw": details.get("state") or details.get("region") or "",
+            "area_raw": (
+                details.get("suburb") or details.get("town") or details.get("city") or
+                details.get("municipality") or details.get("county") or details.get("district") or
+                details.get("village") or details.get("neighbourhood") or ""
+            ),
+        }
+    except Exception:
+        return None
+
+
+def model_default_name(results: pd.DataFrame) -> str:
+    model_options = results["Model"].astype(str).tolist()
+    for model_name in model_options:
+        if normalise_lookup_text(model_name) == "random forest":
+            return model_name
+    for model_name in model_options:
+        if "random" in normalise_lookup_text(model_name) and "forest" in normalise_lookup_text(model_name):
+            return model_name
+    return selected_model_name(results)
+
 # ---------------------------------------------------------------------------
 # LOGIC CONTROLLERS
 # ---------------------------------------------------------------------------
@@ -1139,92 +1347,109 @@ def reset_location_state():
     st.session_state["address_feedback"] = None
     st.session_state["last_prediction"] = None
     st.session_state["last_map_popup"] = None
+    st.session_state["searched_point"] = None
+
 
 def analyze_address(available_states):
     addr_raw = st.session_state.get("address_input", "")
-    addr = addr_raw.lower()
-    if not addr:
+    addr_norm = normalise_lookup_text(addr_raw)
+    if not addr_norm:
         st.session_state["address_feedback"] = None
         return
 
     matched_state = None
     matched_area = None
     match_source = None
+    searched_point = None
 
-    # 1) Deterministic offline postcode lookup — this always responds, even
-    #    with no internet connection, so typing a postcode + Enter never
-    #    appears to silently do nothing.
-    postcode_match = re.search(r'\b\d{5}\b', addr)
-    if postcode_match:
-        postcode = postcode_match.group()
-        pc_state = get_state_from_postcode(postcode)
-        if pc_state:
-            matched_state = pc_state
-            match_source = "postcode"
+    # Fast offline signals first: area text, state text and postcode ranges.
+    postcode_match = re.search(r"\b\d{5}\b", str(addr_raw))
+    postcode_state = get_state_from_postcode(postcode_match.group()) if postcode_match else None
+    text_state = match_state_text(addr_norm)
+    preferred_states = [state for state in [postcode_state, text_state] if state in available_states]
+    area_state, area_name = match_area_text(addr_norm, preferred_states=preferred_states)
 
-        # 2) Optional refinement: try live geocoding for area-level detail.
-        #    Any failure (no internet, rate limit, timeout) is caught and
-        #    simply falls back to the postcode-only match above.
-        if HAS_GEOPY:
-            try:
-                geolocator = Nominatim(user_agent="mh_estimator", timeout=3)
-                loc = geolocator.geocode(f"{postcode}, Malaysia", addressdetails=True)
-                if loc and 'address' in loc.raw:
-                    addr_details = loc.raw['address']
-                    raw_state = addr_details.get('state', '').lower()
-                    raw_area = addr_details.get('town', addr_details.get('city', addr_details.get('county', addr_details.get('suburb', ''))))
+    if area_state and area_name:
+        matched_state = area_state
+        matched_area = area_name
+        match_source = "locality"
+    elif postcode_state:
+        matched_state = postcode_state
+        match_source = "postcode"
+    elif text_state:
+        matched_state = text_state
+        match_source = "state"
 
-                    for st_name in available_states:
-                        if st_name.lower() in raw_state:
-                            matched_state = st_name
-                            break
-                    if raw_area and matched_state:
-                        valid_areas = get_areas_for_state(matched_state)
-                        normalized = {clean_area_name(a): a for a in valid_areas}
-                        found_area = normalized.get(clean_area_name(raw_area))
-                        if found_area:
-                            matched_area = found_area
-                            match_source = "geocode"
-            except Exception:
-                pass
+    # Optional live geocoding is only used after clicking Search Location.
+    # It is cached, Malaysia-restricted, and never runs during map rendering.
+    should_geocode = HAS_GEOPY and (not matched_area or len(addr_norm.split()) >= 3)
+    if should_geocode:
+        geo = geocode_malaysia_location(addr_raw)
+        if geo:
+            searched_point = {"lat": geo["lat"], "lon": geo["lon"], "label": geo["display_name"]}
+            geo_state_norm = normalise_lookup_text(geo.get("state_raw", ""))
+            geo_state = None
+            for state_name in available_states:
+                if contains_lookup_phrase(geo_state_norm, state_name) or contains_lookup_phrase(state_name, geo_state_norm):
+                    geo_state = state_name
+                    break
+            if not geo_state:
+                geo_state = match_state_text(geo_state_norm)
 
-    # 3) Fall back to plain text matching against state/area names.
-    if not matched_state:
-        for st_name in sorted(available_states, key=len, reverse=True):
-            if st_name.lower() in addr:
-                matched_state = st_name
-                match_source = "text"
-                break
+            if geo_state:
+                # Geocoded state improves postcode-only matches, but a strong local
+                # area match such as Setapak still keeps its known state.
+                if not matched_area:
+                    matched_state = geo_state
+                    match_source = "geocode"
+                elif matched_state == postcode_state and text_state and text_state != postcode_state and area_state != postcode_state:
+                    matched_state = geo_state
 
-    if matched_state and not matched_area:
-        valid_areas = get_areas_for_state(matched_state)
-        for a in sorted(valid_areas, key=len, reverse=True):
-            if a.lower() in addr:
-                matched_area = a
-                match_source = match_source or "text"
-                break
+            if geo.get("area_raw"):
+                raw_area_norm = normalise_lookup_text(geo["area_raw"])
+                preferred = [state for state in [matched_state, geo_state, postcode_state, text_state] if state]
+                geo_area_state, geo_area = match_area_text(raw_area_norm, preferred_states=preferred)
+                if geo_area_state and geo_area and not matched_area:
+                    matched_state, matched_area = geo_area_state, geo_area
+                    match_source = "geocode"
+                elif not matched_area and matched_state:
+                    # Keep Malaysia-wide coverage even when the exact place is not in
+                    # the housing dataset or official list. The model can still handle
+                    # this as an unseen/infrequent area.
+                    matched_area = display_name(clean_area_name(geo["area_raw"]))
+                    match_source = "geocode-custom"
 
     if matched_state:
         st.session_state["last_prediction"] = None
         st.session_state["selected_state"] = matched_state
+        st.session_state["searched_point"] = searched_point
         if matched_area:
             st.session_state["selected_area"] = matched_area
-            coords, _ = get_area_map_coords(matched_area, matched_state)
-            if coords:
-                st.session_state["map_center"] = coords
-                st.session_state["map_zoom"] = 12
+            if searched_point:
+                st.session_state["map_center"] = [searched_point["lat"], searched_point["lon"]]
+                st.session_state["map_zoom"] = 14
+            else:
+                coords, _ = get_area_map_coords(matched_area, matched_state)
+                if coords:
+                    st.session_state["map_center"] = coords
+                    st.session_state["map_zoom"] = 12
             st.session_state["address_feedback"] = ("success", f"Matched **{matched_area}, {matched_state}**.")
         else:
             st.session_state["selected_area"] = None
-            st.session_state["map_center"] = STATE_COORDS.get(matched_state, [4.2105, 108.9758])
-            st.session_state["map_zoom"] = 8
+            if searched_point:
+                st.session_state["map_center"] = [searched_point["lat"], searched_point["lon"]]
+                st.session_state["map_zoom"] = 13
+            else:
+                st.session_state["map_center"] = STATE_COORDS.get(matched_state, [4.2105, 108.9758])
+                st.session_state["map_zoom"] = 8
             st.session_state["address_feedback"] = (
                 "info", f"Matched state **{matched_state}**. Pick an area on the map below."
             )
     else:
+        st.session_state["searched_point"] = None
         st.session_state["address_feedback"] = (
             "warning",
-            "Couldn't recognise that address or postcode — please select your location on the map instead.",
+            "Couldn't recognise that address or postcode. Try a postcode, township name, or select the location on the map.",
         )
 
 # ---------------------------------------------------------------------------
@@ -1318,18 +1543,29 @@ def render_result(saved):
 
 def prediction_page(data, results):
     recommended = selected_model_name(results)
+    default_model = model_default_name(results)
     model_options = results["Model"].astype(str).tolist()
     available_states = sorted(STATE_COORDS)
     ptypes = sorted(data["Primary_Type"].dropna().astype(str).unique())
     tenure_options = sorted(data["Tenure"].dropna().astype(str).unique())
     defaults = {
-        "selected_state": None, "selected_area": None, "selected_ptype": ptypes[0],
-        "selected_tenure": tenure_options[0], "address_input": "", "address_feedback": None,
-        "selected_prediction_model": recommended, "last_prediction": None,
-        "last_map_popup": None, "saved_scenarios": [],
+        "selected_state": None,
+        "selected_area": None,
+        "selected_ptype": ptypes[0],
+        "selected_tenure": tenure_options[0],
+        "address_input": "",
+        "address_feedback": None,
+        "selected_prediction_model": default_model,
+        "last_prediction": None,
+        "last_map_popup": None,
+        "searched_point": None,
+        "saved_scenarios": [],
     }
     for key, value in defaults.items():
         st.session_state.setdefault(key, value)
+
+    if st.session_state.get("selected_prediction_model") not in model_options:
+        st.session_state["selected_prediction_model"] = default_model
 
     # A map event arrives near the end of a run. Apply it once at the beginning
     # of the next run so a click cannot create a repeated rerun loop.
@@ -1338,173 +1574,267 @@ def prediction_page(data, results):
         pending_state, pending_area = pending_location
         st.session_state["selected_state"] = pending_state
         st.session_state["selected_area"] = pending_area
+        st.session_state["searched_point"] = None
 
     current_state = st.session_state["selected_state"]
     current_area = st.session_state["selected_area"]
-    st.markdown(
-        f'<div class="mh-hero"><div><h1>Malaysia Housing Price Estimator</h1>'
-        '<p>Explore nationwide housing data and generate an evidence-based township median price estimate '
-        'using the validated 2025 model pipeline.</p></div>'
-        f'<div class="mh-hero-icon">{svg_icon("home", 34)}</div></div>',
-        unsafe_allow_html=True,
-    )
-    render_stepper(current_state, current_area, st.session_state.get("last_prediction"))
-    section_header(1, "Select location", "Search by address or postcode, or select the location directly on the map.", "location")
 
-    search_col, button_col = st.columns([5, 1.15])
-    with search_col:
-        st.text_input("Address or postcode", placeholder="e.g. 45400 or Sekinchan, Selangor", key="address_input")
-    with button_col:
-        st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-        st.button("Search location", type="primary", use_container_width=True,
-                  on_click=analyze_address, args=(available_states,), key="search_location")
-    feedback = st.session_state.get("address_feedback")
-    if feedback:
-        kind, message = feedback
-        {"success": st.success, "info": st.info, "warning": st.warning}.get(kind, st.info)(message)
-
-    map_col = st.container()
-    with map_col:
-        with st.expander("Use map selection", expanded=True):
-            if HAS_INTERACTIVE_MAP:
-                map_center = st.session_state.get("map_center", STATE_COORDS.get(current_state, [4.2105, 108.9758]))
-                map_zoom = st.session_state.get("map_zoom", 9 if current_state else 6)
-                # Leaflet/OSM keeps this student prototype key-free. Google Maps would
-                # require an API key, enabled billing, and different deployment setup.
-                malaysia_map = folium.Map(location=map_center, zoom_start=map_zoom,
-                    tiles="OpenStreetMap", control_scale=True, zoom_control=True, prefer_canvas=True)
-                if not current_state:
-                    for state_name in available_states:
-                        folium.CircleMarker(STATE_COORDS[state_name], radius=10, color="#1E3A8A", weight=2,
-                            fill=True, fill_color="#2563EB", fill_opacity=.85,
-                            tooltip=f"{state_name} · click to select", popup=f"STATE:{state_name}").add_to(malaysia_map)
-                else:
-                    cluster = MarkerCluster(name="Areas", options={"chunkedLoading": True}).add_to(malaysia_map)
-                    marker_rows = list(get_area_marker_data(current_state))
-                    if current_area and current_area not in {row[0] for row in marker_rows}:
-                        coords, approx = get_area_map_coords(current_area, current_state)
-                        if coords:
-                            marker_rows.append((current_area, coords[0], coords[1], approx, get_area_source(current_state, current_area)))
-                    for area_name, lat, lon, approximate, source in marker_rows:
-                        selected = area_name == current_area
-                        folium.CircleMarker([lat, lon], radius=11 if selected else 7,
-                            color="#0F766E" if selected else "#94A3B8" if approximate else "#B45309",
-                            weight=3 if selected else 2, fill=True,
-                            fill_color="#0D9488" if selected else "#CBD5E1" if approximate else "#F59E0B",
-                            fill_opacity=.88, tooltip=f"{area_name}<br>{source}", popup=f"AREA:{area_name}").add_to(cluster)
-                map_kwargs = dict(height=440, use_container_width=True, key="malaysia_map")
-                if "returned_objects" in inspect.signature(st_folium).parameters:
-                    map_kwargs["returned_objects"] = ["last_object_clicked_popup"]
-                map_event = st_folium(malaysia_map, **map_kwargs)
-                st.markdown(
-                    '<div class="mh-map-legend"><span class="legend-item"><span class="legend-dot state-dot"></span>State</span>'
-                    '<span class="legend-item"><span class="legend-dot verified-dot"></span>Verified area</span>'
-                    '<span class="legend-item"><span class="legend-dot approx-dot"></span>Approximate pin</span>'
-                    '<span class="legend-item"><span class="legend-dot selected-dot"></span>Selected</span></div>',
-                    unsafe_allow_html=True,
-                )
-                popup = (map_event or {}).get("last_object_clicked_popup")
-                if popup and popup != st.session_state.get("last_map_popup"):
-                    st.session_state["last_map_popup"] = popup
-                    if popup.startswith("STATE:"):
-                        clicked_state = popup.split(":", 1)[1]
-                        if clicked_state != current_state:
-                            st.session_state["pending_location"] = (clicked_state, None)
-                            st.session_state["map_center"] = STATE_COORDS[clicked_state]
-                            st.session_state["map_zoom"] = 9
-                            clear_last_prediction()
-                            st.rerun()
-                    elif popup.startswith("AREA:"):
-                        clicked_area = popup.split(":", 1)[1]
-                        if clicked_area != current_area:
-                            st.session_state["pending_location"] = (current_state, clicked_area)
-                            coordinates, _ = get_area_map_coords(clicked_area, current_state)
-                            if coordinates:
-                                st.session_state["map_center"] = coordinates
-                                st.session_state["map_zoom"] = 12
-                            clear_last_prediction()
-                            st.rerun()
-            else:
-                st.error("Interactive map packages are unavailable. Install folium and streamlit-folium to select a location.")
-
-    chip_col, reset_col = st.columns([5, 1])
-    with chip_col:
-        st.markdown(
-            f'<div class="mh-chiprow"><span class="mh-chip">{svg_icon("location",16)} '
-            f'<strong>State:</strong> {escape(current_state or "Not selected")}</span>'
-            f'<span class="mh-chip">{svg_icon("pin",16)} <strong>Area:</strong> '
-            f'{escape(current_area or "Not selected")}</span></div>', unsafe_allow_html=True,
-        )
-    with reset_col:
-        st.button("Reset location", use_container_width=True, on_click=reset_location_state, key="reset_location")
-    st.markdown(
-        f'<div class="mh-help">{svg_icon("info",15)} Verified areas come from the dataset or known '
-        'coordinates. Approximate map pins remain selectable but may be less precise.</div>', unsafe_allow_html=True,
-    )
-
-    current_state = st.session_state["selected_state"]
-    current_area = st.session_state["selected_area"]
-    st.markdown('<hr class="mh-rule">', unsafe_allow_html=True)
-    section_header(2, "Choose property", "Choose the property details and prediction model.", "building")
-    field_label("Property type")
-    property_columns = st.columns(min(len(ptypes), 5), gap="small")
-    for index, property_type in enumerate(ptypes):
-        with property_columns[index % len(property_columns)]:
-            selected = property_type == st.session_state["selected_ptype"]
-            st.markdown(
-                f'<div class="mh-property-card {"selected" if selected else ""}">'
-                f'<div class="icon">{svg_icon("building",22)}</div><div class="label">{escape(property_type)}</div></div>',
-                unsafe_allow_html=True,
-            )
-            if st.button("Selected" if selected else "Choose", key=f"btn_{property_type}",
-                         type="primary" if selected else "secondary", use_container_width=True,
-                         disabled=selected):
-                st.session_state["selected_ptype"] = property_type
-                clear_last_prediction()
-                st.rerun()
-
-    reference = market_reference(data, current_state, current_area,
-        st.session_state["selected_ptype"], st.session_state["selected_tenure"])
-    tenure_col, psf_col = st.columns([1.3, 1])
-    with tenure_col:
-        field_label("Tenure")
-        st.markdown('<div class="tenure-hint">Tenure is the ownership status of the property.</div>', unsafe_allow_html=True)
-        tenure_buttons = st.columns(len(tenure_options), gap="small")
-        for index, tenure_option in enumerate(tenure_options):
-            with tenure_buttons[index]:
-                selected = tenure_option == st.session_state["selected_tenure"]
-                if st.button(tenure_option, key=f"tenure_btn_{tenure_option}",
-                             type="primary" if selected else "secondary", use_container_width=True,
-                             disabled=selected):
-                    st.session_state["selected_tenure"] = tenure_option
-                    clear_last_prediction()
-                    st.rerun()
-        tenure = st.session_state["selected_tenure"]
-    with psf_col:
-        field_label("Median PSF (RM)")
-        psf = st.number_input("PSF", min_value=1, step=10, value=int(round(data["Median_PSF"].median())),
-            key="pred_psf", label_visibility="collapsed", on_change=clear_last_prediction)
-        st.caption("Use market median PSF for the selected area and property type.")
-
+    # ---------------- MODEL SELECTION MOVED TO TOP ----------------
     field_label("Prediction model")
     selected_model = st.selectbox(
         "Prediction model",
         model_options,
+        index=model_options.index(st.session_state["selected_prediction_model"]),
         key="selected_prediction_model",
         label_visibility="collapsed",
         on_change=clear_last_prediction,
-        help="Choose which trained model should generate the estimate.",
+        help="Random Forest is the default model. You can still compare the other saved models.",
     )
     selected_metrics = results.loc[results["Model"].eq(selected_model)].iloc[0]
+    model_note = f"Default model: {default_model}"
     if selected_model == recommended:
-        st.caption(f"Recommended model · Test MAE RM {selected_metrics['MAE_test']/1000:,.1f}K · Test R² {selected_metrics['R2_test']:.3f}")
+        model_note += f" · Recommended by evaluation · Test MAE RM {selected_metrics['MAE_test']/1000:,.1f}K · Test R² {selected_metrics['R2_test']:.3f}"
     else:
-        st.caption(f"Test MAE RM {selected_metrics['MAE_test']/1000:,.1f}K · Test R² {selected_metrics['R2_test']:.3f} · Recommended: {recommended}")
+        model_note += f" · Selected Test MAE RM {selected_metrics['MAE_test']/1000:,.1f}K · Test R² {selected_metrics['R2_test']:.3f} · Evaluation recommended: {recommended}"
+    st.caption(model_note)
 
-    psf_confirmed = st.checkbox("I confirm that Median PSF is independently known before prediction.",
-        key="pred_psf_confirmed", help="Do not derive PSF from the Median Price being predicted.", on_change=clear_last_prediction)
-    st.caption(f"PSF reference: RM {reference['psf']:,}/sq ft from the {reference['label']} "
-               f"({reference['rows']:,} record(s)).")
+    # ---------------- LOCATION SELECTION: OLD UI DESIGN, FASTER LOGIC ----------------
+    st.markdown(
+        "<div class='mh-section-head'><div class='mh-step'>1</div><div>"
+        "<h3 class='mh-section-title'>Location Selection</h3>"
+        "<p class='mh-section-note'>Choose a state, then select an area from the nationwide Malaysia coverage.</p>"
+        "</div></div>",
+        unsafe_allow_html=True,
+    )
+
+    search_col, button_col = st.columns([5, 1.25])
+    with search_col:
+        st.text_input(
+            "Enter your address or postcode to auto-detect location, or click the map below:",
+            placeholder="e.g. 45400 or Sekinchan, Selangor",
+            key="address_input",
+        )
+    with button_col:
+        st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
+        st.button(
+            "Search Location",
+            type="primary",
+            use_container_width=True,
+            on_click=analyze_address,
+            args=(available_states,),
+            key="search_location",
+        )
+
+    feedback = st.session_state.get("address_feedback")
+    if feedback:
+        kind, msg = feedback
+        if kind == "success":
+            st.success(msg, icon="✅")
+        elif kind == "info":
+            st.info(msg, icon="ℹ️")
+        else:
+            st.warning(msg, icon="⚠️")
+
+    if HAS_INTERACTIVE_MAP:
+        map_center = st.session_state.get(
+            "map_center",
+            [4.2105, 108.9758] if not current_state else STATE_COORDS.get(current_state, [4.2105, 108.9758]),
+        )
+        map_zoom = st.session_state.get("map_zoom", 6 if not current_state else 9)
+        malaysia_map = folium.Map(
+            location=map_center,
+            zoom_start=map_zoom,
+            tiles="OpenStreetMap",
+            control_scale=True,
+            zoom_control=True,
+            prefer_canvas=True,
+        )
+
+        if not current_state:
+            for state_name in available_states:
+                folium.CircleMarker(
+                    location=STATE_COORDS[state_name],
+                    radius=11,
+                    color="#15243A",
+                    weight=2,
+                    fill=True,
+                    fill_color="#2F6FED",
+                    fill_opacity=0.82,
+                    tooltip=folium.Tooltip(f"<b>{state_name}</b> (Click to select state)", sticky=True),
+                    popup=f"STATE:{state_name}",
+                ).add_to(malaysia_map)
+        else:
+            marker_cluster = MarkerCluster(name="Areas", options={"chunkedLoading": True, "disableClusteringAtZoom": 12}).add_to(malaysia_map)
+            marker_rows = list(get_area_marker_data(current_state))
+            if current_area and current_area not in {row[0] for row in marker_rows}:
+                coords, approx = get_area_map_coords(current_area, current_state)
+                if coords:
+                    marker_rows.append((current_area, coords[0], coords[1], approx, get_area_source(current_state, current_area)))
+
+            for disp_area, lat, lon, is_approx, area_kind in marker_rows:
+                is_sel = disp_area == current_area
+                pin_note = "Approximate position · click to select" if is_approx else "Click to select"
+                folium.CircleMarker(
+                    location=[lat, lon],
+                    radius=12 if is_sel else 8,
+                    color="#18875D" if is_sel else ("#98A2B3" if is_approx else "#C47A10"),
+                    weight=3 if is_sel else 2,
+                    fill=True,
+                    fill_color="#10B981" if is_sel else ("#D0D5DD" if is_approx else "#F59E0B"),
+                    fill_opacity=0.9 if is_sel else 0.75,
+                    tooltip=folium.Tooltip(f"<b>{disp_area}</b><br>{area_kind} · {pin_note}", sticky=True),
+                    popup=f"AREA:{disp_area}",
+                ).add_to(marker_cluster)
+
+            searched_point = st.session_state.get("searched_point")
+            if searched_point and current_state:
+                folium.CircleMarker(
+                    location=[searched_point["lat"], searched_point["lon"]],
+                    radius=10,
+                    color="#0F766E",
+                    weight=3,
+                    fill=True,
+                    fill_color="#0D9488",
+                    fill_opacity=0.95,
+                    tooltip=folium.Tooltip(f"<b>Searched address</b><br>{escape(str(searched_point.get('label', '')))}", sticky=True),
+                    popup="SEARCHED_POINT",
+                ).add_to(malaysia_map)
+
+        st.markdown("<div class='mh-map-wrap'>", unsafe_allow_html=True)
+        map_kwargs = dict(height=470, use_container_width=True, key="malaysia_map")
+        if "returned_objects" in inspect.signature(st_folium).parameters:
+            map_kwargs["returned_objects"] = ["last_object_clicked_popup"]
+        map_event = st_folium(malaysia_map, **map_kwargs)
+        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div class='mh-map-legend'>"
+            "<span class='legend-title'>Map pins:</span>"
+            "<span class='legend-item'><span class='legend-dot state-dot'></span>State</span>"
+            "<span class='legend-item'><span class='legend-dot verified-dot'></span>Verified area</span>"
+            "<span class='legend-item'><span class='legend-dot approx-dot'></span>Approximate position</span>"
+            "<span class='legend-item'><span class='legend-dot selected-dot'></span>Selected area</span>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+
+        popup_txt = (map_event or {}).get("last_object_clicked_popup")
+        if popup_txt and popup_txt != st.session_state.get("last_map_popup"):
+            st.session_state["last_map_popup"] = popup_txt
+            if popup_txt.startswith("STATE:"):
+                clicked_st = popup_txt.split(":", 1)[1]
+                if clicked_st != current_state:
+                    st.session_state["pending_location"] = (clicked_st, None)
+                    st.session_state["map_center"] = STATE_COORDS.get(clicked_st, [4.2105, 108.9758])
+                    st.session_state["map_zoom"] = 9
+                    st.session_state["searched_point"] = None
+                    clear_last_prediction()
+                    st.rerun()
+            elif popup_txt.startswith("AREA:"):
+                clicked_area = popup_txt.split(":", 1)[1]
+                if clicked_area != current_area:
+                    st.session_state["pending_location"] = (current_state, clicked_area)
+                    coords, _ = get_area_map_coords(clicked_area, current_state)
+                    if coords:
+                        st.session_state["map_center"] = coords
+                    st.session_state["map_zoom"] = 12
+                    st.session_state["searched_point"] = None
+                    clear_last_prediction()
+                    st.rerun()
+    else:
+        st.error("Interactive map packages are unavailable. Install folium and streamlit-folium to select a location.")
+
+    current_state = st.session_state["selected_state"]
+    current_area = st.session_state["selected_area"]
+    col_loc1, col_loc2 = st.columns([5, 1.25])
+    with col_loc1:
+        st.markdown(
+            f"<div class='mh-chiprow'><span class='mh-chip'>📍 <strong>State:</strong> {escape(current_state or 'Not Selected')}</span>"
+            f"<span class='mh-chip'>🗺️ <strong>Area:</strong> {escape(current_area or 'Not Selected')}</span></div>",
+            unsafe_allow_html=True,
+        )
+    with col_loc2:
+        st.button("Reset Location", use_container_width=True, on_click=reset_location_state, key="reset_location")
+    st.markdown(
+        "<div class='mh-help'>ⓘ Verified areas come from the dataset or known coordinates. "
+        "Approximate and custom searched locations remain selectable for nationwide Malaysia prediction, "
+        "but the result may have lower confidence when the area is not in the training dataset.</div>",
+        unsafe_allow_html=True,
+    )
+
+    # ---------------- PROPERTY DETAILS: OLD UI DESIGN ----------------
+    st.markdown('<hr class="mh-rule">', unsafe_allow_html=True)
+    st.markdown(
+        "<div class='mh-section-head'><div class='mh-step'>2</div><div>"
+        "<h3 class='mh-section-title'>Property Details</h3>"
+        "<p class='mh-section-note'>Choose the property type and tenure, then enter the independently known median price per square foot.</p>"
+        "</div></div>",
+        unsafe_allow_html=True,
+    )
+
+    field_label("Select Property Type")
+    ptype_cols = st.columns(len(ptypes), gap="small")
+    for i, pt in enumerate(ptypes):
+        with ptype_cols[i]:
+            is_sel = pt == st.session_state["selected_ptype"]
+            if st.button(
+                get_property_label(pt),
+                key=f"btn_{pt}",
+                type="primary" if is_sel else "secondary",
+                use_container_width=True,
+            ):
+                st.session_state["selected_ptype"] = pt
+                clear_last_prediction()
+                st.rerun()
+
+    reference = market_reference(
+        data,
+        current_state,
+        current_area,
+        st.session_state["selected_ptype"],
+        st.session_state["selected_tenure"],
+    )
+
+    col_in1, col_in2 = st.columns(2)
+    with col_in1:
+        field_label("Tenure")
+        st.markdown("<div class='tenure-hint'>Ownership status</div>", unsafe_allow_html=True)
+        tenure_group, _ = st.columns([3.2, 1.15])
+        with tenure_group:
+            tenure_cols = st.columns(len(tenure_options), gap="small")
+            for idx, tenure_option in enumerate(tenure_options):
+                with tenure_cols[idx]:
+                    is_tenure_selected = tenure_option == st.session_state["selected_tenure"]
+                    if st.button(
+                        tenure_option,
+                        key=f"tenure_btn_{tenure_option}",
+                        type="primary" if is_tenure_selected else "secondary",
+                        use_container_width=True,
+                    ):
+                        st.session_state["selected_tenure"] = tenure_option
+                        clear_last_prediction()
+                        st.rerun()
+        tenure = st.session_state["selected_tenure"]
+    with col_in2:
+        field_label("Median price per sq ft (RM)")
+        psf = st.number_input(
+            "PSF",
+            min_value=1,
+            step=10,
+            value=int(round(data["Median_PSF"].median())),
+            key="pred_psf",
+            label_visibility="collapsed",
+            on_change=clear_last_prediction,
+        )
+        st.caption("Use market median PSF for the selected area and property type.")
+
+    psf_confirmed = st.checkbox(
+        "I confirm that Median PSF is independently known before prediction.",
+        key="pred_psf_confirmed",
+        help="Do not derive PSF from the Median Price being predicted.",
+        on_change=clear_last_prediction,
+    )
+    st.caption(f"PSF reference: RM {reference['psf']:,}/sq ft from the {reference['label']} ({reference['rows']:,} record(s)).")
+
     # The fitted pipelines still require Transactions. It is intentionally not
     # a user input: the app supplies the median from the closest matching
     # historical market reference to keep the interface simple and consistent.
@@ -1523,11 +1853,12 @@ def prediction_page(data, results):
     elif psf < market_median * .5 or psf > market_median * 1.5:
         st.warning(f"This PSF is far from the relevant market median of approximately RM {market_median:,.0f}/sq ft. Please verify it.")
 
-    st.markdown('<hr class="mh-rule">', unsafe_allow_html=True)
-    section_header(3, "Generate estimate", "Create the estimate using the selected model.", "money")
-    if st.button("Generate price estimate  →", type="primary", use_container_width=True, key="generate_estimate"):
+    st.markdown('<br>', unsafe_allow_html=True)
+    predict_clicked = st.button("Generate Price Estimate  →", type="primary", use_container_width=True, key="generate_estimate")
+
+    if predict_clicked:
         if not current_state or not current_area:
-            st.error("Please select both a state and an area before predicting.")
+            st.error("Please select both a State and an Area from the map or address input before predicting.")
         elif not psf_confirmed:
             st.error("Please confirm that Median PSF is independently known before prediction.")
         else:
@@ -1542,18 +1873,27 @@ def prediction_page(data, results):
                 return
             area_key = create_area_key(current_state, current_area)
             features = pd.DataFrame([{
-                "State": current_state, "Area_Key": area_key, "Tenure": tenure,
-                "Primary_Type": st.session_state["selected_ptype"], "Median_PSF": psf,
+                "State": current_state,
+                "Area_Key": area_key,
+                "Tenure": tenure,
+                "Primary_Type": st.session_state["selected_ptype"],
+                "Median_PSF": psf,
                 "Transactions": model_transactions,
             }])[MODEL_FEATURES]
             with st.spinner("Calculating estimate..."):
                 prediction = float(model.predict(features)[0])
             metrics = results.loc[results["Model"].eq(selected_model)].iloc[0]
             st.session_state["last_prediction"] = {
-                "prediction": prediction, "state": current_state, "area": current_area,
-                "ptype": st.session_state["selected_ptype"], "tenure": tenure, "psf": psf,
-                "transactions": model_transactions, "model_name": selected_model,
-                "rmse_test": float(metrics["RMSE_test"]), "mae_test": float(metrics["MAE_test"]),
+                "prediction": prediction,
+                "state": current_state,
+                "area": current_area,
+                "ptype": st.session_state["selected_ptype"],
+                "tenure": tenure,
+                "psf": psf,
+                "transactions": model_transactions,
+                "model_name": selected_model,
+                "rmse_test": float(metrics["RMSE_test"]),
+                "mae_test": float(metrics["MAE_test"]),
                 "r2_test": float(metrics["R2_test"]),
                 "dataset_supported": area_key in set(data["Area_Key"].astype(str)),
                 "model_supported": model_has_seen_area(model, area_key),
@@ -1587,7 +1927,7 @@ def prediction_page(data, results):
     else:
         st.markdown(
             f'<div class="mh-empty"><div class="icon">{svg_icon("money",24)}</div>'
-            '<strong>Your estimate will appear here.</strong><br>Select the location and complete all property inputs.</div>',
+            '<strong>Your estimate will appear here.</strong><br>Select location and property details above, then generate the estimate.</div>',
             unsafe_allow_html=True,
         )
 
@@ -1595,12 +1935,19 @@ def prediction_page(data, results):
     if scenarios:
         st.markdown("### Compare saved scenarios")
         comparison = pd.DataFrame([{
-            "Location": f"{s['area']}, {s['state']}", "Property type": s["ptype"],
-            "Tenure": s["tenure"], "Median PSF (RM)": s["psf"],
-            "Model": s["model_name"], "Estimated price (RM)": round(s["prediction"]),
+            "Location": f"{s['area']}, {s['state']}",
+            "Property type": s["ptype"],
+            "Tenure": s["tenure"],
+            "Median PSF (RM)": s["psf"],
+            "Model": s["model_name"],
+            "Estimated price (RM)": round(s["prediction"]),
         } for s in scenarios])
-        st.dataframe(comparison, use_container_width=True, hide_index=True,
-                     column_config={"Estimated price (RM)": st.column_config.NumberColumn(format="RM %,.0f")})
+        st.dataframe(
+            comparison,
+            use_container_width=True,
+            hide_index=True,
+            column_config={"Estimated price (RM)": st.column_config.NumberColumn(format="RM %,.0f")},
+        )
 
 # ---------------------------------------------------------------------------
 # PAGE 2 - MARKET INSIGHTS
