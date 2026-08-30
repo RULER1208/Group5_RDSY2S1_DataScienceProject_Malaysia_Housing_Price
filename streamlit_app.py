@@ -2,7 +2,7 @@
 BMDS2003 Data Science - Deployment Prototype
 Malaysia Housing Median Price Estimator
 
-Run locally:  streamlit run my_UI_latestfinal_live_spiderfly_sync.py
+Run locally:  streamlit run streamlit_app_location_search_v2.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -55,7 +55,6 @@ st.set_page_config(
 # ---------------------------------------------------------------------------
 APP_DIR = Path(__file__).resolve().parent
 DATA_PATH = APP_DIR / "malaysia_house_price_cleaned_with_area.csv"
-RAW_DATA_PATH = APP_DIR / "malaysia_house_price_data_2025.csv"
 RESULTS_PATH = APP_DIR / "model_comparison_table.csv"
 RESULTS_FALLBACK_PATH = APP_DIR / "model_results.csv"
 MODELS_DIR = APP_DIR / "models"
@@ -1073,13 +1072,6 @@ def get_state_from_postcode(postcode: str):
 # ---------------------------------------------------------------------------
 @st.cache_data(show_spinner=False)
 def load_data():
-    return pd.read_csv(DATA_PATH)
-
-
-@st.cache_data(show_spinner=False)
-def load_raw_data():
-    if RAW_DATA_PATH.exists():
-        return pd.read_csv(RAW_DATA_PATH)
     return pd.read_csv(DATA_PATH)
 
 RESULT_COLUMNS = [
@@ -2149,7 +2141,7 @@ def attach_spider_fly_marker(
     The mascot itself is created as a REAL Folium ``Marker``/``DivIcon`` in
     Python, so it is visible even if the optional movement JavaScript fails.
     JavaScript is used only for the smooth flight, speech updates, camera
-    ``flyTo`` motion, and keeping the idle mascot at the map centre.
+    ``flyTo`` motion while the idle mascot stays attached to its map coordinate.
 
     This is intentionally different from the previous implementation, which
     tried to create the marker from injected JavaScript.  In Streamlit/Folium
@@ -2160,18 +2152,26 @@ def attach_spider_fly_marker(
 
     has_flight = bool(fly_request)
 
-    # The Folium map is deliberately rendered at the OLD view for one run when
-    # a flight is requested.  The real marker starts there as well, then the
-    # macro below moves both the camera and Spider-Man toward the destination.
+    # Keep the mascot attached to a real geographic coordinate.  When nothing
+    # is selected yet, the initial Malaysia map centre is used so Spider-Man is
+    # still visible immediately.
     default_center = list(getattr(malaysia_map, "location", None) or [4.2105, 108.9758])
+    resting_center = list(default_center)
+    if current_area and current_state:
+        area_coords, _ = get_area_map_coords(current_area, current_state)
+        if area_coords:
+            resting_center = list(area_coords)
+    elif current_state and current_state in STATE_COORDS:
+        resting_center = list(STATE_COORDS[current_state])
+
     if has_flight:
         start_center = list(fly_request.get("from_center", default_center))
-        target_center = list(fly_request.get("to_center", default_center))
+        target_center = list(fly_request.get("to_center", resting_center))
         target_zoom = int(fly_request.get("to_zoom", 9))
         duration = max(1.2, float(fly_request.get("duration", 3.0)))
     else:
-        start_center = default_center
-        target_center = default_center
+        start_center = list(resting_center)
+        target_center = list(resting_center)
         target_zoom = int(getattr(malaysia_map, "options", {}).get("zoom", 9) or 9)
         duration = 0.0
 
@@ -2271,6 +2271,8 @@ def attach_spider_fly_marker(
         display:block;
         width:72px;
         height:72px;
+        transform:rotate(180deg);
+        transform-origin:50% 50%;
       }
       .mh-spider-bubble {
         position:absolute;
@@ -2375,14 +2377,6 @@ def attach_spider_fly_marker(
         const bubble = bubbleElement();
         if (bubble) bubble.textContent = value;
       }}
-      function keepSpiderAtCentre() {{
-        if (!flying && spiderMarker) spiderMarker.setLatLng(mapObj.getCenter());
-      }}
-
-      // When idle, Spider-Man stays visually centred while the user pans/zooms.
-      mapObj.on('move', keepSpiderAtCentre);
-      mapObj.on('zoom', keepSpiderAtCentre);
-
       function easeInOutCubic(t) {{
         return t < 0.5
           ? 4 * t * t * t
@@ -2481,8 +2475,8 @@ def attach_spider_fly_marker(
         // starting position before Spider-Man launches.
         window.setTimeout(startFlight, 650);
       }} else {{
-        // Static fallback / idle state: keep him in the visible map centre.
-        keepSpiderAtCentre();
+        // Static / idle state: keep him anchored to the selected Lat/Lon.
+        spiderMarker.setLatLng(target);
         setMessage(arrivedMessage);
       }}
     }})();
@@ -2540,7 +2534,6 @@ def prediction_page(data, results):
         st.session_state["selected_state"] = pending_state
         st.session_state["selected_area"] = pending_area
         st.session_state["searched_point"] = None
-        st.session_state["last_map_popup"] = None
 
     current_state = st.session_state["selected_state"]
     current_area = st.session_state["selected_area"]
@@ -2657,8 +2650,8 @@ def prediction_page(data, results):
         final_map_zoom = st.session_state.get("map_zoom", 6 if not current_state else 9)
 
         if fly_request:
-            map_center = final_map_center
-            map_zoom = final_map_zoom
+            map_center = fly_request.get("from_center", final_map_center)
+            map_zoom = fly_request.get("from_zoom", max(6, int(final_map_zoom) - 3))
         else:
             map_center = final_map_center
             map_zoom = final_map_zoom
@@ -2689,20 +2682,7 @@ def prediction_page(data, results):
                     popup=f"STATE:{state_name}",
                 ).add_to(malaysia_map)
         else:
-            # Area markers use clustering again so dense state views stay usable.
-            # At close zoom levels the cluster opens into individual clickable pins.
-            area_cluster = MarkerCluster(
-                name="Areas",
-                options={
-                    "chunkedLoading": True,
-                    "spiderfyOnMaxZoom": True,
-                    "showCoverageOnHover": False,
-                    "zoomToBoundsOnClick": True,
-                    "disableClusteringAtZoom": 12,
-                    "maxClusterRadius": 42,
-                },
-            ).add_to(malaysia_map)
-
+            marker_cluster = MarkerCluster(name="Areas", options={"chunkedLoading": True, "disableClusteringAtZoom": 12}).add_to(malaysia_map)
             marker_rows = list(get_area_marker_data(current_state))
             if current_area and current_area not in {row[0] for row in marker_rows}:
                 coords, approx = get_area_map_coords(current_area, current_state)
@@ -2712,18 +2692,17 @@ def prediction_page(data, results):
             for disp_area, lat, lon, is_approx, area_kind in marker_rows:
                 is_sel = disp_area == current_area
                 pin_note = "Approximate position · click to select" if is_approx else "Click to select"
-                target_layer = malaysia_map if is_sel else area_cluster
                 folium.CircleMarker(
                     location=[lat, lon],
-                    radius=13 if is_sel else 8,
+                    radius=12 if is_sel else 8,
                     color="#18875D" if is_sel else ("#98A2B3" if is_approx else "#C47A10"),
-                    weight=4 if is_sel else 2,
+                    weight=3 if is_sel else 2,
                     fill=True,
                     fill_color="#10B981" if is_sel else ("#D0D5DD" if is_approx else "#F59E0B"),
-                    fill_opacity=0.94 if is_sel else 0.78,
+                    fill_opacity=0.9 if is_sel else 0.75,
                     tooltip=folium.Tooltip(f"<b>{disp_area}</b><br>{area_kind} · {pin_note}", sticky=True),
                     popup=f"AREA:{disp_area}",
-                ).add_to(target_layer)
+                ).add_to(marker_cluster)
 
             searched_point = st.session_state.get("searched_point")
             if searched_point and current_state:
@@ -2783,7 +2762,6 @@ def prediction_page(data, results):
                         "to_center": target, "to_zoom": 9, "duration": 3.0,
                     }
                     st.session_state["searched_point"] = None
-                    st.session_state["last_map_popup"] = None
                     clear_last_prediction()
                     st.rerun()
             elif popup_txt.startswith("AREA:"):
@@ -2801,7 +2779,6 @@ def prediction_page(data, results):
                         "to_center": target, "to_zoom": 12, "duration": 2.8,
                     }
                     st.session_state["searched_point"] = None
-                    st.session_state["last_map_popup"] = None
                     clear_last_prediction()
                     st.rerun()
     else:
@@ -3019,295 +2996,525 @@ def prediction_page(data, results):
 # ---------------------------------------------------------------------------
 # PAGE 2 - MARKET INSIGHTS
 # ---------------------------------------------------------------------------
-LIVE_FIGURE_GROUPS = {
+LIVE_INSIGHT_GROUPS = {
     "Data quality": [
-        ("fig01", "Raw target distribution", "Shows the overall shape of Median Price and the premium-price tail."),
-        ("fig02", "Numeric range and outliers", "Shows the spread of price, PSF and transactions before modelling."),
-        ("fig03", "Raw category labels", "Shows why category labels need to be standardised."),
-        ("fig07", "Outlier review", "Shows that extreme records are flagged for review, not blindly deleted."),
-        ("fig08", "Retained price coverage", "Shows the retained price range used by the estimator."),
+        (1, "Raw Median Price distribution", "House prices are strongly right-skewed; the log view makes the same 2,000 records easier to read."),
+        (2, "Raw numerical distributions", "Price, PSF and Transactions contain long right tails and potential IQR outliers."),
+        (3, "Raw categorical labels", "Tenure and Type contain inconsistent raw labels that need standardisation before modelling."),
+        (7, "Extreme values flagged and retained", "Extreme price and PSF records are flagged but kept so the model still covers the full market range."),
+        (8, "Retained price distribution", "The original and log views contain the same records; only the display scale changes."),
     ],
     "Data preparation and coverage": [
-        ("fig04", "Tenure cleaning", "Shows how mixed tenure labels are consolidated."),
-        ("fig05", "Property type cleaning", "Shows how raw property types become Primary Type."),
-        ("fig06", "Area label cleaning", "Shows how Area text is cleaned before creating Area Key."),
-        ("fig09", "Area frequency bands", "Shows why rare and unseen areas need uncertainty warnings."),
+        (4, "Tenure before and after standardisation", "Equivalent mixed-tenure labels are combined into one consistent Mixed category."),
+        (5, "Property Type before and after processing", "Raw Type combinations are converted into a consistent Primary_Type for modelling."),
+        (6, "Area labels before and after standardisation", "State-qualified Area_Key keeps same-named locations in different states separate."),
+        (9, "Area record-frequency bands", "Many Areas have limited observations, so rare and unseen locations require cautious interpretation."),
     ],
     "Market composition": [
-        ("fig10", "Record count by state", "Shows how dataset coverage differs by state."),
-        ("fig11", "Record count by property type", "Shows which property types dominate the dataset."),
-        ("fig12", "Landed versus high-rise share", "Summarises the broad property category mix."),
+        (10, "Record count by State", "Selangor and Johor contain the most records, while several states have much smaller samples."),
+        (11, "Record count by Property Type", "Terrace House has the strongest representation; niche property types have less training evidence."),
+        (12, "Landed versus High-Rise composition", "The dataset contains more Landed than High-Rise records; this describes this dataset only."),
     ],
     "Price patterns": [
-        ("fig13", "Price by state", "Shows that location is a major source of price variation."),
-        ("fig14", "Price by area", "Shows selected high-price areas and area-level differences."),
-        ("fig15", "Price by property type", "Shows that housing formats occupy different price bands."),
-        ("fig16", "Price by tenure", "Shows price differences by ownership status."),
-        ("fig17", "Price by category", "Compares landed and high-rise price distributions."),
-        ("fig18", "PSF by state", "Shows that market PSF varies strongly by geography."),
+        (13, "Price distribution by State", "Price levels differ by state, but large within-state spreads show that State alone is not enough."),
+        (14, "Price distribution by Area", "Area reveals finer location differences and supports using Area_Key as a model input."),
+        (15, "Price by Property Type", "Property types occupy different price bands, although their distributions still overlap."),
+        (16, "Price distribution by Tenure", "Leasehold tends to have a lower median price, while the small Mixed group should be read carefully."),
+        (17, "Price by broad property category", "Landed properties generally have higher prices, but Category alone cannot explain all variation."),
+        (18, "Median PSF distribution by State", "Median PSF differs clearly across states and provides useful location-related market information."),
     ],
     "Relationships and combined effects": [
-        ("fig19", "Median PSF versus price", "Shows why PSF is an important model input."),
-        ("fig20", "Transactions versus price", "Shows the weaker relationship between volume and price."),
-        ("fig21", "Numeric correlation matrix", "Summarises linear relationships among numeric variables."),
-        ("fig22", "Feature association with price", "Ranks how strongly final inputs relate to Median Price."),
-        ("fig23", "State and category heatmap", "Shows combined location and property-category effects."),
-        ("fig24", "Type and tenure heatmap", "Shows combined property-type and tenure effects."),
+        (19, "Median PSF against Median Price", "Median PSF has a strong positive relationship with price for both Landed and High-Rise properties."),
+        (20, "Transactions against Median Price", "Transactions has only a very weak relationship with price compared with PSF and location."),
+        (21, "Correlation matrix", "Median_PSF has the strongest numeric relationship with price, while Transactions contributes very little."),
+        (22, "Final feature association with price", "Median PSF is strongest, followed by Area and Property Type; Transactions is weakest."),
+        (23, "Median price by State and Category", "The Landed versus High-Rise price difference changes across states, showing a combined effect."),
+        (24, "Median price by Property Type and Tenure", "Price varies across Property Type and Tenure combinations; thin groups are masked."),
     ],
 }
 
-FIGURE_TAKEAWAYS = {
-    "Data quality": "The housing market is skewed and contains real premium observations, so evaluation must consider large errors.",
-    "Data preparation and coverage": "Cleaning protects feature meaning, while rare areas explain why the app shows uncertainty warnings.",
-    "Market composition": "The dataset is not evenly distributed, so state and property-type coverage must be interpreted carefully.",
-    "Price patterns": "Location, property type, tenure, category and PSF all show visible price differences.",
-    "Relationships and combined effects": "PSF is the strongest practical driver, but combined feature effects also support the model inputs.",
+LIVE_INSIGHT_TAKEAWAYS = {
+    "Data quality": "The market contains a long premium tail, so the model must be evaluated on the full price range instead of only the middle of the market.",
+    "Data preparation and coverage": "Cleaning preserves all valid records while making Tenure, Type and Area labels consistent for modelling.",
+    "Market composition": "The dataset is not evenly distributed across states and property types, so small groups should be interpreted carefully.",
+    "Price patterns": "Location and property characteristics clearly separate price levels, but no single categorical feature explains price by itself.",
+    "Relationships and combined effects": "Median PSF is the strongest relationship, while Area and Property Type add important structural information.",
 }
 
 
-def money_tick(value):
-    try:
-        value = float(value)
-    except Exception:
-        return value
-    if abs(value) >= 1_000_000:
-        return f"RM {value/1_000_000:,.1f}M"
-    if abs(value) >= 1_000:
-        return f"RM {value/1_000:,.0f}K"
-    return f"RM {value:,.0f}"
+@st.cache_data(show_spinner=False)
+def load_raw_insight_data():
+    raw_path = APP_DIR / "malaysia_house_price_data_2025.csv"
+    if raw_path.exists():
+        return pd.read_csv(raw_path)
+
+    fallback = load_data().copy()
+    if "Area_Raw" in fallback.columns and "Area" not in fallback.columns:
+        fallback["Area"] = fallback["Area_Raw"]
+    return fallback
 
 
-def clean_chart_frame(frame: pd.DataFrame) -> pd.DataFrame:
-    return frame.copy().replace([float("inf"), float("-inf")], pd.NA).dropna(how="all")
+def render_plotly(fig):
+    fig.update_layout(
+        template="plotly_white",
+        margin=dict(l=15, r=15, t=70, b=20),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="#FFFFFF",
+        font=dict(color="#0F172A"),
+        hoverlabel=dict(bgcolor="#FFFFFF"),
+        legend=dict(title=None),
+    )
+    st.plotly_chart(
+        fig,
+        use_container_width=True,
+        config={
+            "displayModeBar": True,
+            "displaylogo": False,
+            "scrollZoom": True,
+            "responsive": True,
+        },
+    )
 
 
-def categorical_strength(frame: pd.DataFrame, feature: str, target: str = "Median_Price") -> float:
-    temp = frame[[feature, target]].dropna().copy()
-    if temp.empty or temp[target].nunique() <= 1:
-        return 0.0
-    overall = temp[target].mean()
-    total_ss = ((temp[target] - overall) ** 2).sum()
-    if total_ss <= 0:
-        return 0.0
-    group_stats = temp.groupby(feature)[target].agg(["count", "mean"])
-    between_ss = (group_stats["count"] * (group_stats["mean"] - overall) ** 2).sum()
-    return float(between_ss / total_ss)
+def _live_iqr_flags(series, k=1.5):
+    q1 = series.quantile(0.25)
+    q3 = series.quantile(0.75)
+    iqr = q3 - q1
+    low = q1 - k * iqr
+    high = q3 + k * iqr
+    return (series < low) | (series > high), low, high
 
 
-def make_live_insight_chart(chart_id: str, data: pd.DataFrame, raw_data: pd.DataFrame):
-    source = clean_chart_frame(data)
-    raw = clean_chart_frame(raw_data)
+def _live_log_iqr_fences(series, k=1.5):
+    import numpy as np
 
-    if chart_id == "fig01":
-        fig = px.histogram(source, x="Median_Price", nbins=45, marginal="box", title="Figure 1 — Raw target distribution")
-        fig.update_xaxes(title="Median Price (RM)")
-        fig.update_yaxes(title="Record count")
+    log_values = np.log1p(series)
+    q1 = log_values.quantile(0.25)
+    q3 = log_values.quantile(0.75)
+    iqr = q3 - q1
+    return q1 - k * iqr, q3 + k * iqr
+
+
+def _live_correlation_ratio(categories, measurements):
+    import math
+    import numpy as np
+
+    cat = pd.Categorical(categories)
+    values = np.asarray(measurements, dtype=float)
+    grand_mean = values.mean()
+    numerator = 0.0
+    for level in range(len(cat.categories)):
+        group = values[cat.codes == level]
+        if len(group):
+            numerator += len(group) * (group.mean() - grand_mean) ** 2
+    denominator = ((values - grand_mean) ** 2).sum()
+    return math.sqrt(numerator / denominator) if denominator else 0.0
+
+
+def build_live_notebook_figure(figure_number, data, raw):
+    if not HAS_PLOTLY:
+        return None
+
+    import numpy as np
+    from plotly.subplots import make_subplots
+
+    if figure_number == 1:
+        price = raw["Median_Price"].dropna().astype(float)
+        fig = make_subplots(
+            rows=1,
+            cols=2,
+            subplot_titles=(
+                f"Linear scale (skewness = {price.skew():.2f})",
+                f"Log scale (log skewness = {np.log(price).skew():.2f})",
+            ),
+        )
+        fig.add_trace(go.Histogram(x=price / 1000, nbinsx=60, marker_color="#2F6FED", showlegend=False), row=1, col=1)
+        fig.add_trace(go.Histogram(x=price, nbinsx=60, marker_color="#7C3AED", showlegend=False), row=1, col=2)
+        fig.update_xaxes(title_text="Median price (RM '000)", row=1, col=1)
+        fig.update_xaxes(title_text="Median price (RM, log scale)", type="log", row=1, col=2)
+        fig.update_yaxes(title_text="Records", row=1, col=1)
+        fig.update_layout(title="Figure 1 — Raw Median Price distribution on linear and logarithmic scales", bargap=0.03)
         return fig
 
-    if chart_id == "fig02":
-        numeric_cols = [col for col in ["Median_Price", "Median_PSF", "Transactions"] if col in source.columns]
-        long = source[numeric_cols].melt(var_name="Feature", value_name="Value").dropna()
-        long["Display value"] = long["Value"].clip(lower=1)
-        fig = px.box(long, x="Feature", y="Display value", color="Feature", points="outliers", log_y=True, title="Figure 2 — Raw numeric range and outliers")
-        fig.update_yaxes(title="Value shown on log scale")
+    if figure_number == 2:
+        cols = ["Median_Price", "Median_PSF", "Transactions"]
+        fig = make_subplots(rows=3, cols=1, vertical_spacing=0.12)
+        for row, col in enumerate(cols, start=1):
+            values = raw[col].dropna().astype(float)
+            flags, _, _ = _live_iqr_flags(values)
+            fig.add_trace(
+                go.Box(
+                    x=values,
+                    orientation="h",
+                    boxpoints="outliers",
+                    marker=dict(color="#2F6FED", size=4, opacity=0.45),
+                    line=dict(color="#667085"),
+                    name=col,
+                    hovertemplate=f"{col}: %{{x:,.0f}}<extra></extra>",
+                    showlegend=False,
+                ),
+                row=row,
+                col=1,
+            )
+            fig.update_xaxes(type="log", title_text=f"{col} (log axis)", row=row, col=1)
+            fig.update_yaxes(title_text=f"{int(flags.sum())} IQR flags", row=row, col=1)
+        fig.update_layout(title="Figure 2 — Raw numerical distributions and potential IQR outliers", height=650)
         return fig
 
-    if chart_id == "fig03":
-        tenure_counts = source.get("Tenure", pd.Series(dtype=str)).astype(str).value_counts().reset_index()
-        tenure_counts.columns = ["Label", "Count"]
-        type_col = "Type" if "Type" in raw.columns else "Primary_Type"
-        type_source = raw if type_col in raw.columns else source
-        type_counts = type_source[type_col].astype(str).value_counts().head(12).reset_index()
-        type_counts.columns = ["Label", "Count"]
-        fig = make_subplots(rows=1, cols=2, subplot_titles=("Tenure labels", "Top raw/property type labels"))
-        fig.add_trace(go.Bar(x=tenure_counts["Label"], y=tenure_counts["Count"], name="Tenure"), row=1, col=1)
-        fig.add_trace(go.Bar(x=type_counts["Label"], y=type_counts["Count"], name="Type"), row=1, col=2)
-        fig.update_layout(title="Figure 3 — Raw category labels", showlegend=False)
+    if figure_number == 3:
+        tenure_counts = raw["Tenure"].value_counts().sort_values()
+        type_counts = raw["Type"].value_counts().head(10).sort_values()
+        fig = make_subplots(
+            rows=1,
+            cols=2,
+            subplot_titles=(
+                f"Tenure: {raw['Tenure'].nunique()} raw labels",
+                f"Top 10 of {raw['Type'].nunique()} raw Type strings",
+            ),
+        )
+        fig.add_trace(go.Bar(x=tenure_counts.values, y=tenure_counts.index.astype(str), orientation="h", marker_color="#2F6FED", text=tenure_counts.values, textposition="outside", showlegend=False), row=1, col=1)
+        fig.add_trace(go.Bar(x=type_counts.values, y=type_counts.index.astype(str), orientation="h", marker_color="#C47A10", text=type_counts.values, textposition="outside", showlegend=False), row=1, col=2)
+        fig.update_xaxes(title_text="Records", row=1, col=1)
+        fig.update_xaxes(title_text="Records", row=1, col=2)
+        fig.update_layout(title="Figure 3 — Raw categorical labels", height=500)
         return fig
 
-    if chart_id == "fig04":
-        raw_counts = raw["Tenure"].astype(str).value_counts().reset_index() if "Tenure" in raw.columns else source["Tenure"].astype(str).value_counts().reset_index()
-        clean_counts = source["Tenure"].astype(str).value_counts().reset_index()
-        raw_counts.columns = ["Label", "Count"]
-        clean_counts.columns = ["Label", "Count"]
-        raw_counts["Stage"] = "Before cleaning"
-        clean_counts["Stage"] = "After cleaning"
-        combined = pd.concat([raw_counts, clean_counts], ignore_index=True)
-        fig = px.bar(combined, x="Label", y="Count", color="Stage", barmode="group", title="Figure 4 — Tenure labels before and after cleaning")
+    if figure_number == 4:
+        before = raw["Tenure"].value_counts()
+        after = data["Tenure"].value_counts()
+        fig = make_subplots(rows=1, cols=2, subplot_titles=("Before", "After"))
+        fig.add_trace(go.Bar(x=before.index.astype(str), y=before.values, marker_color="#C47A10", text=before.values, textposition="outside", showlegend=False), row=1, col=1)
+        fig.add_trace(go.Bar(x=after.index.astype(str), y=after.values, marker_color="#18875D", text=after.values, textposition="outside", showlegend=False), row=1, col=2)
+        fig.update_yaxes(title_text="Rows", row=1, col=1)
+        fig.update_xaxes(tickangle=20, row=1, col=1)
+        fig.update_xaxes(tickangle=20, row=1, col=2)
+        fig.update_layout(title="Figure 4 — Tenure categories before and after standardisation")
         return fig
 
-    if chart_id == "fig05":
-        raw_col = "Type" if "Type" in raw.columns else "Primary_Type"
-        raw_counts = raw[raw_col].astype(str).value_counts().head(12).reset_index()
-        clean_counts = source["Primary_Type"].astype(str).value_counts().reset_index()
-        raw_counts.columns = ["Label", "Count"]
-        clean_counts.columns = ["Label", "Count"]
-        raw_counts["Stage"] = "Before cleaning"
-        clean_counts["Stage"] = "After cleaning"
-        combined = pd.concat([raw_counts, clean_counts], ignore_index=True)
-        fig = px.bar(combined, x="Label", y="Count", color="Stage", barmode="group", title="Figure 5 — Property type before and after cleaning")
+    if figure_number == 5:
+        raw_type_counts = data["Type"].value_counts().head(10).sort_values()
+        primary_counts = data["Primary_Type"].value_counts().sort_values()
+        fig = make_subplots(rows=1, cols=2, subplot_titles=("Top 10 raw Type strings", "Deterministic Primary_Type"))
+        fig.add_trace(go.Bar(x=raw_type_counts.values, y=raw_type_counts.index.astype(str), orientation="h", marker_color="#C47A10", text=raw_type_counts.values, textposition="outside", showlegend=False), row=1, col=1)
+        fig.add_trace(go.Bar(x=primary_counts.values, y=primary_counts.index.astype(str), orientation="h", marker_color="#2F6FED", text=primary_counts.values, textposition="outside", showlegend=False), row=1, col=2)
+        fig.update_xaxes(title_text="Rows", row=1, col=1)
+        fig.update_xaxes(title_text="Rows", row=1, col=2)
+        fig.update_layout(title="Figure 5 — Property Type before and after processing", height=520)
         return fig
 
-    if chart_id == "fig06":
-        raw_col = "Area_Raw" if "Area_Raw" in raw.columns else "Area_Clean"
-        clean_col = "Area_Clean"
-        raw_counts = raw[raw_col].astype(str).value_counts().head(15).reset_index()
-        clean_counts = source[clean_col].astype(str).value_counts().head(15).reset_index()
-        raw_counts.columns = ["Area", "Count"]
-        clean_counts.columns = ["Area", "Count"]
-        raw_counts["Stage"] = "Before cleaning"
-        clean_counts["Stage"] = "After cleaning"
-        combined = pd.concat([raw_counts, clean_counts], ignore_index=True)
-        fig = px.bar(combined, x="Count", y="Area", color="Stage", orientation="h", barmode="group", title="Figure 6 — Area labels before and after cleaning")
+    if figure_number == 6:
+        summary = pd.DataFrame({
+            "Stage": ["Raw Area text", "Cleaned Area text", "State-qualified Area_Key"],
+            "Distinct labels": [data["Area_Raw"].nunique(), data["Area_Clean"].nunique(), data["Area_Key"].nunique()],
+        })
+        fig = px.bar(summary, x="Stage", y="Distinct labels", text="Distinct labels", title="Figure 6 — Distinct Area labels before and after standardisation", color="Stage", color_discrete_sequence=["#667085", "#2F6FED", "#18875D"])
+        fig.update_traces(textposition="outside")
+        fig.update_xaxes(title_text="")
+        fig.update_yaxes(title_text="Distinct values", range=[0, summary["Distinct labels"].max() * 1.15])
+        fig.update_layout(showlegend=False)
+        return fig
+
+    if figure_number == 7:
+        specs = [
+            ("Median_Price", [50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000], ["50K", "100K", "200K", "500K", "1M", "2M", "5M", "10M"], "Median Price (RM, original-scale labels; log1p used for IQR rule)"),
+            ("Median_PSF", [50, 100, 200, 500, 1000, 2000, 3000], ["50", "100", "200", "500", "1000", "2000", "3000"], "Median PSF (RM, original-scale labels; log1p used for IQR rule)"),
+        ]
+        fig = make_subplots(rows=2, cols=1, vertical_spacing=0.18)
+        unique_flags = pd.Series(False, index=data.index)
+        for row, (col, ticks, tick_labels, xlabel) in enumerate(specs, start=1):
+            values = data[col].astype(float)
+            values_log = np.log1p(values)
+            lower, upper = _live_log_iqr_fences(values)
+            flags = (values_log < lower) | (values_log > upper)
+            unique_flags = unique_flags | flags
+            fig.add_trace(go.Box(x=values_log, orientation="h", boxpoints=False, marker_color="#667085", line_color="#667085", name="Distribution", showlegend=False), row=row, col=1)
+            if flags.any():
+                fig.add_trace(go.Scatter(x=values_log[flags], y=[0] * int(flags.sum()), mode="markers", marker=dict(size=7, color="#C63C4A", opacity=0.55), name=f"Flagged: {int(flags.sum())}", hovertemplate=f"{col}: %{{customdata:,.0f}}<extra></extra>", customdata=values[flags], showlegend=True), row=row, col=1)
+            fig.add_vline(x=lower, line_dash="dash", line_color="#2F6FED", row=row, col=1)
+            fig.add_vline(x=upper, line_dash="dash", line_color="#2F6FED", row=row, col=1)
+            fig.update_xaxes(tickvals=np.log1p(ticks), ticktext=tick_labels, title_text=xlabel, row=row, col=1)
+            fig.update_yaxes(showticklabels=False, row=row, col=1)
+        fig.update_layout(title=f"Figure 7 — Extreme values flagged and retained ({int(unique_flags.sum())} records, 0 removed)", height=650)
+        return fig
+
+    if figure_number == 8:
+        price = data["Median_Price"].dropna().astype(float)
+        fig = make_subplots(
+            rows=1,
+            cols=2,
+            subplot_titles=(
+                f"Original scale — skew={price.skew():.2f}",
+                f"Log display scale — log skew={np.log1p(price).skew():.2f}",
+            ),
+        )
+        fig.add_trace(go.Histogram(x=price, nbinsx=60, marker_color="#667085", opacity=0.85, showlegend=False), row=1, col=1)
+        fig.add_trace(go.Histogram(x=price, nbinsx=45, marker_color="#2F6FED", opacity=0.85, showlegend=False), row=1, col=2)
+        fig.update_xaxes(title_text="Median price (RM)", row=1, col=1)
+        fig.update_xaxes(title_text="Median price (RM, log display scale)", type="log", row=1, col=2)
+        fig.update_yaxes(title_text="Records", row=1, col=1)
+        fig.update_layout(title=f"Figure 8 — Price distribution with all {len(data):,} records retained", bargap=0.03)
+        return fig
+
+    if figure_number == 9:
+        area_counts = data["Area_Key"].value_counts()
+        bands = pd.cut(area_counts, bins=[0, 1, 4, 9, np.inf], labels=["Singleton Areas (1)", "Low-frequency Areas (2-4)", "Moderate-frequency Areas (5-9)", "Well-represented Areas (10+)"])
+        band_counts = bands.value_counts().reindex(["Singleton Areas (1)", "Low-frequency Areas (2-4)", "Moderate-frequency Areas (5-9)", "Well-represented Areas (10+)"])
+        fig = go.Figure(go.Pie(labels=band_counts.index, values=band_counts.values, hole=0.45, textinfo="percent", hovertemplate="%{label}<br>%{value:,} Areas<br>%{percent}<extra></extra>", marker=dict(colors=["#C63C4A", "#C47A10", "#2F6FED", "#18875D"])))
+        fig.update_layout(title="Figure 9 — Share of Areas by record-frequency band", annotations=[dict(text=f"{int(band_counts.sum()):,}<br>Areas", x=0.5, y=0.5, font_size=15, showarrow=False)])
+        return fig
+
+    if figure_number == 10:
+        counts = data["State"].value_counts().sort_values()
+        fig = px.bar(x=counts.values, y=counts.index, orientation="h", text=counts.values, title="Figure 10 — Record count by State", labels={"x": "Records", "y": ""})
+        fig.update_traces(marker_color="#2F6FED", textposition="outside", hovertemplate="%{y}<br>Records: %{x:,}<extra></extra>")
+        return fig
+
+    if figure_number == 11:
+        counts = data["Primary_Type"].value_counts().sort_values()
+        fig = px.bar(x=counts.values, y=counts.index, orientation="h", text=counts.values, title="Figure 11 — Record count by Primary_Type", labels={"x": "Records", "y": ""})
+        fig.update_traces(marker_color="#18875D", textposition="outside", hovertemplate="%{y}<br>Records: %{x:,}<extra></extra>")
+        return fig
+
+    if figure_number == 12:
+        counts = data["Category"].value_counts()
+        fig = go.Figure(go.Pie(labels=counts.index, values=counts.values, textinfo="label+value+percent", hovertemplate="%{label}<br>%{value:,} records<br>%{percent}<extra></extra>", marker=dict(colors=["#2F6FED", "#C47A10"])))
+        fig.update_layout(title="Figure 12 — Landed versus High-Rise composition")
+        return fig
+
+    if figure_number == 13:
+        state_n = data["State"].value_counts()
+        major_states = state_n[state_n >= 10].index
+        frame = data[data["State"].isin(major_states)].copy()
+        order = frame.groupby("State")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+        frame["State label"] = frame["State"].map(lambda s: f"{s} (n={state_n[s]:,})")
+        label_order = [f"{s} (n={state_n[s]:,})" for s in order]
+        fig = px.box(frame, x="Median_Price", y="State label", points=False, category_orders={"State label": label_order}, title="Figure 13 — Price distribution by State (states with n >= 10)", labels={"Median_Price": "Median price (RM)", "State label": ""})
+        fig.update_traces(marker_color="#D5E4FF", line_color="#2F6FED", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
         fig.update_yaxes(autorange="reversed")
         return fig
 
-    if chart_id == "fig07":
-        rows = []
-        for col in ["Median_Price", "Median_PSF", "Transactions"]:
-            if col not in source.columns:
-                continue
-            values = source[col].dropna()
-            q1, q3 = values.quantile(0.25), values.quantile(0.75)
-            iqr = q3 - q1
-            lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
-            flagged = ((values < lower) | (values > upper)).sum()
-            rows.append({"Feature": col, "Status": "IQR flagged", "Count": int(flagged)})
-            rows.append({"Feature": col, "Status": "Within IQR range", "Count": int(len(values) - flagged)})
-        fig = px.bar(pd.DataFrame(rows), x="Feature", y="Count", color="Status", barmode="stack", title="Figure 7 — Outlier flagged but retained")
+    if figure_number == 14:
+        min_area_n = 15
+        top_areas = 10
+        area_counts = data["Area_Key"].value_counts()
+        area_keys = area_counts[area_counts >= min_area_n].head(top_areas).index
+        frame = data[data["Area_Key"].isin(area_keys)].copy()
+        frame["Area display"] = frame["Area_Key"].map(lambda v: display_name(str(v).replace(" | ", " — ")))
+        order = frame.groupby("Area display")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+        area_n = frame["Area display"].value_counts()
+        frame["Area label"] = frame["Area display"].map(lambda a: f"{a} (n={area_n[a]})")
+        label_order = [f"{a} (n={area_n[a]})" for a in order]
+        fig = px.box(frame, x="Median_Price", y="Area label", points=False, category_orders={"Area label": label_order}, title=f"Figure 14 — Price distribution by Area (top {top_areas} Areas with n >= {min_area_n})", labels={"Median_Price": "Median price (RM)", "Area label": ""})
+        fig.update_traces(marker_color="#D7F1E5", line_color="#18875D", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
+        fig.update_yaxes(autorange="reversed")
         return fig
 
-    if chart_id == "fig08":
-        fig = px.histogram(source, x="Median_Price", nbins=45, color="Category" if "Category" in source.columns else None, title="Figure 8 — Retained price distribution")
-        fig.update_xaxes(title="Median Price (RM)")
+    if figure_number == 15:
+        counts = data["Primary_Type"].value_counts()
+        major = counts[counts >= 10].index
+        frame = data[data["Primary_Type"].isin(major)].copy()
+        order = frame.groupby("Primary_Type")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+        frame["Type label"] = frame["Primary_Type"].map(lambda t: f"{t} (n={counts[t]:,})")
+        label_order = [f"{t} (n={counts[t]:,})" for t in order]
+        fig = px.box(frame, x="Median_Price", y="Type label", points=False, category_orders={"Type label": label_order}, title="Figure 15 — Price by property type (types with n >= 10)", labels={"Median_Price": "Median price (RM)", "Type label": ""})
+        fig.update_traces(marker_color="#FFE7C2", line_color="#C47A10", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
+        fig.update_yaxes(autorange="reversed")
         return fig
 
-    if chart_id == "fig09":
-        counts = source.groupby("Area_Key").size()
-        bands = pd.cut(counts, bins=[0, 1, 4, 9, 19, float("inf")], labels=["1", "2-4", "5-9", "10-19", "20+"])
-        plot_data = bands.value_counts().sort_index().reset_index()
-        plot_data.columns = ["Record band", "Number of areas"]
-        fig = px.bar(plot_data, x="Record band", y="Number of areas", title="Figure 9 — Area frequency bands")
+    if figure_number == 16:
+        counts = data["Tenure"].value_counts()
+        order = data.groupby("Tenure")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+        frame = data.copy()
+        frame["Tenure label"] = frame["Tenure"].map(lambda t: f"{t} (n={counts[t]:,})")
+        label_order = [f"{t} (n={counts[t]:,})" for t in order]
+        fig = px.box(frame, x="Median_Price", y="Tenure label", points=False, category_orders={"Tenure label": label_order}, title="Figure 16 — Price distribution by tenure", labels={"Median_Price": "Median price (RM)", "Tenure label": ""})
+        fig.update_traces(marker_color="#E4DCFB", line_color="#7C3AED", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
+        fig.update_yaxes(autorange="reversed")
         return fig
 
-    if chart_id == "fig10":
-        plot_data = source["State"].value_counts().reset_index()
-        plot_data.columns = ["State", "Records"]
-        fig = px.bar(plot_data, x="State", y="Records", title="Figure 10 — Record count by state")
+    if figure_number == 17:
+        counts = data["Category"].value_counts()
+        order = data.groupby("Category")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+        frame = data.copy()
+        frame["Category label"] = frame["Category"].map(lambda c: f"{c} (n={counts[c]:,})")
+        label_order = [f"{c} (n={counts[c]:,})" for c in order]
+        fig = px.box(frame, x="Median_Price", y="Category label", points=False, category_orders={"Category label": label_order}, title="Figure 17 — Price by broad property category", labels={"Median_Price": "Median price (RM)", "Category label": ""})
+        fig.update_traces(marker_color="#CFE9E0", line_color="#18875D", hovertemplate="Median price: RM %{x:,.0f}<extra></extra>")
+        fig.update_yaxes(autorange="reversed")
         return fig
 
-    if chart_id == "fig11":
-        plot_data = source["Primary_Type"].value_counts().reset_index()
-        plot_data.columns = ["Primary Type", "Records"]
-        fig = px.bar(plot_data, x="Primary Type", y="Records", title="Figure 11 — Record count by property type")
+    if figure_number == 18:
+        state_n = data["State"].value_counts()
+        major_states = state_n[state_n >= 10].index
+        frame = data[data["State"].isin(major_states)].copy()
+        order = frame.groupby("State")["Median_PSF"].median().sort_values(ascending=False).index.tolist()
+        frame["State label"] = frame["State"].map(lambda s: f"{s} (n={state_n[s]:,})")
+        label_order = [f"{s} (n={state_n[s]:,})" for s in order]
+        fig = px.box(frame, x="Median_PSF", y="State label", points=False, category_orders={"State label": label_order}, title="Figure 18 — Median PSF distribution by State (states with n >= 10)", labels={"Median_PSF": "Median price per square foot (RM)", "State label": ""})
+        fig.update_traces(marker_color="#FBD7DC", line_color="#C63C4A", hovertemplate="Median PSF: RM %{x:,.0f}<extra></extra>")
+        fig.update_yaxes(autorange="reversed")
         return fig
 
-    if chart_id == "fig12":
-        if "Category" in source.columns:
-            plot_data = source["Category"].value_counts().reset_index()
-            plot_data.columns = ["Category", "Records"]
-            fig = px.pie(plot_data, names="Category", values="Records", hole=0.45, title="Figure 12 — Landed versus high-rise share")
-            return fig
-        plot_data = source["Primary_Type"].value_counts().reset_index()
-        plot_data.columns = ["Primary Type", "Records"]
-        return px.pie(plot_data, names="Primary Type", values="Records", hole=0.45, title="Figure 12 — Property type share")
-
-    if chart_id == "fig13":
-        fig = px.box(source, x="State", y="Median_Price", color="State", points="outliers", title="Figure 13 — Median price by state")
-        fig.update_layout(showlegend=False)
+    if figure_number == 19:
+        categories = ["Landed", "High-Rise"]
+        colors = ["#2F6FED", "#C47A10"]
+        titles = []
+        for category in categories:
+            part = data[data["Category"].eq(category)]
+            titles.append(f"{category} (n={len(part):,}, r={part['Median_PSF'].corr(part['Median_Price']):.2f})")
+        fig = make_subplots(rows=1, cols=2, subplot_titles=titles, shared_xaxes=True, shared_yaxes=True)
+        for col, (category, color) in enumerate(zip(categories, colors), start=1):
+            part = data[data["Category"].eq(category)].copy()
+            fig.add_trace(go.Scatter(x=part["Median_PSF"], y=part["Median_Price"], mode="markers", marker=dict(size=6, color=color, opacity=0.32), customdata=part[["State", "Area_Clean", "Primary_Type"]], hovertemplate="PSF: RM %{x:,.0f}<br>Price: RM %{y:,.0f}<br>State: %{customdata[0]}<br>Area: %{customdata[1]}<br>Type: %{customdata[2]}<extra></extra>", showlegend=False), row=1, col=col)
+            if len(part) > 1:
+                slope, intercept = np.polyfit(part["Median_PSF"], part["Median_Price"], 1)
+                xs = np.linspace(part["Median_PSF"].min(), part["Median_PSF"].max(), 100)
+                fig.add_trace(go.Scatter(x=xs, y=slope * xs + intercept, mode="lines", line=dict(color="#C63C4A", width=2), hoverinfo="skip", showlegend=False), row=1, col=col)
+            fig.update_xaxes(title_text="Median PSF (RM)", row=1, col=col)
+            fig.update_yaxes(type="log", row=1, col=col)
+        fig.update_yaxes(title_text="Median price (RM, log display scale)", row=1, col=1)
+        fig.update_layout(title="Figure 19 — Median PSF against Median Price, by category", height=520)
         return fig
 
-    if chart_id == "fig14":
-        area_summary = (source.groupby(["State", "Area_Clean"], as_index=False)
-                        .agg(Median_Price=("Median_Price", "median"), Records=("Median_Price", "size")))
-        area_summary = area_summary.sort_values("Median_Price", ascending=False).head(25)
-        area_summary["Area"] = area_summary["Area_Clean"].map(display_name) + ", " + area_summary["State"]
-        fig = px.bar(area_summary.sort_values("Median_Price"), x="Median_Price", y="Area", orientation="h", hover_data=["Records"], title="Figure 14 — Median price by area")
+    if figure_number == 20:
+        x = data["Transactions"].astype(float)
+        y = data["Median_Price"].astype(float)
+        slope, intercept = np.polyfit(x, y, 1)
+        xs = np.linspace(x.min(), x.max(), 100)
+        pearson = x.corr(y)
+        spearman = x.corr(y, method="spearman")
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=x, y=y, mode="markers", marker=dict(size=6, color="#667085", opacity=0.3), customdata=data[["State", "Area_Clean", "Primary_Type"]], hovertemplate="Transactions: %{x:,.0f}<br>Price: RM %{y:,.0f}<br>State: %{customdata[0]}<br>Area: %{customdata[1]}<br>Type: %{customdata[2]}<extra></extra>", name="Records"))
+        fig.add_trace(go.Scatter(x=xs, y=slope * xs + intercept, mode="lines", line=dict(color="#C63C4A", width=2), name="Linear trend"))
+        fig.update_xaxes(title_text="Transactions")
+        fig.update_yaxes(title_text="Median price (RM, log display scale)", type="log")
+        fig.update_layout(title=f"Figure 20 — Transactions against Median Price (Pearson r={pearson:.3f}, Spearman={spearman:.3f})")
         return fig
 
-    if chart_id == "fig15":
-        fig = px.box(source, x="Primary_Type", y="Median_Price", color="Primary_Type", points="outliers", title="Figure 15 — Median price by property type")
-        fig.update_layout(showlegend=False)
+    if figure_number == 21:
+        encoded = pd.get_dummies(data[["Tenure", "Primary_Type"]], prefix=["Tenure", "Primary_Type"], dtype=float)
+        encoded = pd.concat([encoded.reset_index(drop=True), data[["Median_PSF", "Transactions"]].reset_index(drop=True)], axis=1)
+        encoded["Median_Price"] = data["Median_Price"].values
+        target_corr = encoded.corr(numeric_only=True)["Median_Price"].drop("Median_Price")
+        tenure_cols = target_corr[[c for c in target_corr.index if c.startswith("Tenure_")]].abs().sort_values(ascending=False).index.tolist()
+        type_cols = target_corr[[c for c in target_corr.index if c.startswith("Primary_Type_")]].abs().sort_values(ascending=False).index.tolist()
+        ordered = ["Median_PSF", "Transactions"] + tenure_cols + type_cols + ["Median_Price"]
+        corr = encoded[ordered].corr()
+        z = corr.to_numpy(dtype=float)
+        upper = np.triu(np.ones_like(z, dtype=bool), k=1)
+        z[upper] = np.nan
+        text_values = []
+        for r in range(len(corr.index)):
+            row_text = []
+            for c in range(len(corr.columns)):
+                value = corr.iloc[r, c]
+                row_text.append(f"{value:.2f}" if (not upper[r, c] and abs(value) >= 0.10) else "")
+            text_values.append(row_text)
+        fig = go.Figure(go.Heatmap(z=z, x=corr.columns, y=corr.index, zmin=-1, zmax=1, zmid=0, colorscale="RdBu", reversescale=True, text=text_values, texttemplate="%{text}", hovertemplate="%{y} vs %{x}<br>r=%{z:.3f}<extra></extra>", colorbar=dict(title="r")))
+        fig.update_layout(title="Figure 21 — Correlation matrix (lower triangle)<br><sup>Numeric + Tenure + Primary_Type; |r| >= 0.10 labelled</sup>", height=760)
+        fig.update_xaxes(tickangle=45)
         return fig
 
-    if chart_id == "fig16":
-        fig = px.box(source, x="Tenure", y="Median_Price", color="Tenure", points="outliers", title="Figure 16 — Median price by tenure")
-        fig.update_layout(showlegend=False)
+    if figure_number == 22:
+        association = pd.Series({
+            "Median PSF": abs(data["Median_PSF"].corr(data["Median_Price"])),
+            "Transactions": abs(data["Transactions"].corr(data["Median_Price"])),
+        })
+        for col, label in [("State", "State"), ("Area_Key", "Area"), ("Tenure", "Tenure"), ("Primary_Type", "Property type")]:
+            association[label] = _live_correlation_ratio(data[col], data["Median_Price"])
+        association = association.sort_values()
+        fig = px.bar(x=association.values, y=association.index, orientation="h", text=[f"{v:.3f}" for v in association.values], title="Figure 22 — Association of each final model feature with price", labels={"x": "Association strength with Median_Price", "y": ""})
+        fig.update_traces(marker_color="#2F6FED", textposition="outside", hovertemplate="%{y}<br>Association: %{x:.3f}<extra></extra>")
+        fig.update_xaxes(title_text="Association strength with Median_Price (|Pearson r| numeric; correlation ratio eta categorical)", range=[0, association.max() * 1.18])
         return fig
 
-    if chart_id == "fig17":
-        color_col = "Category" if "Category" in source.columns else "Primary_Type"
-        fig = px.box(source, x=color_col, y="Median_Price", color=color_col, points="outliers", title="Figure 17 — Median price by category")
-        fig.update_layout(showlegend=False)
+    if figure_number == 23:
+        min_cell_n = 10
+        price_matrix = data.pivot_table(index="State", columns="Category", values="Median_Price", aggfunc="median")
+        count_matrix = data.pivot_table(index="State", columns="Category", values="Median_Price", aggfunc="size")
+        thin = count_matrix.isna() | (count_matrix < min_cell_n)
+        keep = ~thin.all(axis=1)
+        price_matrix = price_matrix.loc[keep]
+        count_matrix = count_matrix.loc[keep]
+        thin = thin.loc[keep]
+        z = price_matrix.to_numpy(dtype=float)
+        z[thin.to_numpy()] = np.nan
+        text_values = []
+        hover_values = []
+        for r, state in enumerate(price_matrix.index):
+            text_row = []
+            hover_row = []
+            for c, category in enumerate(price_matrix.columns):
+                n = count_matrix.loc[state, category]
+                if pd.isna(n) or n < min_cell_n:
+                    text_row.append("—")
+                    hover_row.append(f"{state} · {category}<br>Fewer than {min_cell_n} records")
+                else:
+                    value = price_matrix.loc[state, category]
+                    text_row.append(f"RM{value/1000:,.0f}K<br>n={int(n)}")
+                    hover_row.append(f"{state} · {category}<br>Median price: RM {value:,.0f}<br>n={int(n)}")
+            text_values.append(text_row)
+            hover_values.append(hover_row)
+        fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale="YlOrRd", text=text_values, texttemplate="%{text}", customdata=hover_values, hovertemplate="%{customdata}<extra></extra>", colorbar=dict(title="Median price (RM)")))
+        fig.update_layout(title=f"Figure 23 — Median price by State x Category<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>", height=690, plot_bgcolor="#E7E9EE")
         return fig
 
-    if chart_id == "fig18":
-        fig = px.box(source, x="State", y="Median_PSF", color="State", points="outliers", title="Figure 18 — Median PSF by state")
-        fig.update_layout(showlegend=False)
+    if figure_number == 24:
+        min_cell_n = 10
+        price_matrix = data.pivot_table(index="Primary_Type", columns="Tenure", values="Median_Price", aggfunc="median")
+        count_matrix = data.pivot_table(index="Primary_Type", columns="Tenure", values="Median_Price", aggfunc="size")
+        thin = count_matrix.isna() | (count_matrix < min_cell_n)
+        keep = ~thin.all(axis=1)
+        price_matrix = price_matrix.loc[keep]
+        count_matrix = count_matrix.loc[keep]
+        thin = thin.loc[keep]
+        z = price_matrix.to_numpy(dtype=float)
+        z[thin.to_numpy()] = np.nan
+        text_values = []
+        hover_values = []
+        for r, ptype in enumerate(price_matrix.index):
+            text_row = []
+            hover_row = []
+            for c, tenure in enumerate(price_matrix.columns):
+                n = count_matrix.loc[ptype, tenure]
+                if pd.isna(n) or n < min_cell_n:
+                    text_row.append("—")
+                    hover_row.append(f"{ptype} · {tenure}<br>Fewer than {min_cell_n} records")
+                else:
+                    value = price_matrix.loc[ptype, tenure]
+                    text_row.append(f"RM{value/1000:,.0f}K<br>n={int(n)}")
+                    hover_row.append(f"{ptype} · {tenure}<br>Median price: RM {value:,.0f}<br>n={int(n)}")
+            text_values.append(text_row)
+            hover_values.append(hover_row)
+        fig = go.Figure(go.Heatmap(z=z, x=price_matrix.columns, y=price_matrix.index, colorscale="YlGnBu", text=text_values, texttemplate="%{text}", customdata=hover_values, hovertemplate="%{customdata}<extra></extra>", colorbar=dict(title="Median price (RM)")))
+        fig.update_layout(title=f"Figure 24 — Median price by Primary_Type x Tenure<br><sup>Cells with fewer than {min_cell_n} records are masked</sup>", height=600, plot_bgcolor="#E7E9EE")
         return fig
 
-    if chart_id == "fig19":
-        color_col = "Category" if "Category" in source.columns else "Primary_Type"
-        fig = px.scatter(source, x="Median_PSF", y="Median_Price", color=color_col, size="Transactions", hover_data=["State", "Area_Clean", "Primary_Type"], title="Figure 19 — Median PSF versus price")
-        return fig
+    return None
 
-    if chart_id == "fig20":
-        fig = px.scatter(source, x="Transactions", y="Median_Price", color="Primary_Type", hover_data=["State", "Area_Clean"], title="Figure 20 — Transactions versus price")
-        return fig
 
-    if chart_id == "fig21":
-        numeric_cols = [col for col in ["Median_Price", "Median_PSF", "Transactions"] if col in source.columns]
-        corr = source[numeric_cols].corr(numeric_only=True)
-        fig = px.imshow(corr, text_auto=".2f", color_continuous_scale="RdBu_r", zmin=-1, zmax=1, title="Figure 21 — Numeric correlation matrix")
-        return fig
-
-    if chart_id == "fig22":
-        rows = []
-        for col in ["Median_PSF", "Transactions"]:
-            if col in source.columns:
-                rows.append({"Feature": col, "Association": abs(source[[col, "Median_Price"]].corr().iloc[0, 1])})
-        for col in ["State", "Area_Key", "Tenure", "Primary_Type"]:
-            if col in source.columns:
-                rows.append({"Feature": col, "Association": categorical_strength(source, col)})
-        plot_data = pd.DataFrame(rows).fillna(0).sort_values("Association")
-        fig = px.bar(plot_data, x="Association", y="Feature", orientation="h", title="Figure 22 — Feature association with Median Price")
-        fig.update_xaxes(title="Association strength")
-        return fig
-
-    if chart_id == "fig23":
-        if "Category" not in source.columns:
-            source = source.assign(Category=source["Primary_Type"])
-        pivot = source.pivot_table(index="State", columns="Category", values="Median_Price", aggfunc="median")
-        fig = px.imshow(pivot, text_auto=".2s", aspect="auto", title="Figure 23 — State and category median price heatmap")
-        return fig
-
-    if chart_id == "fig24":
-        pivot = source.pivot_table(index="Primary_Type", columns="Tenure", values="Median_Price", aggfunc="median")
-        fig = px.imshow(pivot, text_auto=".2s", aspect="auto", title="Figure 24 — Type and tenure median price heatmap")
-        return fig
-
-    raise ValueError(f"Unknown chart id: {chart_id}")
-
-def render_plotly(fig):
-    fig.update_layout(template="plotly_white", margin=dict(l=10, r=10, t=45, b=10),
-                      paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#FFFFFF",
-                      font=dict(color="#0F172A"), hoverlabel=dict(bgcolor="#FFFFFF"))
-    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+def _render_live_insight_card(figure_number, title, description, data, raw):
+    st.markdown(
+        f'<div class="mh-figure-card"><div class="mh-figure-title">{svg_icon("chart",18)} '
+        f'Figure {figure_number} · {escape(title)}</div>'
+        f'<div class="mh-figure-insight">{escape(description)}</div></div>',
+        unsafe_allow_html=True,
+    )
+    figure = build_live_notebook_figure(figure_number, data, raw)
+    if figure is not None:
+        render_plotly(figure)
+    else:
+        st.info("Plotly is unavailable, so this interactive chart cannot be displayed.")
 
 
 def insights_page(data):
-    raw_data = load_raw_data()
     st.markdown(
-        f'<div class="mh-hero"><div><h1>Market Insights</h1><p>Explore the same evidence used in Latest Final, but as live interactive charts for presentation.</p></div>'
+        f'<div class="mh-hero"><div><h1>Market Insights</h1><p>Filter the 2025 housing dataset, '
+        'compare market segments, and interact with the same analytical views used in Latest_FINAL.</p></div>'
         f'<div class="mh-hero-icon">{svg_icon("chart",34)}</div></div>', unsafe_allow_html=True,
     )
-    view = st.radio(
-        "Insight view",
-        ["Market Explorer", "Live Notebook Charts"],
-        horizontal=True,
-        label_visibility="collapsed",
-        key="insights_view",
-    )
+    view = st.radio("Insight view", ["Market Explorer", "Visual Insights"], horizontal=True,
+                    label_visibility="collapsed", key="insights_view")
 
     if view == "Market Explorer":
         st.markdown(f'<div class="mh-panel-title">{svg_icon("filter",19)} Filter market records</div>', unsafe_allow_html=True)
@@ -3341,30 +3548,65 @@ def insights_page(data):
             ("Median transactions", f"{subset['Transactions'].median():,.0f}", "Observed volume"),
         ])
 
-        st.caption("Interactive summaries below are generated from the same cleaned data used in Latest Final.")
         if HAS_PLOTLY:
+            st.caption("These live views use the same chart logic and axes as Figures 13, 14, 15 and 19, but respond to the filters above.")
+
             left, right = st.columns(2)
             with left:
-                fig = make_live_insight_chart("fig13", subset, raw_data)
+                counts = subset["State"].value_counts()
+                valid_states = counts[counts >= 1].index
+                frame = subset[subset["State"].isin(valid_states)].copy()
+                order = frame.groupby("State")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+                frame["State label"] = frame["State"].map(lambda s: f"{s} (n={counts[s]:,})")
+                fig = px.box(frame, x="Median_Price", y="State label", points=False,
+                             category_orders={"State label": [f"{s} (n={counts[s]:,})" for s in order]},
+                             title="Price distribution by State", labels={"Median_Price": "Median price (RM)", "State label": ""})
+                fig.update_yaxes(autorange="reversed")
                 render_plotly(fig)
-                st.caption("Short insight: location changes the median price pattern.")
+                st.caption("Shows the spread of median prices for the currently filtered states.")
+
             with right:
-                fig = make_live_insight_chart("fig15", subset, raw_data)
+                counts = subset["Primary_Type"].value_counts()
+                order = subset.groupby("Primary_Type")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+                frame = subset.copy()
+                frame["Type label"] = frame["Primary_Type"].map(lambda t: f"{t} (n={counts[t]:,})")
+                fig = px.box(frame, x="Median_Price", y="Type label", points=False,
+                             category_orders={"Type label": [f"{t} (n={counts[t]:,})" for t in order]},
+                             title="Price distribution by Property Type", labels={"Median_Price": "Median price (RM)", "Type label": ""})
+                fig.update_yaxes(autorange="reversed")
                 render_plotly(fig)
-                st.caption("Short insight: property type changes the expected price band.")
+                st.caption("Compares price distributions across the property types left by the filters.")
+
             left, right = st.columns(2)
             with left:
-                fig = make_live_insight_chart("fig19", subset, raw_data)
+                fig = px.scatter(subset, x="Median_PSF", y="Median_Price", color="Category",
+                                 hover_data=["State", "Area_Clean", "Primary_Type"],
+                                 title="Median PSF against Median Price",
+                                 labels={"Median_PSF": "Median PSF (RM)", "Median_Price": "Median price (RM, log display scale)"})
+                fig.update_yaxes(type="log")
                 render_plotly(fig)
-                st.caption("Short insight: PSF is strongly connected to price.")
+                st.caption("Hover over a point to inspect how PSF and price move together for the filtered records.")
+
             with right:
-                fig = make_live_insight_chart("fig14", subset, raw_data)
-                render_plotly(fig)
-                st.caption("Short insight: area-level price differences remain visible.")
+                min_area_n = 15
+                area_counts = subset["Area_Key"].value_counts()
+                area_keys = area_counts[area_counts >= min_area_n].head(10).index
+                if len(area_keys):
+                    frame = subset[subset["Area_Key"].isin(area_keys)].copy()
+                    frame["Area display"] = frame["Area_Key"].map(lambda v: display_name(str(v).replace(" | ", " — ")))
+                    area_n = frame["Area display"].value_counts()
+                    order = frame.groupby("Area display")["Median_Price"].median().sort_values(ascending=False).index.tolist()
+                    frame["Area label"] = frame["Area display"].map(lambda a: f"{a} (n={area_n[a]})")
+                    fig = px.box(frame, x="Median_Price", y="Area label", points=False,
+                                 category_orders={"Area label": [f"{a} (n={area_n[a]})" for a in order]},
+                                 title="Price distribution by Area (n >= 15)", labels={"Median_Price": "Median price (RM)", "Area label": ""})
+                    fig.update_yaxes(autorange="reversed")
+                    render_plotly(fig)
+                    st.caption("Matches the Area comparison logic in Figure 14 and only shows better-represented Areas.")
+                else:
+                    st.info("The current filters do not leave any Area with at least 15 records for the Figure 14-style comparison.")
         else:
-            st.info("Plotly is unavailable, so simplified Streamlit charts are shown.")
-            st.bar_chart(subset.groupby("State")["Median_Price"].median().sort_values(ascending=False))
-            st.scatter_chart(subset, x="Median_PSF", y="Median_Price", color="Primary_Type")
+            st.info("Plotly is unavailable, so interactive Market Explorer charts cannot be displayed.")
 
         export_columns = [c for c in ["Township", "Area_Clean", "State", "Primary_Type", "Tenure", "Median_Price", "Median_PSF", "Transactions"] if c in subset.columns]
         with st.expander("View filtered records"):
@@ -3378,34 +3620,17 @@ def insights_page(data):
         )
         return
 
-    category = st.selectbox("Notebook chart group", list(LIVE_FIGURE_GROUPS), key="live_chart_group")
+    raw = load_raw_insight_data()
+    category = st.selectbox("Insight category", list(LIVE_INSIGHT_GROUPS), key="insight_category")
     st.markdown(
-        f'<div class="mh-takeaway"><strong>Presentation takeaway</strong><br>{FIGURE_TAKEAWAYS[category]}</div>',
+        f'<div class="mh-takeaway"><strong>Key takeaway from this category</strong><br>'
+        f'{escape(LIVE_INSIGHT_TAKEAWAYS[category])}</div>',
         unsafe_allow_html=True,
     )
+    st.caption("All charts below are live Plotly versions of Figures 1–24 in Latest_FINAL. Hover, zoom, pan and use the chart toolbar during presentation.")
 
-    chart_options = LIVE_FIGURE_GROUPS[category]
-    chart_labels = [f"{chart_id.upper()} · {title}" for chart_id, title, _ in chart_options]
-    selected_label = st.selectbox("Live chart", chart_labels, key="live_chart_choice")
-    selected_index = chart_labels.index(selected_label)
-    chart_id, title, description = chart_options[selected_index]
-
-    st.markdown(
-        f'<div class="mh-figure-card"><div class="mh-figure-title">{svg_icon("chart",18)} {escape(title)}</div>'
-        f'<div class="mh-figure-insight">{escape(description)}</div></div>',
-        unsafe_allow_html=True,
-    )
-
-    if not HAS_PLOTLY:
-        st.warning("Plotly is required for the live interactive notebook charts.")
-        return
-
-    try:
-        fig = make_live_insight_chart(chart_id, data, raw_data)
-        render_plotly(fig)
-    except Exception as error:
-        st.error(f"Unable to build this live chart: {error}")
-
+    for figure_number, title, description in LIVE_INSIGHT_GROUPS[category]:
+        _render_live_insight_card(figure_number, title, description, data, raw)
 
 # ---------------------------------------------------------------------------
 # PAGE 3 - MODEL REPORT
