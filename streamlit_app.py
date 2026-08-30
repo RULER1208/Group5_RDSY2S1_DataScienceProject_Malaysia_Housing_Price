@@ -2,7 +2,7 @@
 BMDS2003 Data Science - Deployment Prototype
 Malaysia Housing Median Price Estimator
 
-Run locally:  streamlit run streamlit_app_location_search_v2.py
+Run locally:  streamlit run my_UI2_location_persistence_jinjang_fixed.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -638,6 +638,7 @@ HARDCODED_AREAS = {
         "Kepong": [3.2120, 101.6358], "Mont Kiara": [3.1672, 101.6508], 
         "Bukit Jalil": [3.0578, 101.6885], "Wangsa Maju": [3.2045, 101.7348], 
         "Bangsar": [3.1253, 101.6749], "Old Klang Road": [3.0830, 101.6740],
+        "Jinjang": [3.21131, 101.65832],
     },
     "Johor": {
         "Skudai": [1.5333, 103.6667], "Tebrau": [1.5833, 103.7500], 
@@ -2135,6 +2136,7 @@ def attach_spider_fly_marker(
     fly_request,
     current_state,
     current_area,
+    searched_point=None,
 ):
     """Add a reliable Spider-Man-style navigator to the Folium map.
 
@@ -2152,16 +2154,23 @@ def attach_spider_fly_marker(
 
     has_flight = bool(fly_request)
 
-    # Keep the mascot attached to a real geographic coordinate.  When nothing
-    # is selected yet, the initial Malaysia map centre is used so Spider-Man is
-    # still visible immediately.
+    # Keep the mascot attached to a real geographic coordinate across every
+    # Streamlit rerun.  An exact searched POI/address has highest priority;
+    # otherwise use the selected area's verified coordinate, then the state,
+    # then the initial Malaysia map centre.  Property/model input changes must
+    # never move Spider-Man away from the selected location.
     default_center = list(getattr(malaysia_map, "location", None) or [4.2105, 108.9758])
     resting_center = list(default_center)
-    if current_area and current_state:
+    if searched_point:
+        try:
+            resting_center = [float(searched_point["lat"]), float(searched_point["lon"])]
+        except (KeyError, TypeError, ValueError):
+            searched_point = None
+    if not searched_point and current_area and current_state:
         area_coords, _ = get_area_map_coords(current_area, current_state)
         if area_coords:
             resting_center = list(area_coords)
-    elif current_state and current_state in STATE_COORDS:
+    elif not searched_point and current_state and current_state in STATE_COORDS:
         resting_center = list(STATE_COORDS[current_state])
 
     if has_flight:
@@ -2726,6 +2735,7 @@ def prediction_page(data, results):
             fly_request,
             current_state,
             current_area,
+            st.session_state.get("searched_point"),
         )
 
         st.markdown("<div class='mh-map-wrap'>", unsafe_allow_html=True)
