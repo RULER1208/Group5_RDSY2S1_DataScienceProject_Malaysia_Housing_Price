@@ -1,0 +1,3 @@
+Feature set,Validation RMSE (RM),Validation MAE (RM),Validation R²,Selected model,RMSE difference vs With Median_PSF (%)
+Without Median_PSF,598984.4464446134,208566.59049864585,0.08232774236948814,Random Forest,23.753431052289987
+With Median_PSF,484014.4158843744,125062.12233130341,0.4007982051914437,Random Forest,0.0

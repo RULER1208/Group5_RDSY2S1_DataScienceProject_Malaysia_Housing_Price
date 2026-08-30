@@ -1,0 +1,4 @@
+Model,Combinations tested,Best Group CV RMSE (RM),Best parameters,Search time (s)
+Random Forest,4,279261.06586243096,"{""model__max_depth"": null, ""model__max_features"": 0.8, ""model__min_samples_leaf"": 2, ""model__n_estimators"": 120}",20.633678436279297
+XGBoost,4,279063.77873930795,"{""model__colsample_bytree"": 0.9, ""model__learning_rate"": 0.05, ""model__max_depth"": 5, ""model__n_estimators"": 180, ""model__subsample"": 0.9}",4.0496227741241455
+LightGBM,4,296705.8875333477,"{""model__learning_rate"": 0.05, ""model__min_child_samples"": 20, ""model__n_estimators"": 120, ""model__num_leaves"": 15}",1.7874631881713867

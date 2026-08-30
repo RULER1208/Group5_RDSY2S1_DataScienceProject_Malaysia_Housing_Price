@@ -1,0 +1,2001 @@
+State,Area_Key,Tenure,Primary_Type,Median_PSF,Transactions,Median_Price
+Penang,PENANG | TASEK GELUGOR,Freehold,Terrace House,304.0,593,331800.0
+Johor,JOHOR | KULAI,Freehold,Cluster House,322.0,519,590900.0
+Perak,PERAK | CHENDERIANG,Freehold,Terrace House,130.0,414,229954.0
+Melaka,MELAKA | BEMBAN,Freehold,Terrace House,218.0,391,255600.0
+Perak,PERAK | TAPAH,Leasehold,Terrace House,168.0,363,219300.0
+Johor,JOHOR | TEBRAU,Freehold,Semi D,328.0,349,738000.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,323.0,319,345000.0
+Perak,PERAK | TELUK INTAN,Leasehold,Cluster House,126.0,309,236594.0
+Melaka,MELAKA | JASIN,Freehold,Terrace House,188.0,301,180000.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,496.0,292,793888.0
+Melaka,MELAKA | BEMBAN,Leasehold,Terrace House,92.0,288,128730.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,425.0,259,695000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Leasehold,Terrace House,194.0,210,359000.0
+Johor,JOHOR | TEBRAU,Freehold,Semi D,450.0,203,750000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,307.0,202,394000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Terrace House,326.0,195,450000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Cluster House,214.0,193,400000.0
+Johor,JOHOR | KLUANG,Leasehold,Terrace House,125.0,188,170800.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,471.0,184,832000.0
+Johor,JOHOR | SKUDAI,Leasehold,Terrace House,396.0,183,672000.0
+Johor,JOHOR | KLUANG,Freehold,Cluster House,140.0,181,343400.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Cluster House,387.0,177,380000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Terrace House,392.0,173,500000.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,331.0,172,504000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,500.0,171,1180000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Bungalow,232.0,166,290000.0
+Johor,JOHOR | SKUDAI,Freehold,Service Residence,602.0,165,452900.0
+Perak,PERAK | CHEMOR,Freehold,Semi D,235.0,164,472800.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,470.0,163,930000.0
+Johor,JOHOR | PAGOH,Freehold,Terrace House,74.0,156,80000.0
+Johor,JOHOR | KULAI,Mixed,Cluster House,297.0,155,553200.0
+Negeri Sembilan,NEGERI SEMBILAN | LENGGENG,Leasehold,Terrace House,310.0,152,476240.0
+Johor,JOHOR | PERLING,Freehold,Terrace House,286.0,152,527500.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,384.0,149,551650.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,377.0,145,680000.0
+Selangor,SELANGOR | SERENDAH,Leasehold,Terrace House,186.0,144,200000.0
+Penang,PENANG | PENAGA,Freehold,Terrace House,277.0,141,307000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,357.0,141,450000.0
+Melaka,MELAKA | SUNGEI PETAI,Freehold,Semi D,194.0,140,298800.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Semi D,308.0,140,495000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,294.0,138,450000.0
+Kedah,KEDAH | PADANG SERAI,Freehold,Semi D,143.0,136,199800.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Bungalow,258.0,135,397800.0
+Perak,PERAK | SITIAWAN,Freehold,Cluster House,139.0,128,245000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,200.0,124,419444.0
+Selangor,SELANGOR | IJOK,Freehold,Cluster House,432.0,123,913800.0
+Melaka,MELAKA | BUKIT KATIL,Leasehold,Terrace House,175.0,123,270000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,252.0,122,350000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,322.0,122,530000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,550.0,120,1060888.0
+Johor,JOHOR | TEBRAU,Freehold,Terrace House,382.0,118,610000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Terrace House,309.0,118,472800.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,388.0,118,618500.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,107.0,117,150000.0
+Johor,JOHOR | SKUDAI,Freehold,Flat,283.0,117,140000.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,414.0,115,580000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,325.0,114,435000.0
+Johor,JOHOR | SKUDAI,Freehold,Semi D,483.0,114,1114310.0
+Selangor,SELANGOR | SERENDAH,Freehold,Terrace House,222.0,113,300000.0
+Johor,JOHOR | MASAI,Freehold,Terrace House,279.0,111,430000.0
+Johor,JOHOR | TAMPOI,Freehold,Cluster House,435.0,110,911890.0
+Selangor,SELANGOR | IJOK,Freehold,Terrace House,392.0,109,509800.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Terrace House,496.0,109,872999.0
+Johor,JOHOR | KOTA TINGGI,Leasehold,Terrace House,104.0,105,80000.0
+Selangor,SELANGOR | BANTING,Freehold,Semi D,129.0,104,180000.0
+Selangor,SELANGOR | CHERAS,Freehold,Semi D,422.0,103,640000.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,193.0,102,270610.0
+Selangor,SELANGOR | TANJONG DUABELAS,Freehold,Terrace House,258.0,102,400000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Service Residence,611.0,102,580000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,488.0,99,887800.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT BINTANG,Freehold,Service Residence,1664.0,94,1482000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Terrace House,281.0,93,400000.0
+Selangor,SELANGOR | BANDAR UTAMA,Freehold,Terrace House,849.0,92,1510000.0
+Perak,PERAK | SERI ISKANDAR,Leasehold,Terrace House,104.0,92,145000.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,493.0,92,781000.0
+Johor,JOHOR | SKUDAI,Freehold,Cluster House,321.0,92,460000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,369.0,91,588800.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,119.0,89,250750.0
+Johor,JOHOR | SENAI,Freehold,Terrace House,591.0,89,839000.0
+Melaka,MELAKA | TANJONG MINYAK,Freehold,Semi D,185.0,89,453000.0
+Johor,JOHOR | KOTA TINGGI,Leasehold,Terrace House,160.0,89,246600.0
+Johor,JOHOR | SKUDAI,Freehold,Cluster House,252.0,88,564230.0
+Selangor,SELANGOR | KLANG,Freehold,Semi D,446.0,88,804000.0
+Johor,JOHOR | KOTA TINGGI,Freehold,Terrace House,405.0,87,713000.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,267.0,87,400000.0
+Negeri Sembilan,NEGERI SEMBILAN | JIMAH,Freehold,Terrace House,179.0,86,220000.0
+Penang,PENANG | SUNGAI BAKAP,Freehold,Semi D,241.0,85,675000.0
+Selangor,SELANGOR | BATU CAVES,Freehold,Terrace House,556.0,85,450000.0
+Selangor,SELANGOR | DAMANSARA PERDANA,Leasehold,Apartment,447.0,85,380000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,334.0,84,582222.0
+Perak,PERAK | KAMPAR,Leasehold,Terrace House,214.0,83,300000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN 2,Freehold,Terrace House,464.0,83,775800.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,179.0,82,250000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,186.0,82,260000.0
+Negeri Sembilan,NEGERI SEMBILAN | PASIR PANJANG,Freehold,Terrace House,183.0,82,250000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,271.0,82,431167.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Bungalow,437.0,81,980000.0
+Terengganu,TERENGGANU | KIJAL,Freehold,Semi D,126.0,81,320000.0
+Negeri Sembilan,NEGERI SEMBILAN | JIMAH,Freehold,Terrace House,483.0,80,675888.0
+Johor,JOHOR | SEGAMAT,Freehold,Terrace House,208.0,80,349350.0
+Selangor,SELANGOR | RAWANG,Freehold,Semi D,313.0,79,420000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,1270.0,79,1386800.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,232.0,78,325000.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,267.0,78,380000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,292.0,78,450000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Semi D,327.0,78,609000.0
+Johor,JOHOR | JOHOR BAHRU,Mixed,Terrace House,279.0,78,500000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Terrace House,339.0,78,450000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Terrace House,400.0,78,580000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Freehold,Terrace House,368.0,77,522000.0
+Kedah,KEDAH | GURUN,Freehold,Terrace House,141.0,76,232000.0
+Johor,JOHOR | MASAI,Freehold,Semi D,320.0,76,436440.0
+Selangor,SELANGOR | SERENDAH,Freehold,Terrace House,357.0,75,437100.0
+Selangor,SELANGOR | DENGKIL,Freehold,Terrace House,532.0,75,828888.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,448.0,75,855000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,230.0,74,276800.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,417.0,74,844000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,434.0,74,682500.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,513.0,74,725000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Semi D,535.0,74,1110900.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Terrace House,338.0,73,440000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,389.0,73,650000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Semi D,308.0,73,600000.0
+Kedah,KEDAH | PADANG SERAI,Freehold,Terrace House,159.0,72,204000.0
+Negeri Sembilan,NEGERI SEMBILAN | PASIR PANJANG,Freehold,Terrace House,192.0,72,279000.0
+Selangor,SELANGOR | KAJANG,Leasehold,Service Residence,503.0,72,299000.0
+Kedah,KEDAH | LUNAS,Freehold,Semi D,227.0,71,516888.0
+Perak,PERAK | GOPENG,Freehold,Terrace House,192.0,71,268000.0
+Penang,PENANG | KEPALA BATAS,Freehold,Terrace House,366.0,71,613000.0
+Selangor,SELANGOR | BANDAR PUNCAK ALAM,Leasehold,Cluster House,288.0,71,400000.0
+Selangor,SELANGOR | BANGI,Freehold,Service Residence,508.0,71,432000.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,464.0,70,719000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,177.0,70,260000.0
+Selangor,SELANGOR | BANDAR SRI DAMANSARA,Freehold,Terrace House,564.0,70,894000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,357.0,70,495000.0
+Selangor,SELANGOR | CHERAS,Freehold,Terrace House,543.0,70,775000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,231.0,69,388000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Semi D,325.0,69,750000.0
+Johor,JOHOR | KLUANG,Freehold,Semi D,107.0,69,150000.0
+Johor,JOHOR | TEBRAU,Freehold,Semi D,345.0,69,828000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Semi D,584.0,69,930000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,580.0,68,1260000.0
+Johor,JOHOR | SKUDAI,Freehold,Cluster House,426.0,68,550000.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,542.0,67,768800.0
+Negeri Sembilan,NEGERI SEMBILAN | KUALA PILAH,Freehold,Terrace House,192.0,67,298000.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,417.0,67,584999.0
+Perak,PERAK | IPOH,Mixed,Semi D,344.0,67,496800.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,403.0,66,427500.0
+Negeri Sembilan,NEGERI SEMBILAN | LINGGI,Freehold,Terrace House,131.0,66,180000.0
+Selangor,SELANGOR | BANDAR SUNWAY,Leasehold,Apartment,516.0,66,400000.0
+Selangor,SELANGOR | TELOK PANGLIMA GARANG,Leasehold,Terrace House,287.0,65,455000.0
+Selangor,SELANGOR | BERANANG,Freehold,Semi D,293.0,64,400000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,349.0,64,487800.0
+Perak,PERAK | SERI ISKANDAR,Leasehold,Cluster House,175.0,64,240000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN TUN DR ISMAIL,Freehold,Terrace House,768.0,64,1585000.0
+Perak,PERAK | KAMUNTING,Leasehold,Terrace House,131.0,63,171000.0
+Selangor,SELANGOR | BANDAR SUNGAI LONG,Freehold,Terrace House,440.0,63,690000.0
+Kuala Lumpur,KUALA LUMPUR | SRI PETALING,Leasehold,Semi D,511.0,63,845000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,166.0,63,215000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,156.0,62,228000.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,549.0,62,1201200.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,501.0,62,620000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,321.0,61,330000.0
+Johor,JOHOR | PENGERANG,Leasehold,Terrace House,67.0,60,80000.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,207.0,60,280000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Terrace House,322.0,60,600000.0
+Selangor,SELANGOR | BANGI,Freehold,Cluster House,416.0,60,857000.0
+Selangor,SELANGOR | SERENDAH,Leasehold,Terrace House,188.0,60,300000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KUCHING,Freehold,Condominium,619.0,60,650000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,152.0,59,220000.0
+Selangor,SELANGOR | BATU ARANG,Leasehold,Terrace House,272.0,59,590000.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Mixed,Terrace House,168.0,59,300000.0
+Sarawak,SARAWAK | MIRI,Leasehold,Terrace House,182.0,59,288000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KUCHING,Freehold,Condominium,669.0,59,850000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,354.0,58,670000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,625.0,58,1120000.0
+Selangor,SELANGOR | KLANG,Freehold,Bungalow,546.0,58,1590000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,270.0,58,425000.0
+Selangor,SELANGOR | BERANANG,Freehold,Cluster House,431.0,58,854000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,258.0,58,614000.0
+Melaka,MELAKA | KRUBONG,Freehold,Terrace House,290.0,57,405800.0
+Perak,PERAK | TAIPING,Freehold,Terrace House,203.0,57,299000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,253.0,57,538000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,464.0,57,600000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,264.0,57,400000.0
+Selangor,SELANGOR | KOTA DAMANSARA,Leasehold,Condominium,525.0,57,530000.0
+Perak,PERAK | SITIAWAN,Leasehold,Terrace House,50.0,56,116000.0
+Johor,JOHOR | MASAI,Freehold,Terrace House,305.0,56,496500.0
+Melaka,MELAKA | BEMBAN,Leasehold,Terrace House,150.0,56,230435.0
+Penang,PENANG | KEPALA BATAS,Freehold,Cluster House,260.0,55,310000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,200.0,55,228000.0
+Johor,JOHOR | TEBRAU,Freehold,Semi D,441.0,55,700000.0
+Penang,PENANG | NIBONG TEBAL,Freehold,Bungalow,274.0,55,960000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,311.0,54,900000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,357.0,54,499800.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,468.0,54,767500.0
+Johor,JOHOR | KOTA TINGGI,Freehold,Terrace House,271.0,54,380000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,165.0,54,230000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Leasehold,Flat,380.0,54,224500.0
+Sabah,SABAH | PAPAR,Leasehold,Apartment,218.0,54,115000.0
+Negeri Sembilan,NEGERI SEMBILAN | TELOK KEMANG,Freehold,Terrace House,177.0,53,230000.0
+Terengganu,TERENGGANU | HULU TERENGGANU,Mixed,Bungalow,62.0,53,200000.0
+Perak,PERAK | LUMUT,Leasehold,Terrace House,120.0,53,155500.0
+Melaka,MELAKA | MERLIMAU,Freehold,Terrace House,127.0,53,179800.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,372.0,53,420000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,363.0,53,540000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Bungalow,534.0,53,2450000.0
+Negeri Sembilan,NEGERI SEMBILAN | LENGGENG,Freehold,Bungalow,105.0,53,435000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Semi D,321.0,53,700000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Terrace House,282.0,53,410000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Terrace House,385.0,52,452000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Freehold,Terrace House,67.0,52,80000.0
+Selangor,SELANGOR | RAWANG,Freehold,Semi D,383.0,52,795000.0
+Selangor,SELANGOR | ULU KLANG,Freehold,Semi D,483.0,51,686000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,267.0,51,499900.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,292.0,51,400000.0
+Kuala Lumpur,KUALA LUMPUR | DAMANSARA HEIGHTS,Freehold,Bungalow,700.0,51,3600000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN,Leasehold,Terrace House,317.0,50,411800.0
+Selangor,SELANGOR | SABAK BERNAM,Leasehold,Cluster House,179.0,50,250000.0
+Melaka,MELAKA | TANJONG MINYAK,Freehold,Terrace House,138.0,50,180000.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,273.0,50,375000.0
+Selangor,SELANGOR | KLANG,Leasehold,Terrace House,344.0,50,411640.0
+Perak,PERAK | PARIT BUNTAR,Leasehold,Terrace House,267.0,50,368800.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Condominium,505.0,50,814800.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Condominium,648.0,50,600000.0
+Penang,PENANG | SEBERANG JAYA,Leasehold,Terrace House,294.0,49,280000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Terrace House,332.0,49,430000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,283.0,49,400000.0
+Johor,JOHOR | PASIR GUDANG,Leasehold,Semi D,245.0,49,270000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,382.0,49,499000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Terrace House,338.0,49,508000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Semi D,485.0,49,770000.0
+Perak,PERAK | IPOH,Mixed,Terrace House,202.0,49,199000.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,379.0,48,559444.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,67.0,48,80000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,620.0,48,1225000.0
+Kuala Lumpur,KUALA LUMPUR | KEPONG,Mixed,Terrace House,445.0,48,667500.0
+Selangor,SELANGOR | BANDAR KINRARA,Freehold,Terrace House,621.0,48,1415000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,146.0,48,197500.0
+Johor,JOHOR | PASIR GUDANG,Leasehold,Terrace House,381.0,48,300000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Service Residence,386.0,48,360000.0
+Johor,JOHOR | GERISEK,Freehold,Terrace House,100.0,47,165000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,226.0,47,303800.0
+Selangor,SELANGOR | IJOK,Leasehold,Terrace House,189.0,47,310000.0
+Melaka,MELAKA | KRUBONG,Leasehold,Terrace House,223.0,47,290000.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,387.0,47,1000000.0
+Negeri Sembilan,NEGERI SEMBILAN | TAMPIN,Freehold,Semi D,145.0,47,299473.0
+Penang,PENANG | AYER ITAM,Freehold,Flat,243.0,47,170000.0
+Negeri Sembilan,NEGERI SEMBILAN | BAHAU,Leasehold,Terrace House,192.0,46,249000.0
+Kedah,KEDAH | PADANG SERAI,Freehold,Terrace House,208.0,46,270000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,253.0,46,390000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,454.0,46,600000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,482.0,46,765000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,244.0,46,420000.0
+Kedah,KEDAH | PADANG SERAI,Freehold,Terrace House,214.0,46,292500.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,536.0,46,580000.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Service Residence,1827.0,46,1453150.0
+Perak,PERAK | SITIAWAN,Leasehold,Semi D,279.0,45,329890.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,235.0,45,340194.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,273.0,45,330000.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,254.0,45,358000.0
+Johor,JOHOR | KOTA TINGGI,Freehold,Semi D,198.0,45,310000.0
+Johor,JOHOR | SENAI,Freehold,Terrace House,110.0,45,170000.0
+Negeri Sembilan,NEGERI SEMBILAN | LUKUT,Freehold,Terrace House,210.0,45,287850.0
+Johor,JOHOR | SENAI,Freehold,Terrace House,446.0,45,480000.0
+Penang,PENANG | AYER ITAM,Freehold,Flat,335.0,45,180000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN,Freehold,Terrace House,272.0,44,380000.0
+Selangor,SELANGOR | BATANG KALI,Freehold,Cluster House,208.0,44,232500.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,366.0,44,380000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,346.0,43,520000.0
+Perak,PERAK | SERI ISKANDAR,Leasehold,Semi D,175.0,43,250000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,445.0,43,781800.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,158.0,43,185000.0
+Selangor,SELANGOR | CHERAS,Freehold,Semi D,390.0,43,800000.0
+Johor,JOHOR | PASIR GUDANG,Mixed,Terrace House,353.0,43,480000.0
+Johor,JOHOR | TAMPOI,Freehold,Terrace House,291.0,43,480000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,454.0,43,780000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,511.0,42,718000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,387.0,42,325000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,513.0,42,900000.0
+Penang,PENANG | SUNGAI JAWI,Freehold,Terrace House,224.0,42,260000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Freehold,Terrace House,145.0,42,235789.0
+Johor,JOHOR | TAMPOI,Freehold,Service Residence,485.0,42,391500.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Bungalow,519.0,41,923000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,107.0,41,150000.0
+Melaka,MELAKA | BEMBAN,Freehold,Terrace House,337.0,41,497000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,229.0,41,403000.0
+Selangor,SELANGOR | SELAYANG,Freehold,Terrace House,56.0,41,310281.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,43.0,41,27049.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,151.0,41,200000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Terrace House,487.0,41,809662.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,383.0,41,639888.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,354.0,40,473000.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,350.0,40,512650.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Cluster House,314.0,40,880000.0
+Selangor,SELANGOR | KLANG,Freehold,Cluster House,620.0,40,1449665.0
+Johor,JOHOR | PENGERANG,Leasehold,Terrace House,375.0,40,525000.0
+Perak,PERAK | SIMPANG PULAI,Mixed,Terrace House,288.0,40,448800.0
+Selangor,SELANGOR | BATANG KALI,Leasehold,Terrace House,187.0,40,250000.0
+Melaka,MELAKA | TANJONG MINYAK,Leasehold,Terrace House,181.0,39,260000.0
+Perak,PERAK | IPOH,Mixed,Bungalow,171.0,39,425000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,236.0,39,330880.0
+Selangor,SELANGOR | SEPANG,Leasehold,Terrace House,463.0,39,555210.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,205.0,39,245000.0
+Johor,JOHOR | KLUANG,Freehold,Semi D,110.0,39,199900.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,237.0,39,379000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,195.0,39,200000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,340.0,39,595000.0
+Johor,JOHOR | PERLING,Freehold,Terrace House,306.0,39,780000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Bungalow,464.0,39,948000.0
+Selangor,SELANGOR | CHERAS,Leasehold,Flat,313.0,39,185000.0
+Selangor,SELANGOR | CHERAS,Freehold,Condominium,162.0,39,250000.0
+Johor,JOHOR | MASAI,Freehold,Service Residence,530.0,39,631950.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Apartment,433.0,39,280000.0
+Melaka,MELAKA | BUKIT KATIL,Leasehold,Semi D,338.0,38,488000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Mixed,Terrace House,445.0,38,912500.0
+Perak,PERAK | IPOH,Freehold,Terrace House,238.0,38,335000.0
+Kedah,KEDAH | KULIM,Freehold,Terrace House,330.0,38,462000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,391.0,38,547770.0
+Perak,PERAK | IPOH,Mixed,Terrace House,298.0,38,458880.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,361.0,38,340000.0
+Perak,PERAK | IPOH,Freehold,Cluster House,262.0,38,688000.0
+Penang,PENANG | KEPALA BATAS,Freehold,Cluster House,275.0,38,350000.0
+Johor,JOHOR | SKUDAI,Freehold,Cluster House,329.0,38,655000.0
+Terengganu,TERENGGANU | KERTEH,Mixed,Semi D,108.0,38,350000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Terrace House,511.0,38,522500.0
+Selangor,SELANGOR | KAJANG,Freehold,Bungalow,330.0,38,540000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Cluster House,409.0,38,1034400.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,174.0,38,271790.0
+Selangor,SELANGOR | RAWANG,Freehold,Terrace House,403.0,37,504339.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,288.0,37,435000.0
+Melaka,MELAKA | AYER MOLEK,Freehold,Terrace House,312.0,37,435800.0
+Perak,PERAK | BIDOR,Leasehold,Terrace House,75.0,37,90000.0
+Selangor,SELANGOR | BERANANG,Freehold,Cluster House,419.0,37,680000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Terrace House,336.0,37,680000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,468.0,37,750000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,152.0,37,200000.0
+Penang,PENANG | BAYAN BARU,Leasehold,Semi D,376.0,37,570000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,342.0,37,290000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,418.0,37,640000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,136.0,37,320000.0
+Penang,PENANG | AYER ITAM,Leasehold,Flat,188.0,37,72000.0
+Johor,JOHOR | TEBRAU,Freehold,Service Residence,365.0,37,380000.0
+Selangor,SELANGOR | BANDAR SUNWAY,Leasehold,Apartment,235.0,37,210000.0
+Penang,PENANG | AYER ITAM,Freehold,Flat,254.0,37,130000.0
+Penang,PENANG | BAYAN BARU,Leasehold,Flat,308.0,37,156000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,446.0,36,900000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Bungalow,708.0,36,1880000.0
+Selangor,SELANGOR | DENGKIL,Leasehold,Terrace House,573.0,36,1042000.0
+Johor,JOHOR | SEGAMAT,Leasehold,Terrace House,81.0,36,117500.0
+Negeri Sembilan,NEGERI SEMBILAN | JIMAH,Freehold,Terrace House,483.0,36,700888.0
+Perak,PERAK | BIDOR,Leasehold,Terrace House,187.0,36,268000.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,444.0,36,628888.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Leasehold,Semi D,175.0,36,380000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,450.0,36,745000.0
+Johor,JOHOR | SENGGARANG,Freehold,Terrace House,107.0,36,150000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Semi D,547.0,36,921500.0
+Johor,JOHOR | SKUDAI,Freehold,Cluster House,474.0,36,1065000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,180.0,36,275000.0
+Selangor,SELANGOR | IJOK,Leasehold,Terrace House,325.0,36,455000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Bungalow,151.0,36,350000.0
+Melaka,MELAKA | JASIN,Freehold,Terrace House,100.0,35,120700.0
+Perak,PERAK | TAPAH,Leasehold,Terrace House,121.0,35,169000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,226.0,35,298800.0
+Kedah,KEDAH | KULIM,Freehold,Terrace House,387.0,35,542200.0
+Negeri Sembilan,NEGERI SEMBILAN | AMPANGAN,Freehold,Terrace House,454.0,35,669000.0
+Selangor,SELANGOR | SEPANG,Freehold,Bungalow,109.0,35,400000.0
+Johor,JOHOR | GELANG PATAH,Freehold,Terrace House,403.0,35,527680.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,273.0,35,380000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Semi D,368.0,35,780000.0
+Perak,PERAK | SUNGAI SIPUT,Leasehold,Terrace House,175.0,35,267284.0
+Johor,JOHOR | SKUDAI,Freehold,Semi D,427.0,35,1000000.0
+Selangor,SELANGOR | IJOK,Leasehold,Bungalow,438.0,35,700000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,153.0,35,250000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,155.0,35,210000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,289.0,35,568000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,158.0,35,250000.0
+Selangor,SELANGOR | TELOK PANGLIMA GARANG,Leasehold,Semi D,258.0,35,454220.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Apartment,415.0,35,250000.0
+Johor,JOHOR | TAMPOI,Leasehold,Apartment,443.0,35,380000.0
+Sabah,SABAH | PENAMPANG,Freehold,Apartment,480.0,35,240000.0
+Selangor,SELANGOR | ARA DAMANSARA,Freehold,Condominium,420.0,35,443000.0
+Selangor,SELANGOR | DENGKIL,Leasehold,Terrace House,944.0,34,1450000.0
+Melaka,MELAKA | AYER MOLEK,Freehold,Cluster House,175.0,34,269100.0
+Melaka,MELAKA | MERLIMAU,Freehold,Terrace House,186.0,34,311650.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,175.0,34,271000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,210.0,34,307500.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Bungalow,164.0,34,262500.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Terrace House,458.0,34,859000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Terrace House,490.0,34,815000.0
+Selangor,SELANGOR | TELOK PANGLIMA GARANG,Freehold,Terrace House,293.0,34,435000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,252.0,34,609000.0
+Johor,JOHOR | MASAI,Freehold,Terrace House,306.0,34,450000.0
+Kuala Lumpur,KUALA LUMPUR | SEGAMBUT,Freehold,Terrace House,663.0,34,495000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,407.0,34,810000.0
+Sabah,SABAH | TAWAU,Leasehold,Terrace House,169.0,34,385000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Freehold,Condominium,386.0,34,500000.0
+Penang,PENANG | AYER ITAM,Leasehold,Flat,272.0,34,165000.0
+Johor,JOHOR | TEBRAU,Freehold,Apartment,359.0,34,293000.0
+Selangor,SELANGOR | CHERAS,Freehold,Condominium,801.0,34,970000.0
+Johor,JOHOR | SKUDAI,Freehold,Apartment,336.0,34,300000.0
+Johor,JOHOR | MASAI,Freehold,Cluster House,361.0,33,495000.0
+Kuala Lumpur,KUALA LUMPUR | KEPONG,Leasehold,Terrace House,456.0,33,890000.0
+Negeri Sembilan,NEGERI SEMBILAN | AMPANGAN,Freehold,Semi D,279.0,33,433680.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,429.0,33,650000.0
+Johor,JOHOR | SKUDAI,Freehold,Apartment,516.0,33,650000.0
+Johor,JOHOR | SKUDAI,Mixed,Service Residence,437.0,33,365000.0
+Johor,JOHOR | TAMPOI,Leasehold,Flat,246.0,33,136000.0
+Melaka,MELAKA | BUKIT RAMBAI,Mixed,Terrace House,164.0,32,295000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Semi D,541.0,32,505000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Bungalow,423.0,32,1565000.0
+Selangor,SELANGOR | BANDAR KINRARA,Freehold,Terrace House,540.0,32,885000.0
+Melaka,MELAKA | BEMBAN,Leasehold,Bungalow,136.0,32,632000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,536.0,32,694000.0
+Selangor,SELANGOR | RASA,Leasehold,Semi D,125.0,32,439928.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Terrace House,390.0,32,740000.0
+Kedah,KEDAH | KULIM,Freehold,Terrace House,189.0,32,275000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Semi D,340.0,32,1344000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,174.0,32,180000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,531.0,32,762500.0
+Johor,JOHOR | SIMPANG RENGAM,Leasehold,Bungalow,95.0,32,335000.0
+Melaka,MELAKA | DUYONG,Leasehold,Terrace House,157.0,32,268000.0
+Johor,JOHOR | KULAI,Freehold,Semi D,328.0,32,589000.0
+Johor,JOHOR | TEBRAU,Freehold,Terrace House,523.0,32,880000.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,384.0,32,460000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,801.0,32,2380000.0
+Selangor,SELANGOR | BANDAR UTAMA,Freehold,Condominium,566.0,32,1269000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Apartment,292.0,32,220000.0
+Selangor,SELANGOR | BANDAR SUNGAI LONG,Freehold,Condominium,543.0,32,550000.0
+Johor,JOHOR | TAMPOI,Leasehold,Apartment,357.0,32,380000.0
+Melaka,MELAKA | DURIAN TUNGGAL,Freehold,Terrace House,226.0,31,267000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,207.0,31,399880.0
+Perak,PERAK | BIDOR,Leasehold,Terrace House,132.0,31,185000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,102.0,31,90000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,305.0,31,406700.0
+Perak,PERAK | SERI ISKANDAR,Leasehold,Terrace House,245.0,31,343040.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,300.0,31,397000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Semi D,206.0,31,573000.0
+Johor,JOHOR | SKUDAI,Leasehold,Terrace House,440.0,31,618000.0
+Sarawak,SARAWAK | SIBU,Leasehold,Terrace House,173.0,31,430000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,174.0,31,280000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Freehold,Semi D,331.0,31,472910.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,179.0,31,400000.0
+Selangor,SELANGOR | CHERAS,Freehold,Terrace House,361.0,31,445000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Semi D,557.0,31,1680000.0
+Sarawak,SARAWAK | SIBU,Leasehold,Terrace House,130.0,31,200000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,1074.0,31,2200000.0
+Johor,JOHOR | PERLING,Freehold,Flat,273.0,31,150000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,506.0,31,360000.0
+Johor,JOHOR | KLUANG,Freehold,Semi D,215.0,30,176500.0
+Kedah,KEDAH | GURUN,Freehold,Semi D,136.0,30,210000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,656.0,30,1565000.0
+Selangor,SELANGOR | KLANG,Leasehold,Semi D,287.0,30,475000.0
+Perak,PERAK | SIMPANG PULAI,Leasehold,Terrace House,65.0,30,85000.0
+Kedah,KEDAH | ALOR SETAR,Freehold,Semi D,117.0,30,300000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,323.0,30,462500.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,430.0,30,879000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,196.0,30,347500.0
+Melaka,MELAKA | BACHANG,Leasehold,Terrace House,243.0,30,296500.0
+Melaka,MELAKA | BALAI PANJANG,Mixed,Terrace House,201.0,30,325000.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,333.0,30,644000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Terrace House,484.0,30,722500.0
+Pahang,PAHANG | HULU LEPAR,Leasehold,Terrace House,141.0,30,181500.0
+Selangor,SELANGOR | SAUJANA UTAMA,Leasehold,Terrace House,282.0,30,497500.0
+Terengganu,TERENGGANU | KIJAL,Freehold,Terrace House,177.0,30,274850.0
+Kuala Lumpur,KUALA LUMPUR | SRI PETALING,Leasehold,Condominium,482.0,30,550000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,1055.0,30,2386358.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Condominium,493.0,30,628000.0
+Penang,PENANG | GEORGETOWN,Leasehold,Apartment,402.0,30,260000.0
+Negeri Sembilan,NEGERI SEMBILAN | JUASSEH,Freehold,Terrace House,158.0,29,249800.0
+Perak,PERAK | LUMUT,Freehold,Terrace House,270.0,29,420000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,306.0,29,435000.0
+Negeri Sembilan,NEGERI SEMBILAN | BAHAU,Leasehold,Terrace House,184.0,29,239999.0
+Melaka,MELAKA | SUNGAI RAMBAI,Freehold,Cluster House,136.0,29,367000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Bungalow,275.0,29,980000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,188.0,29,220000.0
+Perlis,PERLIS | ARAU,Freehold,Semi D,205.0,29,414428.0
+Penang,PENANG | TASEK GELUGOR,Freehold,Terrace House,157.0,29,343800.0
+Selangor,SELANGOR | KAJANG,Freehold,Bungalow,495.0,29,2330000.0
+Penang,PENANG | JELUTONG,Freehold,Terrace House,632.0,29,1000000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Leasehold,Flat,414.0,29,220000.0
+Penang,PENANG | PERAI,Leasehold,Flat,168.0,29,100000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,641.0,29,586000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Terrace House,500.0,28,760000.0
+Selangor,SELANGOR | BANGI,Freehold,Terrace House,418.0,28,607500.0
+Perak,PERAK | BIDOR,Leasehold,Terrace House,175.0,28,245000.0
+Penang,PENANG | KEPALA BATAS,Freehold,Bungalow,271.0,28,618744.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,143.0,28,200000.0
+Johor,JOHOR | KOTA TINGGI,Freehold,Terrace House,275.0,28,424150.0
+Pahang,PAHANG | SUNGAI KARANG,Leasehold,Terrace House,205.0,28,315000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,457.0,28,685000.0
+Perak,PERAK | KAMPAR,Leasehold,Terrace House,195.0,28,272500.0
+Perak,PERAK | ULU BERNAM,Freehold,Terrace House,211.0,28,467500.0
+Melaka,MELAKA | PAYA RUMPUT,Freehold,Bungalow,158.0,28,627500.0
+Melaka,MELAKA | TANJONG MINYAK,Leasehold,Terrace House,197.0,28,300000.0
+Sarawak,SARAWAK | SIBU,Leasehold,Terrace House,179.0,28,377500.0
+Selangor,SELANGOR | PUCHONG,Mixed,Terrace House,374.0,28,531000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,426.0,28,650000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,209.0,28,317600.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,176.0,28,215000.0
+Selangor,SELANGOR | KAPAR,Leasehold,Terrace House,298.0,28,371159.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,114.0,28,300000.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,328.0,28,470000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Terrace House,547.0,28,925000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Semi D,216.0,28,625000.0
+Johor,JOHOR | GELANG PATAH,Freehold,Semi D,422.0,28,650000.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,309.0,28,365000.0
+Sabah,SABAH | SANDAKAN,Leasehold,Terrace House,256.0,28,395000.0
+Perak,PERAK | TRONOH,Leasehold,Terrace House,190.0,28,263000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Freehold,Apartment,390.0,28,231000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Apartment,451.0,28,415000.0
+Johor,JOHOR | TAMPOI,Leasehold,Apartment,297.0,28,285000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Condominium,351.0,28,260000.0
+Terengganu,TERENGGANU | KUALA TERENGGANU,Leasehold,Apartment,276.0,28,232000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Apartment,50.0,28,35000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Flat,287.0,28,207500.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Freehold,Flat,326.0,28,207500.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Terrace House,67.0,27,80000.0
+Selangor,SELANGOR | KUALA SELANGOR,Freehold,Terrace House,258.0,27,308000.0
+Perak,PERAK | TANJONG TUALANG,Leasehold,Terrace House,117.0,27,180000.0
+Perak,PERAK | KAMPAR,Leasehold,Semi D,123.0,27,269800.0
+Pahang,PAHANG | RAUB,Leasehold,Terrace House,208.0,27,297600.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Semi D,457.0,27,1450000.0
+Penang,PENANG | NIBONG TEBAL,Freehold,Bungalow,185.0,27,520000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Terrace House,538.0,27,705000.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,346.0,27,450000.0
+Selangor,SELANGOR | RAWANG,Freehold,Terrace House,322.0,27,460000.0
+Perak,PERAK | CHEMOR,Freehold,Terrace House,279.0,27,398800.0
+Selangor,SELANGOR | SELAYANG,Leasehold,Semi D,204.0,27,450000.0
+Selangor,SELANGOR | KLANG,Mixed,Terrace House,395.0,27,548000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Bungalow,168.0,27,240000.0
+Penang,PENANG | BUTTERWORTH,Mixed,Terrace House,396.0,27,350000.0
+Negeri Sembilan,NEGERI SEMBILAN | TAMPIN,Freehold,Terrace House,173.0,27,285000.0
+Selangor,SELANGOR | PORT KLANG,Freehold,Terrace House,249.0,27,420000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Freehold,Apartment,373.0,27,250000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Flat,292.0,27,185000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,505.0,27,380000.0
+Selangor,SELANGOR | SERENDAH,Leasehold,Flat,187.0,27,130000.0
+Selangor,SELANGOR | BANDAR KINRARA,Freehold,Terrace House,434.0,26,702500.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,424.0,26,603444.0
+Perak,PERAK | IPOH,Freehold,Cluster House,270.0,26,338000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,364.0,26,513967.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,344.0,26,540000.0
+Perak,PERAK | BIDOR,Mixed,Terrace House,162.0,26,248960.0
+Johor,JOHOR | TAMPOI,Leasehold,Terrace House,288.0,26,300000.0
+Sabah,SABAH | TAWAU,Leasehold,Cluster House,205.0,26,200000.0
+Johor,JOHOR | PASIR GUDANG,Leasehold,Terrace House,313.0,26,390000.0
+Selangor,SELANGOR | BANGI,Leasehold,Bungalow,279.0,26,535000.0
+Perak,PERAK | MENGLEMBU,Leasehold,Terrace House,372.0,26,408000.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Freehold,Terrace House,238.0,26,510000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,162.0,26,300000.0
+Perak,PERAK | IPOH,Mixed,Terrace House,159.0,26,212500.0
+Johor,JOHOR | MASAI,Freehold,Terrace House,391.0,26,335000.0
+Johor,JOHOR | TEBRAU,Freehold,Terrace House,497.0,26,904900.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Terrace House,343.0,26,625000.0
+Melaka,MELAKA | CHENG,Freehold,Terrace House,256.0,26,370000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,310.0,26,460000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,118.0,26,370000.0
+Selangor,SELANGOR | SUNGAI BULOH,Freehold,Bungalow,529.0,26,1703888.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,270.0,26,440300.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Terrace House,172.0,26,205000.0
+Kedah,KEDAH | KULIM,Freehold,Semi D,207.0,26,300000.0
+Negeri Sembilan,NEGERI SEMBILAN | AMPANGAN,Freehold,Terrace House,349.0,26,487910.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Terrace House,342.0,26,722500.0
+Johor,JOHOR | PENGERANG,Leasehold,Semi D,251.0,26,330000.0
+Johor,JOHOR | TAMPOI,Freehold,Service Residence,431.0,26,445000.0
+Terengganu,TERENGGANU | KUALA IBAI,Leasehold,Flat,106.0,26,66500.0
+Selangor,SELANGOR | BANGI,Freehold,Condominium,471.0,26,450400.0
+Johor,JOHOR | SKUDAI,Freehold,Bungalow,324.0,25,600000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,209.0,25,326970.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Freehold,Terrace House,207.0,25,300000.0
+Selangor,SELANGOR | RAWANG,Freehold,Terrace House,518.0,25,837000.0
+Selangor,SELANGOR | BANGI,Freehold,Semi D,334.0,25,1068000.0
+Selangor,SELANGOR | BANDAR KINRARA,Freehold,Semi D,610.0,25,2400000.0
+Pahang,PAHANG | RAUB,Freehold,Semi D,131.0,25,420000.0
+Selangor,SELANGOR | PETALING JAYA,Leasehold,Terrace House,333.0,25,715000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,374.0,25,575000.0
+Pahang,PAHANG | SUNGAI KARANG,Freehold,Semi D,206.0,25,265000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,186.0,25,280000.0
+Melaka,MELAKA | DURIAN TUNGGAL,Leasehold,Terrace House,213.0,25,280000.0
+Selangor,SELANGOR | KEPONG,Leasehold,Terrace House,305.0,25,505000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Semi D,286.0,25,468000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Semi D,488.0,25,1300000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Terrace House,442.0,25,505000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Apartment,288.0,25,180000.0
+Selangor,SELANGOR | BANGI,Freehold,Service Residence,376.0,25,360000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Flat,472.0,25,320000.0
+Kuala Lumpur,KUALA LUMPUR | BANDAR TASIK SELATAN,Leasehold,Flat,282.0,25,190000.0
+Selangor,SELANGOR | BANDAR UTAMA,Leasehold,Condominium,460.0,25,480000.0
+Johor,JOHOR | SKUDAI,Leasehold,Flat,244.0,25,150000.0
+Labuan,LABUAN | LABUAN,Leasehold,Flat,169.0,25,130000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Apartment,302.0,25,296400.0
+Johor,JOHOR | SKUDAI,Freehold,Flat,228.0,25,150000.0
+Penang,PENANG | PERAI,Freehold,Flat,316.0,25,185000.0
+Selangor,SELANGOR | BANDAR UTAMA,Leasehold,Apartment,576.0,25,450000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Service Residence,426.0,25,400000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Service Residence,548.0,25,300000.0
+Selangor,SELANGOR | BANGI,Freehold,Condominium,323.0,25,350000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,378.0,24,700000.0
+Negeri Sembilan,NEGERI SEMBILAN | SENAWANG,Freehold,Bungalow,232.0,24,440000.0
+Perak,PERAK | IPOH,Leasehold,Cluster House,168.0,24,428000.0
+Sabah,SABAH | SANDAKAN,Leasehold,Terrace House,273.0,24,325000.0
+Melaka,MELAKA | KRUBONG,Freehold,Bungalow,234.0,24,685000.0
+Penang,PENANG | PERAI,Freehold,Terrace House,318.0,24,514000.0
+Selangor,SELANGOR | BANGI,Freehold,Semi D,337.0,24,447500.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN,Freehold,Semi D,276.0,24,492500.0
+Johor,JOHOR | GELANG PATAH,Freehold,Cluster House,337.0,24,675000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,427.0,24,650000.0
+Selangor,SELANGOR | BANTING,Freehold,Terrace House,248.0,24,315000.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,357.0,24,442000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Semi D,717.0,24,1890000.0
+Melaka,MELAKA | DURIAN TUNGGAL,Freehold,Semi D,213.0,24,699000.0
+Negeri Sembilan,NEGERI SEMBILAN | AMPANGAN,Freehold,Terrace House,231.0,24,382500.0
+Selangor,SELANGOR | SERI KEMBANGAN,Freehold,Semi D,477.0,24,582500.0
+Melaka,MELAKA | BUKIT BARU,Freehold,Terrace House,245.0,24,380000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Semi D,150.0,24,192500.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,173.0,24,225000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Terrace House,286.0,24,420000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Bungalow,452.0,24,1750000.0
+Selangor,SELANGOR | KAPAR,Leasehold,Terrace House,251.0,24,260000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Terrace House,306.0,24,398040.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Terrace House,1146.0,24,3450000.0
+Selangor,SELANGOR | SEPANG,Leasehold,Terrace House,437.0,24,575000.0
+Melaka,MELAKA | BEMBAN,Leasehold,Semi D,388.0,24,645000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Service Residence,532.0,24,560000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Apartment,290.0,24,175000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Apartment,368.0,24,374000.0
+Kuala Lumpur,KUALA LUMPUR | KAMPUNG KERINCHI (BANGSAR SOUTH),Leasehold,Condominium,601.0,24,1180000.0
+Johor,JOHOR | PASIR GUDANG,Leasehold,Flat,251.0,24,130000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,420.0,24,380000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,839.0,24,2800000.0
+Perak,PERAK | CHEMOR,Leasehold,Terrace House,244.0,23,342240.0
+Johor,JOHOR | PENGERANG,Mixed,Terrace House,199.0,23,278800.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Terrace House,349.0,23,488000.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Bungalow,128.0,23,620000.0
+Selangor,SELANGOR | KUALA KUBU BARU,Freehold,Terrace House,70.0,23,155000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Semi D,376.0,23,700000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,223.0,23,368000.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR ENSTEK,Freehold,Terrace House,264.0,23,570000.0
+Selangor,SELANGOR | SUNGAI BULOH,Freehold,Cluster House,424.0,23,700000.0
+Kedah,KEDAH | ALOR SETAR,Freehold,Terrace House,38.0,23,39600.0
+Melaka,MELAKA | BATU BERENDAM,Leasehold,Terrace House,227.0,23,300000.0
+Selangor,SELANGOR | KAPAR,Freehold,Semi D,321.0,23,850000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Cluster House,385.0,23,240000.0
+Perak,PERAK | CHEMOR,Leasehold,Terrace House,167.0,23,200000.0
+Selangor,SELANGOR | SUNGAI BULOH,Mixed,Bungalow,570.0,23,2400000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Terrace House,456.0,23,642630.0
+Melaka,MELAKA | ALOR GAJAH,Freehold,Terrace House,306.0,23,398760.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Bungalow,493.0,23,763000.0
+Selangor,SELANGOR | PANDAMARAN,Freehold,Terrace House,455.0,23,686000.0
+Selangor,SELANGOR | BATU CAVES,Freehold,Service Residence,440.0,23,430000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Flat,375.0,23,250000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Flat,102.0,23,67000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Condominium,370.0,23,450000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Apartment,372.0,23,300000.0
+Kuala Lumpur,KUALA LUMPUR | DUTAMAS,Freehold,Service Residence,801.0,23,900000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,310.0,23,300000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,673.0,23,550000.0
+Johor,JOHOR | TAMPOI,Freehold,Service Residence,666.0,23,601900.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,292.0,23,280000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Apartment,387.0,23,200000.0
+Negeri Sembilan,NEGERI SEMBILAN | SIKAMAT,Freehold,Apartment,221.0,23,185000.0
+Penang,PENANG | JELUTONG,Leasehold,Flat,452.0,23,282000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Flat,264.0,23,175000.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Terrace House,182.0,22,235000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,73.0,22,80000.0
+Perak,PERAK | GOPENG,Leasehold,Terrace House,167.0,22,277235.0
+Perak,PERAK | IPOH,Freehold,Terrace House,328.0,22,459800.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Bungalow,202.0,22,378000.0
+Perak,PERAK | TAMBUN,Leasehold,Terrace House,216.0,22,342500.0
+Selangor,SELANGOR | GLENMARIE,Freehold,Semi D,617.0,22,1875000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Freehold,Terrace House,659.0,22,413500.0
+Negeri Sembilan,NEGERI SEMBILAN | JUASSEH,Freehold,Terrace House,67.0,22,81500.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,295.0,22,490000.0
+Perak,PERAK | KAMPAR,Leasehold,Terrace House,159.0,22,259000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,291.0,22,297500.0
+Pahang,PAHANG | MENTAKAB,Freehold,Terrace House,160.0,22,170000.0
+Perak,PERAK | PUSING,Leasehold,Terrace House,229.0,22,273800.0
+Selangor,SELANGOR | IJOK,Freehold,Terrace House,324.0,22,467500.0
+Selangor,SELANGOR | JENJAROM,Freehold,Terrace House,419.0,22,680000.0
+Negeri Sembilan,NEGERI SEMBILAN | BAHAU,Freehold,Terrace House,179.0,22,300000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,582.0,22,1138000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,499.0,22,915000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Terrace House,315.0,22,521000.0
+Perak,PERAK | ULU BERNAM,Freehold,Terrace House,198.0,22,252500.0
+Pahang,PAHANG | MENTAKAB,Freehold,Terrace House,101.0,22,105500.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,569.0,22,999000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Terrace House,342.0,22,375000.0
+Johor,JOHOR | PONTIAN,Freehold,Bungalow,150.0,22,541600.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Flat,232.0,22,172500.0
+Selangor,SELANGOR | CHERAS,Freehold,Condominium,458.0,22,457500.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Apartment,332.0,22,351500.0
+Penang,PENANG | AYER ITAM,Freehold,Apartment,425.0,22,265000.0
+Selangor,SELANGOR | KAJANG,Freehold,Service Residence,472.0,22,688800.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Condominium,238.0,22,250000.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Flat,102.0,22,68000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Service Residence,550.0,22,416500.0
+Johor,JOHOR | TAMPOI,Freehold,Apartment,340.0,22,420000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Service Residence,396.0,22,339000.0
+Johor,JOHOR | TEBRAU,Freehold,Flat,226.0,22,170000.0
+Penang,PENANG | SUNGAI DUA,Leasehold,Flat,328.0,22,180000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Service Residence,379.0,22,297500.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,301.0,21,450000.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Bungalow,513.0,21,1200000.0
+Selangor,SELANGOR | DENGKIL,Freehold,Cluster House,616.0,21,1438800.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,501.0,21,828000.0
+Perak,PERAK | IPOH,Leasehold,Cluster House,235.0,21,398000.0
+Pahang,PAHANG | KUALA LIPIS,Leasehold,Terrace House,61.0,21,80000.0
+Penang,PENANG | BATU KAWAN,Freehold,Semi D,395.0,21,625320.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,530.0,21,960000.0
+Penang,PENANG | SUNGAI JAWI,Freehold,Terrace House,195.0,21,325000.0
+Negeri Sembilan,NEGERI SEMBILAN | SENAWANG,Freehold,Terrace House,246.0,21,440000.0
+Pahang,PAHANG | KUANTAN,Mixed,Terrace House,160.0,21,195000.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,191.0,21,460000.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,180.0,21,288800.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Terrace House,286.0,21,450000.0
+Perak,PERAK | LAHAT,Leasehold,Terrace House,267.0,21,318880.0
+Kedah,KEDAH | KULIM,Freehold,Semi D,166.0,21,269500.0
+Terengganu,TERENGGANU | BESUT,Freehold,Bungalow,190.0,21,335000.0
+Negeri Sembilan,NEGERI SEMBILAN | BUKIT KEPAYANG,Freehold,Terrace House,231.0,21,380000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,153.0,21,170000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,171.0,21,285000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,297.0,21,350000.0
+Kuala Lumpur,KUALA LUMPUR | KEPONG,Freehold,Terrace House,434.0,21,780000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Freehold,Terrace House,341.0,21,600000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Freehold,Terrace House,578.0,21,720000.0
+Selangor,SELANGOR | KEPONG,Leasehold,Terrace House,349.0,21,500000.0
+Selangor,SELANGOR | PETALING JAYA,Mixed,Bungalow,339.0,21,1700000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,214.0,21,300000.0
+Johor,JOHOR | SEGAMAT,Freehold,Bungalow,125.0,21,220000.0
+Kedah,KEDAH | KUALA KEDAH,Freehold,Terrace House,229.0,21,200000.0
+Perak,PERAK | LUMUT,Freehold,Terrace House,263.0,21,418800.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Terrace House,571.0,21,1260000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,157.0,21,255000.0
+Selangor,SELANGOR | KUALA SELANGOR,Freehold,Terrace House,222.0,21,342500.0
+Melaka,MELAKA | TANJONG MINYAK,Freehold,Terrace House,200.0,21,240000.0
+Perak,PERAK | SITIAWAN,Freehold,Semi D,166.0,21,480000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,343.0,21,310000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Condominium,304.0,21,495000.0
+Johor,JOHOR | TEBRAU,Freehold,Flat,438.0,21,250000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Apartment,126.0,21,95000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Leasehold,Flat,398.0,21,210000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,372.0,21,350000.0
+Selangor,SELANGOR | ULU KLANG,Freehold,Condominium,413.0,21,530000.0
+Kuala Lumpur,KUALA LUMPUR | KL SENTRAL,Freehold,Service Residence,2264.0,21,3715000.0
+Kuala Lumpur,KUALA LUMPUR | SENTUL,Leasehold,Service Residence,371.0,21,365000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,335.0,21,360000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Service Residence,352.0,21,330000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Flat,186.0,21,120000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Condominium,492.0,21,450000.0
+Perak,PERAK | TAMBUN,Leasehold,Terrace House,245.0,20,302500.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,797.0,20,1372500.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Semi D,465.0,20,909000.0
+Johor,JOHOR | KLUANG,Freehold,Semi D,208.0,20,610500.0
+Perak,PERAK | KUALA KANGSAR,Freehold,Terrace House,196.0,20,318000.0
+Negeri Sembilan,NEGERI SEMBILAN | LENGGENG,Freehold,Terrace House,373.0,20,529500.0
+Perak,PERAK | SITIAWAN,Freehold,Cluster House,129.0,20,248000.0
+Johor,JOHOR | KOTA TINGGI,Freehold,Cluster House,320.0,20,776900.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Town House,272.0,20,320000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,217.0,20,205000.0
+Johor,JOHOR | TANGKAK,Freehold,Cluster House,107.0,20,288800.0
+Perak,PERAK | PARIT BUNTAR,Mixed,Terrace House,191.0,20,366075.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,355.0,20,450000.0
+Selangor,SELANGOR | DENGKIL,Mixed,Terrace House,321.0,20,669600.0
+Melaka,MELAKA | KLEBANG,Freehold,Terrace House,187.0,20,289000.0
+Selangor,SELANGOR | BANGI,Freehold,Semi D,335.0,20,615000.0
+Johor,JOHOR | MASAI,Freehold,Terrace House,501.0,20,767500.0
+Perak,PERAK | IPOH,Leasehold,Cluster House,236.0,20,638800.0
+Johor,JOHOR | TAMPOI,Freehold,Terrace House,283.0,20,432500.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,164.0,20,200000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,203.0,20,397500.0
+Johor,JOHOR | TANGKAK,Freehold,Terrace House,184.0,20,287500.0
+Selangor,SELANGOR | BANDAR PUNCAK ALAM,Leasehold,Terrace House,341.0,20,560000.0
+Selangor,SELANGOR | BATANG KALI,Freehold,Terrace House,244.0,20,400000.0
+Johor,JOHOR | TAMPOI,Freehold,Terrace House,406.0,20,375000.0
+Melaka,MELAKA | BATU BERENDAM,Leasehold,Terrace House,182.0,20,326500.0
+Johor,JOHOR | TEBRAU,Freehold,Terrace House,462.0,20,814300.0
+Johor,JOHOR | SENAI,Freehold,Service Residence,520.0,20,528900.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Condominium,439.0,20,485000.0
+Kuala Lumpur,KUALA LUMPUR | KUCHAI LAMA,Freehold,Service Residence,626.0,20,580000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,611.0,20,942450.0
+Selangor,SELANGOR | KEPONG,Freehold,Flat,253.0,20,166500.0
+Penang,PENANG | PERAI,Freehold,Flat,195.0,20,110000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,265.0,20,240000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Condominium,340.0,20,400000.0
+Perak,PERAK | SERI MANJONG,Freehold,Apartment,239.0,20,223300.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Condominium,117.0,20,95000.0
+Selangor,SELANGOR | BANDAR SUNWAY,Leasehold,Condominium,420.0,20,500000.0
+Melaka,MELAKA | MELAKA CITY,Leasehold,Apartment,336.0,20,204500.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Apartment,393.0,20,376500.0
+Selangor,SELANGOR | KEPONG,Freehold,Apartment,454.0,20,445000.0
+Penang,PENANG | GELUGOR,Freehold,Apartment,426.0,20,293500.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Apartment,352.0,20,235000.0
+Negeri Sembilan,NEGERI SEMBILAN | MANTIN,Freehold,Flat,114.0,20,70000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Service Residence,378.0,20,290000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,208.0,19,330000.0
+Selangor,SELANGOR | KEPONG,Leasehold,Terrace House,488.0,19,737000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN 2,Freehold,Terrace House,220.0,19,370000.0
+Sarawak,SARAWAK | BINTULU,Freehold,Terrace House,44.0,19,80000.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,163.0,19,325000.0
+Perak,PERAK | HUTAN MELINTANG,Freehold,Semi D,136.0,19,438800.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,300.0,19,470000.0
+Selangor,SELANGOR | SUNGAI BULOH,Leasehold,Terrace House,315.0,19,440000.0
+Johor,JOHOR | TAMPOI,Freehold,Bungalow,259.0,19,500000.0
+Kuala Lumpur,KUALA LUMPUR | BANGSAR,Freehold,Bungalow,814.0,19,1710000.0
+Perak,PERAK | BAGAN SERAI,Freehold,Semi D,169.0,19,263800.0
+Kedah,KEDAH | GURUN,Freehold,Semi D,154.0,19,220000.0
+Melaka,MELAKA | KRUBONG,Freehold,Terrace House,197.0,19,240000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Bungalow,220.0,19,420000.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Freehold,Terrace House,205.0,19,350000.0
+Penang,PENANG | GELUGOR,Freehold,Bungalow,465.0,19,2200000.0
+Selangor,SELANGOR | KLANG,Freehold,Bungalow,410.0,19,960000.0
+Negeri Sembilan,NEGERI SEMBILAN | BAHAU,Freehold,Terrace House,155.0,19,183000.0
+Johor,JOHOR | SKUDAI,Mixed,Terrace House,292.0,19,380000.0
+Melaka,MELAKA | KRUBONG,Freehold,Bungalow,317.0,19,443800.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Terrace House,608.0,19,1050000.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Leasehold,Terrace House,192.0,19,250000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,260.0,19,420000.0
+Sabah,SABAH | TAWAU,Leasehold,Semi D,220.0,19,400000.0
+Johor,JOHOR | TEBRAU,Freehold,Terrace House,372.0,19,577150.0
+Kuala Lumpur,KUALA LUMPUR | BANGSAR,Freehold,Bungalow,751.0,19,2500000.0
+Penang,PENANG | PERAI,Freehold,Terrace House,265.0,19,490000.0
+Selangor,SELANGOR | SELAYANG,Freehold,Terrace House,551.0,19,680000.0
+Selangor,SELANGOR | RAWANG,Freehold,Terrace House,409.0,19,837000.0
+Melaka,MELAKA | MASJID TANAH,Freehold,Terrace House,142.0,19,200000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,209.0,19,250000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN,Freehold,Terrace House,182.0,19,250000.0
+Melaka,MELAKA | BUKIT KATIL,Freehold,Semi D,194.0,19,315000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Terrace House,590.0,19,500000.0
+Selangor,SELANGOR | BANGI,Leasehold,Terrace House,357.0,19,590000.0
+Selangor,SELANGOR | BALAKONG,Leasehold,Terrace House,249.0,19,425000.0
+Selangor,SELANGOR | DENGKIL,Freehold,Semi D,260.0,19,500000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,128.0,19,160000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,133.0,19,248000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Service Residence,1106.0,19,1010000.0
+Johor,JOHOR | MASAI,Freehold,Apartment,281.0,19,265000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Service Residence,515.0,19,410000.0
+Kedah,KEDAH | ALOR SETAR,Freehold,Flat,124.0,19,68000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,756.0,19,2050000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Condominium,301.0,19,350000.0
+Penang,PENANG | JELUTONG,Leasehold,Condominium,551.0,19,520000.0
+Selangor,SELANGOR | BANDAR KINRARA,Leasehold,Apartment,235.0,19,200000.0
+Kuala Lumpur,KUALA LUMPUR | SENTUL,Freehold,Condominium,590.0,19,760000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Apartment,348.0,19,330000.0
+Sabah,SABAH | PENAMPANG,Leasehold,Apartment,336.0,19,340000.0
+Sabah,SABAH | TUARAN,Leasehold,Apartment,287.0,19,290000.0
+Selangor,SELANGOR | KAJANG,Freehold,Apartment,302.0,19,290000.0
+Sabah,SABAH | PENAMPANG,Leasehold,Flat,284.0,19,190000.0
+Penang,PENANG | BATU FERRINGHI,Freehold,Condominium,447.0,19,530000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,325.0,19,375000.0
+Penang,PENANG | GEORGETOWN,Freehold,Condominium,623.0,19,838000.0
+Johor,JOHOR | TAMPOI,Leasehold,Flat,232.0,19,115000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Flat,86.0,19,65000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Terrace House,136.0,18,195000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Semi D,463.0,18,810000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Bungalow,310.0,18,1365000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,603.0,18,869000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,336.0,18,1043800.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Terrace House,587.0,18,1311150.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Semi D,189.0,18,386500.0
+Pahang,PAHANG | KUALA LIPIS,Leasehold,Semi D,48.0,18,150000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Semi D,504.0,18,637000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,434.0,18,788800.0
+Pahang,PAHANG | ROMPIN,Freehold,Terrace House,129.0,18,210000.0
+Selangor,SELANGOR | BANDAR KINRARA,Freehold,Terrace House,463.0,18,674000.0
+Melaka,MELAKA | SUNGAI RAMBAI,Leasehold,Terrace House,154.0,18,304200.0
+Selangor,SELANGOR | TROPICANA,Leasehold,Bungalow,580.0,18,2550000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,387.0,18,480000.0
+Selangor,SELANGOR | SUBANG JAYA,Leasehold,Terrace House,370.0,18,665000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Terrace House,308.0,18,493000.0
+Perak,PERAK | TAIPING,Freehold,Terrace House,317.0,18,528800.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,250.0,18,234000.0
+Perak,PERAK | LAHAT,Leasehold,Terrace House,239.0,18,255100.0
+Selangor,SELANGOR | SELAYANG,Leasehold,Terrace House,396.0,18,650000.0
+Kuala Lumpur,KUALA LUMPUR | BANDAR MENJALARA,Leasehold,Terrace House,599.0,18,850000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Mixed,Bungalow,352.0,18,480000.0
+Negeri Sembilan,NEGERI SEMBILAN | TELOK KEMANG,Mixed,Terrace House,154.0,18,220000.0
+Perak,PERAK | CHEMOR,Freehold,Terrace House,172.0,18,235000.0
+Johor,JOHOR | BAKRI,Freehold,Terrace House,373.0,18,820000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,179.0,18,270000.0
+Selangor,SELANGOR | DENGKIL,Leasehold,Bungalow,203.0,18,402500.0
+Putrajaya,PUTRAJAYA | PUTRAJAYA,Freehold,Bungalow,569.0,18,1260000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,154.0,18,238000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Freehold,Terrace House,672.0,18,1425000.0
+Johor,JOHOR | TAMPOI,Freehold,Terrace House,311.0,18,390000.0
+Putrajaya,PUTRAJAYA | PUTRAJAYA,Freehold,Semi D,465.0,18,880000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,323.0,18,532500.0
+Selangor,SELANGOR | SEPANG,Freehold,Terrace House,274.0,18,396500.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Leasehold,Apartment,259.0,18,170000.0
+Johor,JOHOR | PERMAS JAYA,Leasehold,Apartment,367.0,18,375000.0
+Penang,PENANG | BUKIT JAMBUL,Freehold,Flat,311.0,18,263000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,508.0,18,395000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Service Residence,516.0,18,550000.0
+Johor,JOHOR | GELANG PATAH,Leasehold,Apartment,325.0,18,330000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Flat,280.0,18,169000.0
+Selangor,SELANGOR | BANDAR SUNGAI LONG,Freehold,Condominium,599.0,18,600000.0
+Johor,JOHOR | SKUDAI,Freehold,Flat,195.0,18,130000.0
+Johor,JOHOR | MASAI,Freehold,Flat,228.0,18,146000.0
+Johor,JOHOR | TAMPOI,Leasehold,Apartment,267.0,18,183750.0
+Kuala Lumpur,KUALA LUMPUR | DESA PETALING,Leasehold,Condominium,323.0,18,350000.0
+Selangor,SELANGOR | SUBANG JAYA,Leasehold,Flat,321.0,18,211000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Condominium,138.0,18,90500.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,897.0,18,3350000.0
+Selangor,SELANGOR | BERANANG,Freehold,Flat,170.0,18,119000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,459.0,18,400000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Service Residence,442.0,18,550000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Flat,263.0,18,160000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Service Residence,1097.0,18,778800.0
+Selangor,SELANGOR | PUCHONG,Freehold,Condominium,686.0,18,1109000.0
+Kedah,KEDAH | KULIM,Freehold,Terrace House,222.0,17,320000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Terrace House,395.0,17,700000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,689.0,17,1140000.0
+Selangor,SELANGOR | BANDAR SUNWAY,Leasehold,Terrace House,549.0,17,940000.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Freehold,Semi D,227.0,17,500000.0
+Penang,PENANG | BATU KAWAN,Freehold,Terrace House,556.0,17,1000000.0
+Selangor,SELANGOR | SELAYANG,Leasehold,Terrace House,1071.0,17,1498800.0
+Selangor,SELANGOR | DENGKIL,Freehold,Terrace House,192.0,17,250000.0
+Pahang,PAHANG | KUALA LIPIS,Freehold,Terrace House,179.0,17,275000.0
+Perak,PERAK | ULU BERNAM,Leasehold,Cluster House,285.0,17,398888.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,455.0,17,833300.0
+Negeri Sembilan,NEGERI SEMBILAN | SENAWANG,Leasehold,Terrace House,153.0,17,150000.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,630.0,17,895000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN 2,Freehold,Terrace House,200.0,17,300000.0
+Selangor,SELANGOR | DENGKIL,Mixed,Terrace House,261.0,17,493000.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,210.0,17,310000.0
+Terengganu,TERENGGANU | KEMAMAN,Leasehold,Terrace House,113.0,17,213000.0
+Kedah,KEDAH | KUALA KETIL,Freehold,Terrace House,144.0,17,215000.0
+Selangor,SELANGOR | BANGI,Leasehold,Terrace House,384.0,17,590000.0
+Johor,JOHOR | SKUDAI,Freehold,Semi D,531.0,17,892000.0
+Perak,PERAK | IPOH,Mixed,Terrace House,315.0,17,528800.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Bungalow,569.0,17,1600000.0
+Johor,JOHOR | PENGERANG,Leasehold,Terrace House,272.0,17,386200.0
+Johor,JOHOR | MUAR,Freehold,Bungalow,155.0,17,394000.0
+Penang,PENANG | SUNGAI JAWI,Freehold,Terrace House,248.0,17,340000.0
+Johor,JOHOR | TAMPOI,Freehold,Terrace House,415.0,17,540000.0
+Johor,JOHOR | KULAI,Freehold,Cluster House,281.0,17,440000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,200.0,17,350000.0
+Selangor,SELANGOR | SEPANG,Freehold,Semi D,123.0,17,267000.0
+Selangor,SELANGOR | KLANG,Freehold,Semi D,248.0,17,599800.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,268.0,17,360000.0
+Selangor,SELANGOR | ARA DAMANSARA,Freehold,Bungalow,729.0,17,1300000.0
+Kedah,KEDAH | PADANG SERAI,Freehold,Terrace House,209.0,17,270000.0
+Kedah,KEDAH | MERBOK,Freehold,Terrace House,150.0,17,210000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,177.0,17,200000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,274.0,17,500000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,484.0,17,850000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Terrace House,334.0,17,400000.0
+Melaka,MELAKA | TANJONG MINYAK,Freehold,Semi D,203.0,17,344000.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,357.0,17,623800.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,320.0,17,450000.0
+Melaka,MELAKA | BUKIT KATIL,Leasehold,Bungalow,136.0,17,707000.0
+Melaka,MELAKA | BUKIT KATIL,Leasehold,Terrace House,159.0,17,220000.0
+Sarawak,SARAWAK | KUCHING,Freehold,Terrace House,302.0,17,700000.0
+Negeri Sembilan,NEGERI SEMBILAN | MANTIN,Freehold,Semi D,160.0,17,550000.0
+Selangor,SELANGOR | CHERAS,Freehold,Bungalow,506.0,17,2700000.0
+Melaka,MELAKA | MELAKA CITY,Freehold,Terrace House,279.0,17,430000.0
+Sarawak,SARAWAK | SIBU,Leasehold,Terrace House,197.0,17,380000.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,293.0,17,410000.0
+Kedah,KEDAH | SUNGAI LALANG,Freehold,Terrace House,147.0,17,230000.0
+Johor,JOHOR | TEBRAU,Freehold,Semi D,434.0,17,670000.0
+Penang,PENANG | PERAI,Leasehold,Flat,73.0,17,43000.0
+Selangor,SELANGOR | TROPICANA,Leasehold,Condominium,464.0,17,540000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Condominium,368.0,17,400000.0
+Johor,JOHOR | JOHOR BAHRU,Mixed,Apartment,328.0,17,410000.0
+Penang,PENANG | GEORGETOWN,Leasehold,Flat,342.0,17,175000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KUCHING,Freehold,Condominium,455.0,17,710000.0
+Kuala Lumpur,KUALA LUMPUR | SUNGAI BESI,Leasehold,Apartment,325.0,17,210000.0
+Selangor,SELANGOR | BANDAR PUNCAK ALAM,Leasehold,Apartment,257.0,17,185000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Condominium,555.0,17,640000.0
+Selangor,SELANGOR | ARA DAMANSARA,Freehold,Service Residence,619.0,17,535000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Condominium,967.0,17,1510000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Leasehold,Condominium,422.0,17,395000.0
+Selangor,SELANGOR | CHERAS,Freehold,Apartment,313.0,17,256000.0
+Johor,JOHOR | TAMPOI,Freehold,Apartment,292.0,17,400000.0
+Penang,PENANG | GELUGOR,Freehold,Condominium,420.0,17,390000.0
+Penang,PENANG | RELAU,Freehold,Apartment,385.0,17,290000.0
+Johor,JOHOR | GELANG PATAH,Leasehold,Apartment,226.0,17,180000.0
+Kuala Lumpur,KUALA LUMPUR | SRI PETALING,Leasehold,Condominium,319.0,17,360000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Apartment,173.0,17,130000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Apartment,415.0,17,460000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Apartment,306.0,17,260000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Apartment,353.0,17,300000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Apartment,228.0,17,180000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Flat,138.0,17,85000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Service Residence,586.0,17,335000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Freehold,Service Residence,624.0,17,480000.0
+Kuala Lumpur,KUALA LUMPUR | BANDAR MENJALARA,Freehold,Condominium,400.0,17,430000.0
+Johor,JOHOR | SKUDAI,Freehold,Flat,198.0,17,130000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Flat,266.0,17,200000.0
+Johor,JOHOR | PERMAS JAYA,Leasehold,Apartment,344.0,17,290000.0
+Melaka,MELAKA | MELAKA CITY,Leasehold,Flat,138.0,17,78000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Service Residence,885.0,17,719000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Apartment,345.0,17,400000.0
+Selangor,SELANGOR | DAMANSARA PERDANA,Leasehold,Condominium,380.0,17,340000.0
+Penang,PENANG | TANJUNG BUNGAH,Freehold,Condominium,396.0,17,440000.0
+Selangor,SELANGOR | DAMANSARA DAMAI,Leasehold,Apartment,275.0,17,220000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Service Residence,433.0,17,460000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Apartment,198.0,17,160000.0
+Kedah,KEDAH | BEDONG,Freehold,Terrace House,246.0,16,362000.0
+Selangor,SELANGOR | ULU KLANG,Leasehold,Bungalow,548.0,16,717500.0
+Kedah,KEDAH | JITRA,Freehold,Terrace House,168.0,16,255000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Semi D,390.0,16,869000.0
+Selangor,SELANGOR | RAWANG,Freehold,Terrace House,360.0,16,623400.0
+Melaka,MELAKA | AYER MOLEK,Freehold,Cluster House,129.0,16,337834.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Freehold,Terrace House,283.0,16,500000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Bungalow,51.0,16,152660.0
+Selangor,SELANGOR | BANDAR PUNCAK ALAM,Leasehold,Cluster House,288.0,16,522500.0
+Negeri Sembilan,NEGERI SEMBILAN | AMPANGAN,Freehold,Terrace House,412.0,16,637500.0
+Pahang,PAHANG | RAUB,Freehold,Terrace House,285.0,16,470000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Terrace House,947.0,16,1365000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,207.0,16,405900.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,183.0,16,350000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,222.0,16,455000.0
+Penang,PENANG | BUTTERWORTH,Freehold,Terrace House,638.0,16,1044400.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,409.0,16,539000.0
+Pahang,PAHANG | BENTONG,Freehold,Terrace House,192.0,16,240000.0
+Perak,PERAK | LAHAT,Leasehold,Cluster House,232.0,16,499440.0
+Kedah,KEDAH | TELOI KIRI,Freehold,Terrace House,118.0,16,180000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,159.0,16,232500.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,451.0,16,562500.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Terrace House,533.0,16,1209750.0
+Selangor,SELANGOR | IJOK,Leasehold,Terrace House,410.0,16,500000.0
+Penang,PENANG | BUTTERWORTH,Freehold,Terrace House,389.0,16,655000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Freehold,Terrace House,328.0,16,669000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Semi D,316.0,16,487500.0
+Kuala Lumpur,KUALA LUMPUR | SUNGAI BESI,Leasehold,Terrace House,751.0,16,1325000.0
+Johor,JOHOR | JEMENTAH,Freehold,Terrace House,241.0,16,385000.0
+Johor,JOHOR | PALOH,Freehold,Semi D,200.0,16,308000.0
+Sabah,SABAH | TAWAU,Leasehold,Terrace House,117.0,16,195000.0
+Penang,PENANG | SUNGAI JAWI,Freehold,Semi D,195.0,16,459000.0
+Perak,PERAK | KAMPAR,Leasehold,Terrace House,270.0,16,300000.0
+Perak,PERAK | LUMUT,Leasehold,Cluster House,156.0,16,328000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Semi D,537.0,16,1040000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Terrace House,335.0,16,520000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Semi D,167.0,16,300000.0
+Selangor,SELANGOR | BATU CAVES,Leasehold,Terrace House,340.0,16,550000.0
+Selangor,SELANGOR | TELOK PANGLIMA GARANG,Freehold,Terrace House,302.0,16,385000.0
+Kedah,KEDAH | KULIM,Freehold,Semi D,232.0,16,490000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,409.0,16,498500.0
+Selangor,SELANGOR | KAJANG,Mixed,Bungalow,346.0,16,499500.0
+Kedah,KEDAH | ALOR SETAR,Freehold,Semi D,206.0,16,311111.0
+Melaka,MELAKA | BUKIT KATIL,Leasehold,Semi D,172.0,16,280000.0
+Johor,JOHOR | SKUDAI,Leasehold,Cluster House,420.0,16,959000.0
+Johor,JOHOR | TEBRAU,Freehold,Cluster House,442.0,16,1200000.0
+Melaka,MELAKA | BALAI PANJANG,Freehold,Terrace House,203.0,16,312000.0
+Kedah,KEDAH | KUALA KEDAH,Freehold,Semi D,189.0,16,421925.0
+Selangor,SELANGOR | BANTING,Mixed,Terrace House,220.0,16,342500.0
+Kuala Lumpur,KUALA LUMPUR | SETIAWANGSA,Freehold,Terrace House,593.0,16,1140000.0
+Selangor,SELANGOR | KOTA DAMANSARA,Leasehold,Bungalow,630.0,16,2400000.0
+Penang,PENANG | KUBANG SEMANG,Freehold,Terrace House,241.0,16,292500.0
+Selangor,SELANGOR | BERANANG,Freehold,Terrace House,338.0,16,505000.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Freehold,Terrace House,277.0,16,505000.0
+Johor,JOHOR | MASAI,Leasehold,Flat,193.0,16,138000.0
+Selangor,SELANGOR | BATU CAVES,Leasehold,Condominium,380.0,16,380000.0
+Penang,PENANG | JELUTONG,Freehold,Apartment,436.0,16,305000.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Apartment,177.0,16,170000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Apartment,135.0,16,100000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Service Residence,356.0,16,300000.0
+Selangor,SELANGOR | KLANG,Freehold,Flat,221.0,16,143000.0
+Penang,PENANG | GELUGOR,Freehold,Apartment,486.0,16,345000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Condominium,364.0,16,520000.0
+Sabah,SABAH | SANDAKAN,Leasehold,Apartment,292.0,16,200000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,321.0,16,370000.0
+Kuala Lumpur,KUALA LUMPUR | BANDAR TASIK SELATAN,Leasehold,Apartment,332.0,16,290000.0
+Selangor,SELANGOR | SUNGAI BULOH,Leasehold,Apartment,342.0,16,270000.0
+Selangor,SELANGOR | BANDAR SRI DAMANSARA,Freehold,Apartment,384.0,16,322500.0
+Penang,PENANG | JELUTONG,Leasehold,Flat,423.0,16,257500.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Service Residence,476.0,16,250000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Apartment,383.0,16,249000.0
+Kuala Lumpur,KUALA LUMPUR | KEPONG,Leasehold,Service Residence,774.0,16,412500.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Apartment,486.0,16,345000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Flat,232.0,16,135000.0
+Selangor,SELANGOR | KAJANG,Freehold,Condominium,301.0,16,330000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Flat,264.0,16,215000.0
+Penang,PENANG | AYER ITAM,Freehold,Flat,307.0,16,195000.0
+Kuala Lumpur,KUALA LUMPUR | PANTAI,Leasehold,Apartment,406.0,16,330000.0
+Penang,PENANG | JELUTONG,Freehold,Apartment,439.0,16,307500.0
+Penang,PENANG | SUNGAI ARA,Freehold,Condominium,396.0,16,502500.0
+Pahang,PAHANG | GENTING HIGHLANDS,Freehold,Apartment,232.0,16,211500.0
+Sabah,SABAH | PENAMPANG,Leasehold,Flat,326.0,16,250000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Condominium,633.0,16,835000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Apartment,407.0,16,390000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Flat,289.0,16,161500.0
+Johor,JOHOR | TEBRAU,Freehold,Apartment,462.0,16,330000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN IPOH,Freehold,Service Residence,494.0,16,500000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Apartment,386.0,16,357500.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Condominium,111.0,16,84000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Service Residence,767.0,16,855000.0
+Penang,PENANG | BUKIT MINYAK,Freehold,Apartment,356.0,16,280000.0
+Kedah,KEDAH | KULIM,Freehold,Flat,206.0,16,120000.0
+Selangor,SELANGOR | KAJANG,Leasehold,Flat,64.0,16,42000.0
+Kuala Lumpur,KUALA LUMPUR | SRI PETALING,Leasehold,Condominium,320.0,16,307500.0
+Sabah,SABAH | PENAMPANG,Freehold,Apartment,346.0,16,294000.0
+Selangor,SELANGOR | ARA DAMANSARA,Freehold,Service Residence,874.0,16,1672200.0
+Kuala Lumpur,KUALA LUMPUR | KEPONG,Leasehold,Apartment,364.0,16,379000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Bungalow,291.0,15,590000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Freehold,Terrace House,278.0,15,425000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,239.0,15,393000.0
+Kedah,KEDAH | JITRA,Freehold,Terrace House,182.0,15,325000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,471.0,15,880000.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Freehold,Terrace House,247.0,15,345000.0
+Selangor,SELANGOR | KAJANG,Freehold,Semi D,407.0,15,600000.0
+Johor,JOHOR | SKUDAI,Mixed,Cluster House,415.0,15,1050000.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,305.0,15,468880.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,441.0,15,610000.0
+Kelantan,KELANTAN | PADANG ENGGANG,Leasehold,Terrace House,361.0,15,470000.0
+Penang,PENANG | TASEK GELUGOR,Freehold,Terrace House,294.0,15,310000.0
+Sarawak,SARAWAK | MIRI,Leasehold,Terrace House,233.0,15,338888.0
+Pahang,PAHANG | TERAS,Freehold,Terrace House,299.0,15,538000.0
+Selangor,SELANGOR | DENGKIL,Freehold,Terrace House,460.0,15,737800.0
+Kuala Lumpur,KUALA LUMPUR | SALAK SELATAN,Freehold,Terrace House,349.0,15,550000.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,193.0,15,298800.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,157.0,15,335000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Leasehold,Terrace House,150.0,15,220000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Terrace House,455.0,15,778000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Freehold,Bungalow,172.0,15,715000.0
+Sabah,SABAH | LAHAD DATU,Leasehold,Semi D,191.0,15,550000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,236.0,15,245000.0
+Melaka,MELAKA | MELAKA CITY,Leasehold,Terrace House,279.0,15,470000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Terrace House,686.0,15,1331000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,281.0,15,499800.0
+Melaka,MELAKA | JASIN,Leasehold,Cluster House,164.0,15,285000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,169.0,15,250000.0
+Johor,JOHOR | SKUDAI,Leasehold,Cluster House,239.0,15,498000.0
+Perak,PERAK | SIMPANG PULAI,Leasehold,Terrace House,204.0,15,199000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Freehold,Terrace House,363.0,15,520000.0
+Terengganu,TERENGGANU | DUNGUN,Freehold,Bungalow,111.0,15,340000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,115.0,15,260000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Terrace House,303.0,15,780000.0
+Perak,PERAK | TELUK INTAN,Mixed,Terrace House,255.0,15,476888.0
+Selangor,SELANGOR | SEMENYIH,Leasehold,Terrace House,150.0,15,465000.0
+Selangor,SELANGOR | KOTA DAMANSARA,Leasehold,Terrace House,528.0,15,930000.0
+Johor,JOHOR | SKUDAI,Freehold,Semi D,397.0,15,1350000.0
+Melaka,MELAKA | SUNGAI UDANG,Freehold,Terrace House,175.0,15,270000.0
+Selangor,SELANGOR | KAJANG,Leasehold,Terrace House,361.0,15,370000.0
+Pahang,PAHANG | MENTAKAB,Leasehold,Terrace House,157.0,15,219000.0
+Negeri Sembilan,NEGERI SEMBILAN | LUKUT,Freehold,Terrace House,313.0,15,459000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,325.0,15,520000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,253.0,15,280000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Terrace House,346.0,15,585000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,329.0,15,548000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,230.0,15,320000.0
+Selangor,SELANGOR | RAWANG,Freehold,Terrace House,404.0,15,680000.0
+Pahang,PAHANG | TRIANG,Freehold,Terrace House,154.0,15,200000.0
+Sarawak,SARAWAK | BINTULU,Leasehold,Terrace House,340.0,15,380000.0
+Negeri Sembilan,NEGERI SEMBILAN | KUALA PILAH,Freehold,Bungalow,127.0,15,199000.0
+Penang,PENANG | SIMPANG AMPAT,Leasehold,Terrace House,201.0,15,280000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,195.0,15,330000.0
+Penang,PENANG | JELUTONG,Freehold,Semi D,590.0,15,1800000.0
+Melaka,MELAKA | MELAKA CITY,Leasehold,Terrace House,402.0,15,580000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,368.0,15,560000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,426.0,15,650000.0
+Sabah,SABAH | SANDAKAN,Leasehold,Terrace House,222.0,15,320000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Terrace House,561.0,15,802000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Semi D,158.0,15,220000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Apartment,425.0,15,430000.0
+Kuala Lumpur,KUALA LUMPUR | DESA PARKCITY,Freehold,Condominium,1007.0,15,1550000.0
+Selangor,SELANGOR | DAMANSARA PERDANA,Leasehold,Service Residence,445.0,15,460000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Flat,77.0,15,50000.0
+Johor,JOHOR | TEBRAU,Freehold,Apartment,436.0,15,388000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,259.0,15,170000.0
+Selangor,SELANGOR | PORT KLANG,Freehold,Service Residence,492.0,15,380000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Flat,163.0,15,105000.0
+Johor,JOHOR | TEBRAU,Freehold,Apartment,470.0,15,380000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Condominium,124.0,15,90000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Apartment,376.0,15,320000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Condominium,494.0,15,575000.0
+Kuala Lumpur,KUALA LUMPUR | KL CITY,Freehold,Service Residence,679.0,15,616505.0
+Johor,JOHOR | ULU TIRAM,Freehold,Flat,228.0,15,150000.0
+Perak,PERAK | ULU BERNAM,Freehold,Apartment,230.0,15,163000.0
+Penang,PENANG | SUNGAI JAWI,Freehold,Flat,100.0,15,55000.0
+Selangor,SELANGOR | BANDAR SRI DAMANSARA,Freehold,Condominium,452.0,15,690000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Service Residence,551.0,15,595000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Leasehold,Apartment,304.0,15,220000.0
+Selangor,SELANGOR | HULU LANGAT,Freehold,Flat,299.0,15,225000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,420.0,15,420000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Condominium,795.0,15,760000.0
+Negeri Sembilan,NEGERI SEMBILAN | PASIR PANJANG,Freehold,Apartment,130.0,15,53000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Leasehold,Condominium,219.0,15,160000.0
+Penang,PENANG | GURNEY,Freehold,Condominium,744.0,15,657000.0
+Sabah,SABAH | PENAMPANG,Leasehold,Apartment,375.0,15,350000.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Leasehold,Apartment,240.0,15,180000.0
+Selangor,SELANGOR | KAJANG,Freehold,Apartment,287.0,15,300000.0
+Penang,PENANG | GELUGOR,Freehold,Condominium,471.0,15,330000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Apartment,265.0,15,172000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Leasehold,Flat,257.0,15,180000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Flat,232.0,15,150000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Condominium,319.0,15,380000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Freehold,Condominium,412.0,15,350000.0
+Penang,PENANG | BATU FERRINGHI,Freehold,Apartment,304.0,15,170000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Service Residence,851.0,15,650000.0
+Selangor,SELANGOR | KAJANG,Freehold,Condominium,302.0,15,390000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Apartment,432.0,15,450000.0
+Johor,JOHOR | SKUDAI,Freehold,Flat,217.0,15,140000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Leasehold,Condominium,479.0,15,585000.0
+Kuala Lumpur,KUALA LUMPUR | DUTAMAS,Freehold,Condominium,414.0,15,453000.0
+Penang,PENANG | BUTTERWORTH,Freehold,Flat,222.0,15,115000.0
+Selangor,SELANGOR | KELANA JAYA,Leasehold,Condominium,349.0,15,380000.0
+Selangor,SELANGOR | SERENDAH,Leasehold,Apartment,214.0,15,150000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Condominium,442.0,15,538000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Service Residence,465.0,15,500000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Leasehold,Apartment,355.0,15,310000.0
+Penang,PENANG | GELUGOR,Freehold,Condominium,457.0,15,260000.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Service Residence,879.0,15,1000000.0
+Kuala Lumpur,KUALA LUMPUR | SUNGAI BESI,Leasehold,Condominium,386.0,15,450000.0
+Kuala Lumpur,KUALA LUMPUR | DESA PARKCITY,Freehold,Condominium,1164.0,15,1600000.0
+Selangor,SELANGOR | SHAH ALAM,Mixed,Cluster House,301.0,14,416000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,371.0,14,554888.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,233.0,14,489000.0
+Kedah,KEDAH | LUNAS,Freehold,Semi D,172.0,14,412500.0
+Perak,PERAK | PENGKALAN HULU,Leasehold,Terrace House,157.0,14,188000.0
+Melaka,MELAKA | MASJID TANAH,Freehold,Semi D,128.0,14,410000.0
+Melaka,MELAKA | BEMBAN,Freehold,Terrace House,182.0,14,291230.0
+Kedah,KEDAH | SUNGAI LALANG,Freehold,Terrace House,268.0,14,320000.0
+Selangor,SELANGOR | DENGKIL,Freehold,Terrace House,418.0,14,585000.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,295.0,14,378000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,291.0,14,378800.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,276.0,14,392000.0
+Kedah,KEDAH | KUALA KETIL,Freehold,Terrace House,136.0,14,237500.0
+Kedah,KEDAH | SUNGAI LALANG,Freehold,Bungalow,98.0,14,548000.0
+Perak,PERAK | LUMUT,Freehold,Semi D,178.0,14,498800.0
+Negeri Sembilan,NEGERI SEMBILAN | TAMPIN,Freehold,Semi D,107.0,14,401900.0
+Perak,PERAK | SERI ISKANDAR,Leasehold,Terrace House,175.0,14,250000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,145.0,14,231300.0
+Perak,PERAK | SITIAWAN,Freehold,Bungalow,117.0,14,240000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Freehold,Semi D,159.0,14,605000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,254.0,14,296800.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Terrace House,675.0,14,1175000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN 2,Freehold,Cluster House,274.0,14,550000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,232.0,14,450000.0
+Kedah,KEDAH | KUAH,Leasehold,Terrace House,101.0,14,145000.0
+Kedah,KEDAH | KUAH,Freehold,Terrace House,435.0,14,618800.0
+Johor,JOHOR | BATU PAHAT,Freehold,Semi D,185.0,14,325000.0
+Johor,JOHOR | KLUANG,Freehold,Semi D,179.0,14,314000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,398.0,14,445000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,133.0,14,234000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,231.0,14,315000.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Terrace House,182.0,14,300000.0
+Selangor,SELANGOR | KAJANG,Freehold,Bungalow,354.0,14,525000.0
+Sabah,SABAH | KOTA MARUDU,Leasehold,Semi D,238.0,14,500000.0
+Negeri Sembilan,NEGERI SEMBILAN | SIKAMAT,Leasehold,Terrace House,210.0,14,237500.0
+Perak,PERAK | TAIPING,Freehold,Terrace House,192.0,14,230000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,227.0,14,445000.0
+Melaka,MELAKA | BATU BERENDAM,Leasehold,Terrace House,227.0,14,305000.0
+Perak,PERAK | BIDOR,Leasehold,Semi D,153.0,14,364000.0
+Johor,JOHOR | BAKRI,Freehold,Terrace House,238.0,14,610000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Cluster House,298.0,14,335000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,296.0,14,655000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,552.0,14,697500.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,624.0,14,2125000.0
+Melaka,MELAKA | SUNGAI UDANG,Freehold,Terrace House,175.0,14,290000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,189.0,14,250000.0
+Johor,JOHOR | SENAI,Leasehold,Terrace House,142.0,14,411000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,191.0,14,229400.0
+Perak,PERAK | PADANG RENGAS,Freehold,Terrace House,187.0,14,274440.0
+Selangor,SELANGOR | BATU CAVES,Leasehold,Terrace House,581.0,14,550000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,293.0,14,515000.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,329.0,14,865000.0
+Selangor,SELANGOR | SUNGAI BULOH,Freehold,Bungalow,670.0,14,2405000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,198.0,14,250000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN,Leasehold,Terrace House,172.0,14,215000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,210.0,14,334500.0
+Kuala Lumpur,KUALA LUMPUR | SENTUL,Leasehold,Cluster House,513.0,14,330000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,336.0,14,559000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,426.0,14,885000.0
+Kedah,KEDAH | LUNAS,Freehold,Terrace House,207.0,14,300000.0
+Johor,JOHOR | MASAI,Freehold,Bungalow,456.0,14,2125000.0
+Johor,JOHOR | YONG PENG,Freehold,Terrace House,160.0,14,240000.0
+Kedah,KEDAH | KULIM,Freehold,Terrace House,216.0,14,297000.0
+Kuala Lumpur,KUALA LUMPUR | BATU CAVES,Freehold,Terrace House,504.0,14,460000.0
+Sarawak,SARAWAK | SIBU,Leasehold,Terrace House,119.0,14,267500.0
+Kedah,KEDAH | SUNGAI LALANG,Freehold,Bungalow,150.0,14,240000.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,264.0,14,485000.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Leasehold,Terrace House,213.0,14,592500.0
+Selangor,SELANGOR | TANJONG DUABELAS,Mixed,Terrace House,269.0,14,414973.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,182.0,14,237500.0
+Negeri Sembilan,NEGERI SEMBILAN | LABU,Freehold,Terrace House,444.0,14,623888.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Bungalow,189.0,14,935000.0
+Pahang,PAHANG | BENTONG,Freehold,Terrace House,242.0,14,338000.0
+Perak,PERAK | LAHAT,Leasehold,Terrace House,224.0,14,280000.0
+Sabah,SABAH | LAHAD DATU,Leasehold,Terrace House,176.0,14,375000.0
+Kedah,KEDAH | GURUN,Freehold,Semi D,107.0,14,206500.0
+Selangor,SELANGOR | SELAYANG,Leasehold,Terrace House,491.0,14,684000.0
+Perak,PERAK | BAGAN SERAI,Freehold,Terrace House,222.0,14,310000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,271.0,14,311500.0
+Melaka,MELAKA | TANJONG KLING,Leasehold,Terrace House,193.0,14,308000.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,251.0,14,410000.0
+Melaka,MELAKA | BALAI PANJANG,Freehold,Terrace House,236.0,14,382500.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,232.0,14,475000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Terrace House,348.0,14,700000.0
+Penang,PENANG | PERMATANG PAUH,Freehold,Flat,218.0,14,160000.0
+Penang,PENANG | BUKIT MINYAK,Freehold,Flat,167.0,14,100000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Condominium,1066.0,14,1253287.0
+Selangor,SELANGOR | SELAYANG,Leasehold,Condominium,316.0,14,350000.0
+Penang,PENANG | JELUTONG,Freehold,Flat,374.0,14,177500.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Apartment,400.0,14,245000.0
+Selangor,SELANGOR | KAJANG,Freehold,Apartment,310.0,14,310000.0
+Selangor,SELANGOR | SELAYANG,Leasehold,Apartment,324.0,14,282500.0
+Penang,PENANG | BUKIT MINYAK,Freehold,Flat,248.0,14,160000.0
+Johor,JOHOR | SKUDAI,Freehold,Condominium,268.0,14,271000.0
+Sarawak,SARAWAK | MIRI,Leasehold,Apartment,306.0,14,260000.0
+Penang,PENANG | JELUTONG,Leasehold,Condominium,637.0,14,690000.0
+Penang,PENANG | BUTTERWORTH,Freehold,Apartment,303.0,14,215000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Apartment,378.0,14,354000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Condominium,366.0,14,370000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Condominium,322.0,14,380000.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Service Residence,1200.0,14,749400.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,226.0,14,217500.0
+Melaka,MELAKA | MELAKA CITY,Leasehold,Apartment,155.0,14,126000.0
+Johor,JOHOR | TAMPOI,Freehold,Service Residence,413.0,14,435000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Condominium,407.0,14,487500.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Condominium,279.0,14,204500.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Service Residence,3017.0,14,11420500.0
+Perak,PERAK | IPOH,Freehold,Apartment,180.0,14,137500.0
+Penang,PENANG | BUKIT MERTAJAM,Leasehold,Flat,282.0,14,170000.0
+Kuala Lumpur,KUALA LUMPUR | PANTAI,Leasehold,Condominium,506.0,14,462500.0
+Kuala Lumpur,KUALA LUMPUR | KAMPUNG KERINCHI (BANGSAR SOUTH),Freehold,Condominium,437.0,14,482500.0
+Melaka,MELAKA | BUKIT BARU,Freehold,Apartment,259.0,14,332500.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN TUN DR ISMAIL,Freehold,Condominium,600.0,14,830500.0
+Perak,PERAK | IPOH,Leasehold,Condominium,259.0,14,315000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Freehold,Condominium,311.0,14,393500.0
+Penang,PENANG | BUTTERWORTH,Freehold,Flat,204.0,14,110000.0
+Selangor,SELANGOR | BANGI,Freehold,Apartment,347.0,14,316000.0
+Penang,PENANG | JELUTONG,Freehold,Apartment,560.0,14,378000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Apartment,458.0,14,380000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,350.0,14,320000.0
+Kuala Lumpur,KUALA LUMPUR | DUTAMAS,Freehold,Service Residence,1068.0,14,1090000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Flat,121.0,14,71000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Apartment,410.0,14,340000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,968.0,14,2531000.0
+Selangor,SELANGOR | KELANA JAYA,Leasehold,Condominium,342.0,14,400000.0
+Kuala Lumpur,KUALA LUMPUR | SRI PETALING,Leasehold,Condominium,297.0,14,298850.0
+Selangor,SELANGOR | KEPONG,Freehold,Apartment,313.0,14,262500.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Service Residence,1173.0,14,1853500.0
+Kuala Lumpur,KUALA LUMPUR | SEGAMBUT,Leasehold,Flat,195.0,14,182500.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,408.0,14,395000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Leasehold,Apartment,327.0,14,300000.0
+Sabah,SABAH | TUARAN,Leasehold,Flat,215.0,14,137000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Flat,222.0,14,157500.0
+Kedah,KEDAH | JITRA,Freehold,Apartment,241.0,14,165000.0
+Selangor,SELANGOR | KEPONG,Leasehold,Terrace House,515.0,13,550000.0
+Kuala Lumpur,KUALA LUMPUR | JINJANG,Leasehold,Cluster House,472.0,13,300000.0
+Johor,JOHOR | MASAI,Freehold,Terrace House,364.0,13,688000.0
+Sabah,SABAH | SANDAKAN,Leasehold,Terrace House,208.0,13,430000.0
+Selangor,SELANGOR | ULU KLANG,Freehold,Terrace House,439.0,13,450000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,415.0,13,590000.0
+Selangor,SELANGOR | KAPAR,Freehold,Bungalow,275.0,13,540000.0
+Johor,JOHOR | LABIS,Freehold,Terrace House,224.0,13,386400.0
+Perak,PERAK | ULU BERNAM,Freehold,Terrace House,292.0,13,408000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Semi D,79.0,13,230000.0
+Negeri Sembilan,NEGERI SEMBILAN | MANTIN,Freehold,Terrace House,519.0,13,800000.0
+Perak,PERAK | SERI ISKANDAR,Freehold,Terrace House,163.0,13,228000.0
+Perak,PERAK | SIMPANG PULAI,Leasehold,Terrace House,219.0,13,285000.0
+Negeri Sembilan,NEGERI SEMBILAN | SIKAMAT,Freehold,Terrace House,179.0,13,240000.0
+Perak,PERAK | BIDOR,Leasehold,Cluster House,150.0,13,398700.0
+Negeri Sembilan,NEGERI SEMBILAN | TAMPIN,Freehold,Terrace House,161.0,13,249998.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,143.0,13,236000.0
+Negeri Sembilan,NEGERI SEMBILAN | JIMAH,Freehold,Terrace House,435.0,13,608299.0
+Selangor,SELANGOR | KAPAR,Freehold,Terrace House,391.0,13,549900.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Semi D,131.0,13,980000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Town House,250.0,13,310000.0
+Johor,JOHOR | KULAI,Leasehold,Terrace House,325.0,13,385000.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,167.0,13,210000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,284.0,13,580000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Town House,431.0,13,510000.0
+Kedah,KEDAH | ALOR SETAR,Freehold,Bungalow,270.0,13,561200.0
+Penang,PENANG | BATU KAWAN,Leasehold,Cluster House,278.0,13,350000.0
+Penang,PENANG | NIBONG TEBAL,Leasehold,Terrace House,199.0,13,190000.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,269.0,13,370000.0
+Terengganu,TERENGGANU | DUNGUN,Freehold,Semi D,98.0,13,350000.0
+Perak,PERAK | SERI ISKANDAR,Leasehold,Semi D,126.0,13,370000.0
+Pahang,PAHANG | MENTAKAB,Freehold,Terrace House,144.0,13,210000.0
+Selangor,SELANGOR | KAPAR,Freehold,Semi D,205.0,13,575000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,495.0,13,800000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,166.0,13,240000.0
+Perak,PERAK | LAHAT,Leasehold,Terrace House,184.0,13,250000.0
+Selangor,SELANGOR | PUCHONG,Mixed,Terrace House,510.0,13,929000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,222.0,13,490000.0
+Penang,PENANG | NIBONG TEBAL,Freehold,Semi D,251.0,13,340000.0
+Selangor,SELANGOR | BANTING,Freehold,Terrace House,227.0,13,450000.0
+Selangor,SELANGOR | SHAH ALAM,Freehold,Terrace House,382.0,13,600000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Terrace House,200.0,13,305000.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,312.0,13,610000.0
+Selangor,SELANGOR | PANDAMARAN,Leasehold,Terrace House,200.0,13,250000.0
+Melaka,MELAKA | UMBAI,Freehold,Semi D,156.0,13,260000.0
+Selangor,SELANGOR | BALAKONG,Freehold,Terrace House,434.0,13,390000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,302.0,13,600000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,354.0,13,615000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,240.0,13,480000.0
+Johor,JOHOR | ULU TIRAM,Leasehold,Terrace House,499.0,13,670000.0
+Penang,PENANG | PERAI,Freehold,Terrace House,400.0,13,590000.0
+Kedah,KEDAH | KULIM,Freehold,Semi D,177.0,13,280000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Semi D,536.0,13,1490000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,186.0,13,380000.0
+Selangor,SELANGOR | SERI KEMBANGAN,Freehold,Town House,340.0,13,455000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,290.0,13,390000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,346.0,13,420000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Bungalow,188.0,13,550000.0
+Melaka,MELAKA | TANJONG MINYAK,Freehold,Terrace House,207.0,13,270000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,241.0,13,309800.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,246.0,13,365000.0
+Selangor,SELANGOR | PETALING JAYA,Leasehold,Semi D,309.0,13,600000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,253.0,13,400000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Terrace House,293.0,13,300000.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,156.0,13,250000.0
+Selangor,SELANGOR | KUALA SELANGOR,Freehold,Semi D,215.0,13,450000.0
+Perak,PERAK | LAHAT,Leasehold,Terrace House,179.0,13,288800.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,227.0,13,360000.0
+Johor,JOHOR | TAMPOI,Leasehold,Terrace House,206.0,13,330000.0
+Selangor,SELANGOR | CHERAS,Leasehold,Semi D,550.0,13,929000.0
+Melaka,MELAKA | MASJID TANAH,Leasehold,Terrace House,184.0,13,300000.0
+Kuala Lumpur,KUALA LUMPUR | BANGSAR,Freehold,Semi D,624.0,13,1270000.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,180.0,13,368800.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,195.0,13,300000.0
+Kelantan,KELANTAN | CHERANG RUKU,Freehold,Bungalow,61.0,13,325000.0
+Selangor,SELANGOR | DENGKIL,Leasehold,Apartment,224.0,13,180000.0
+Penang,PENANG | JELUTONG,Freehold,Condominium,592.0,13,780000.0
+Johor,JOHOR | SKUDAI,Freehold,Apartment,281.0,13,330000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Flat,287.0,13,170000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Condominium,204.0,13,220000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Condominium,688.0,13,595000.0
+Selangor,SELANGOR | PETALING JAYA,Leasehold,Condominium,422.0,13,430000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Apartment,397.0,13,325000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Apartment,306.0,13,290000.0
+Melaka,MELAKA | MELAKA CITY,Leasehold,Service Residence,457.0,13,330000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Condominium,406.0,13,580000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Condominium,1140.0,13,2550000.0
+Selangor,SELANGOR | BALAKONG,Leasehold,Flat,231.0,13,170000.0
+Johor,JOHOR | TEBRAU,Freehold,Flat,258.0,13,150000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Apartment,373.0,13,380000.0
+Melaka,MELAKA | MELAKA CITY,Freehold,Apartment,230.0,13,220000.0
+Selangor,SELANGOR | SAUJANA,Freehold,Service Residence,614.0,13,530000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Condominium,401.0,13,328000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,452.0,13,630000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Apartment,179.0,13,170000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Apartment,331.0,13,339000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Service Residence,388.0,13,388000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Condominium,393.0,13,495000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Condominium,472.0,13,620000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Apartment,407.0,13,320000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Service Residence,373.0,13,370000.0
+Selangor,SELANGOR | RAWANG,Freehold,Apartment,263.0,13,210000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Apartment,372.0,13,320000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Flat,249.0,13,190000.0
+Kuala Lumpur,KUALA LUMPUR | SENTUL,Leasehold,Condominium,394.0,13,400000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Flat,147.0,13,105000.0
+Selangor,SELANGOR | BANDAR UTAMA,Leasehold,Apartment,497.0,13,460000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Leasehold,Condominium,584.0,13,1000000.0
+Kuala Lumpur,KUALA LUMPUR | KEPONG,Leasehold,Apartment,331.0,13,285000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Apartment,429.0,13,425000.0
+Penang,PENANG | BUKIT JAMBUL,Freehold,Apartment,371.0,13,260000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,667.0,13,1300000.0
+Kuala Lumpur,KUALA LUMPUR | DESA PARKCITY,Freehold,Condominium,949.0,13,1835000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Apartment,352.0,13,265000.0
+Selangor,SELANGOR | PORT KLANG,Leasehold,Flat,203.0,13,155000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,538.0,13,695000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Condominium,344.0,13,298000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Service Residence,402.0,13,400000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Flat,221.0,13,150000.0
+Johor,JOHOR | PASIR GUDANG,Leasehold,Flat,183.0,13,130000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Condominium,647.0,13,650000.0
+Kuala Lumpur,KUALA LUMPUR | BATU CAVES,Leasehold,Flat,183.0,13,130000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Condominium,607.0,13,830700.0
+Sabah,SABAH | PAPAR,Leasehold,Apartment,269.0,13,210000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Apartment,453.0,13,400000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Apartment,366.0,13,270000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,314.0,13,280000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Flat,177.0,13,120000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Service Residence,841.0,13,380000.0
+Johor,JOHOR | PERMAS JAYA,Freehold,Apartment,342.0,13,360000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Flat,330.0,13,230000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Service Residence,608.0,13,510000.0
+Johor,JOHOR | TEBRAU,Freehold,Flat,77.0,13,53000.0
+Penang,PENANG | AYER ITAM,Leasehold,Apartment,394.0,13,310000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Condominium,258.0,13,320000.0
+Perak,PERAK | TAMBUN,Leasehold,Terrace House,273.0,12,427500.0
+Pahang,PAHANG | MENTAKAB,Freehold,Semi D,139.0,12,397900.0
+Sabah,SABAH | TAWAU,Leasehold,Terrace House,250.0,12,365000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,180.0,12,220000.0
+Selangor,SELANGOR | TELOK PANGLIMA GARANG,Freehold,Terrace House,324.0,12,455000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,610.0,12,825000.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Terrace House,687.0,12,1190000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,508.0,12,922500.0
+Perak,PERAK | IPOH,Leasehold,Cluster House,192.0,12,252500.0
+Perak,PERAK | IPOH,Freehold,Terrace House,213.0,12,309550.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,254.0,12,722500.0
+Perak,PERAK | IPOH,Leasehold,Bungalow,145.0,12,328800.0
+Selangor,SELANGOR | KAPAR,Leasehold,Semi D,272.0,12,446635.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,312.0,12,420000.0
+Penang,PENANG | KEPALA BATAS,Freehold,Terrace House,268.0,12,481287.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,193.0,12,345000.0
+Penang,PENANG | SUNGAI BAKAP,Freehold,Semi D,321.0,12,526500.0
+Perak,PERAK | IPOH,Freehold,Terrace House,194.0,12,298880.0
+Johor,JOHOR | LABIS,Freehold,Terrace House,204.0,12,344000.0
+Pahang,PAHANG | SUNGAI KARANG,Leasehold,Terrace House,169.0,12,238000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,263.0,12,434500.0
+Pahang,PAHANG | PEKAN,Mixed,Terrace House,184.0,12,288000.0
+Perak,PERAK | KUALA KANGSAR,Freehold,Terrace House,203.0,12,269800.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,515.0,12,620000.0
+Perak,PERAK | SITIAWAN,Freehold,Semi D,210.0,12,628000.0
+Negeri Sembilan,NEGERI SEMBILAN | SIMPANG PERTANG,Leasehold,Terrace House,64.0,12,90000.0
+Selangor,SELANGOR | BANTING,Freehold,Terrace House,273.0,12,390900.0
+Kedah,KEDAH | SUNGAI LALANG,Freehold,Semi D,188.0,12,269800.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,296.0,12,398380.0
+Johor,JOHOR | TEBRAU,Freehold,Terrace House,563.0,12,788800.0
+Perak,PERAK | IPOH,Freehold,Terrace House,323.0,12,568880.0
+Perak,PERAK | TAIPING,Leasehold,Terrace House,367.0,12,468800.0
+Selangor,SELANGOR | BANTING,Freehold,Semi D,270.0,12,442500.0
+Penang,PENANG | PENAGA,Freehold,Semi D,204.0,12,237500.0
+Melaka,MELAKA | SUNGAI UDANG,Leasehold,Terrace House,193.0,12,310000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Freehold,Terrace House,566.0,12,505000.0
+Sarawak,SARAWAK | LIMBANG,Freehold,Terrace House,74.0,12,80000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Terrace House,484.0,12,815000.0
+Kedah,KEDAH | JITRA,Freehold,Terrace House,185.0,12,200000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,190.0,12,237500.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,354.0,12,495805.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Leasehold,Terrace House,263.0,12,571500.0
+Johor,JOHOR | MASAI,Freehold,Terrace House,341.0,12,295000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,229.0,12,380400.0
+Selangor,SELANGOR | BATANG KALI,Leasehold,Terrace House,198.0,12,300000.0
+Sabah,SABAH | LAHAD DATU,Leasehold,Terrace House,152.0,12,250000.0
+Perak,PERAK | SITIAWAN,Freehold,Semi D,251.0,12,499000.0
+Kedah,KEDAH | PADANG SERAI,Freehold,Terrace House,182.0,12,262500.0
+Pahang,PAHANG | KUANTAN,Leasehold,Bungalow,65.0,12,260000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Bungalow,257.0,12,744000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Terrace House,397.0,12,475000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,451.0,12,850000.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,229.0,12,160000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Leasehold,Terrace House,140.0,12,175000.0
+Perak,PERAK | LUMUT,Freehold,Semi D,238.0,12,300000.0
+Kuala Lumpur,KUALA LUMPUR | JINJANG,Leasehold,Bungalow,207.0,12,675000.0
+Perak,PERAK | SITIAWAN,Freehold,Terrace House,178.0,12,279400.0
+Melaka,MELAKA | DURIAN TUNGGAL,Freehold,Terrace House,244.0,12,413000.0
+Selangor,SELANGOR | SEPANG,Freehold,Terrace House,301.0,12,598000.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Freehold,Terrace House,188.0,12,271000.0
+Terengganu,TERENGGANU | KEMAMAN,Freehold,Bungalow,115.0,12,330000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,166.0,12,176050.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Terrace House,560.0,12,1073250.0
+Selangor,SELANGOR | CHERAS,Freehold,Terrace House,447.0,12,561000.0
+Melaka,MELAKA | BATU BERENDAM,Leasehold,Terrace House,202.0,12,300000.0
+Melaka,MELAKA | BATU BERENDAM,Leasehold,Terrace House,232.0,12,275000.0
+Kedah,KEDAH | BEDONG,Freehold,Terrace House,149.0,12,235000.0
+Johor,JOHOR | KLUANG,Freehold,Bungalow,153.0,12,360000.0
+Selangor,SELANGOR | PUCHONG,Mixed,Terrace House,347.0,12,635000.0
+Perak,PERAK | BIDOR,Leasehold,Terrace House,194.0,12,300000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,233.0,12,327500.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Terrace House,370.0,12,705000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,216.0,12,188500.0
+Selangor,SELANGOR | KLANG,Leasehold,Terrace House,286.0,12,382500.0
+Penang,PENANG | KEPALA BATAS,Freehold,Bungalow,236.0,12,425000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Terrace House,248.0,12,350000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,201.0,12,301500.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,248.0,12,620000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,405.0,12,589000.0
+Penang,PENANG | NIBONG TEBAL,Freehold,Terrace House,299.0,12,374160.0
+Sarawak,SARAWAK | KUCHING,Mixed,Semi D,250.0,12,509444.0
+Pahang,PAHANG | TRIANG,Freehold,Terrace House,139.0,12,288000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,182.0,12,180000.0
+Selangor,SELANGOR | KAPAR,Freehold,Semi D,232.0,12,543000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Bungalow,590.0,12,2161500.0
+Melaka,MELAKA | SUNGEI PETAI,Freehold,Terrace House,160.0,12,252500.0
+Melaka,MELAKA | MELAKA CITY,Freehold,Bungalow,219.0,12,392500.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Terrace House,202.0,12,300000.0
+Negeri Sembilan,NEGERI SEMBILAN | PAROI,Freehold,Semi D,145.0,12,230000.0
+Perak,PERAK | MENGLEMBU,Leasehold,Terrace House,239.0,12,250000.0
+Johor,JOHOR | KLUANG,Freehold,Semi D,167.0,12,215000.0
+Kuala Lumpur,KUALA LUMPUR | WANGSA MAJU,Leasehold,Terrace House,428.0,12,840000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,219.0,12,275000.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,243.0,12,394000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Town House,320.0,12,500000.0
+Penang,PENANG | PENAGA,Freehold,Semi D,245.0,12,350000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Semi D,507.0,12,420000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,195.0,12,300000.0
+Negeri Sembilan,NEGERI SEMBILAN | MANTIN,Freehold,Terrace House,464.0,12,960000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,352.0,12,866000.0
+Negeri Sembilan,NEGERI SEMBILAN | BUKIT KEPAYANG,Freehold,Terrace House,151.0,12,300000.0
+Selangor,SELANGOR | CHERAS,Freehold,Terrace House,376.0,12,390000.0
+Selangor,SELANGOR | KLANG,Freehold,Semi D,347.0,12,625000.0
+Sabah,SABAH | PENAMPANG,Leasehold,Terrace House,256.0,12,432500.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,204.0,12,265000.0
+Johor,JOHOR | SKUDAI,Freehold,Terrace House,495.0,12,400000.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,389.0,12,485000.0
+Sabah,SABAH | PENAMPANG,Leasehold,Terrace House,390.0,12,350000.0
+Selangor,SELANGOR | JENJAROM,Freehold,Semi D,272.0,12,790000.0
+Johor,JOHOR | SKUDAI,Freehold,Town House,274.0,12,280000.0
+Penang,PENANG | AYER ITAM,Leasehold,Flat,309.0,12,190000.0
+Perak,PERAK | TAIPING,Freehold,Condominium,220.0,12,300000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Apartment,139.0,12,65500.0
+Selangor,SELANGOR | HULU SELANGOR,Freehold,Flat,192.0,12,150000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,650.0,12,1475000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Condominium,381.0,12,475000.0
+Penang,PENANG | SUNGAI ARA,Freehold,Apartment,452.0,12,340000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Condominium,485.0,12,708000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Condominium,421.0,12,452500.0
+Penang,PENANG | TANJUNG BUNGAH,Freehold,Condominium,419.0,12,289000.0
+Kuala Lumpur,KUALA LUMPUR | KEPONG,Leasehold,Flat,326.0,12,220000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Flat,300.0,12,200000.0
+Johor,JOHOR | TEBRAU,Leasehold,Service Residence,423.0,12,390000.0
+Penang,PENANG | BUKIT JAMBUL,Leasehold,Apartment,360.0,12,370000.0
+Selangor,SELANGOR | BANDAR KINRARA,Leasehold,Service Residence,255.0,12,181500.0
+Selangor,SELANGOR | AMPANG,Leasehold,Service Residence,675.0,12,335000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Condominium,420.0,12,380000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Flat,275.0,12,170000.0
+Kuala Lumpur,KUALA LUMPUR | BRICKFIELDS,Leasehold,Condominium,388.0,12,367500.0
+Penang,PENANG | BALIK PULAU,Freehold,Apartment,298.0,12,192500.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,308.0,12,265000.0
+Kuala Lumpur,KUALA LUMPUR | SUNGAI BESI,Leasehold,Condominium,540.0,12,467500.0
+Penang,PENANG | RELAU,Freehold,Condominium,566.0,12,786500.0
+Kuala Lumpur,KUALA LUMPUR | SENTUL,Leasehold,Apartment,347.0,12,295000.0
+Penang,PENANG | GEORGETOWN,Leasehold,Flat,348.0,12,245000.0
+Selangor,SELANGOR | TROPICANA,Leasehold,Condominium,445.0,12,495000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Flat,133.0,12,66000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Service Residence,470.0,12,470000.0
+Kuala Lumpur,KUALA LUMPUR | AMPANG,Freehold,Service Residence,598.0,12,530000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Service Residence,437.0,12,446150.0
+Penang,PENANG | GELUGOR,Freehold,Apartment,483.0,12,330000.0
+Penang,PENANG | AYER ITAM,Freehold,Flat,319.0,12,220000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT BINTANG,Freehold,Service Residence,805.0,12,499600.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KUCHING,Freehold,Condominium,293.0,12,295000.0
+Selangor,SELANGOR | BANDAR SUNWAY,Leasehold,Condominium,469.0,12,692500.0
+Selangor,SELANGOR | BANDAR SRI DAMANSARA,Freehold,Apartment,430.0,12,340000.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Service Residence,1563.0,12,1497050.0
+Selangor,SELANGOR | BANDAR SUNGAI LONG,Freehold,Condominium,479.0,12,650000.0
+Selangor,SELANGOR | SUBANG JAYA,Leasehold,Condominium,446.0,12,545000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Flat,136.0,12,75000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Apartment,402.0,12,185000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Flat,271.0,12,190000.0
+Putrajaya,PUTRAJAYA | PUTRAJAYA,Freehold,Flat,357.0,12,250000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Apartment,185.0,12,130000.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Condominium,284.0,12,364315.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Service Residence,851.0,12,1130000.0
+Johor,JOHOR | MUAR,Freehold,Apartment,220.0,12,155000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Apartment,329.0,12,262500.0
+Kuala Lumpur,KUALA LUMPUR | SENTUL,Leasehold,Condominium,385.0,12,342500.0
+Johor,JOHOR | MASAI,Freehold,Service Residence,414.0,12,410000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,336.0,12,330000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Apartment,512.0,12,377500.0
+Selangor,SELANGOR | SERENDAH,Freehold,Flat,166.0,12,132500.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Apartment,345.0,12,282500.0
+Sabah,SABAH | TUARAN,Leasehold,Apartment,234.0,12,195000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Freehold,Service Residence,533.0,12,500000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Service Residence,446.0,12,260000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Condominium,544.0,12,570000.0
+Sabah,SABAH | TUARAN,Leasehold,Apartment,263.0,12,160000.0
+Penang,PENANG | SUNGAI BAKAP,Freehold,Semi D,264.0,11,408000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,247.0,11,280000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,250.0,11,370000.0
+Selangor,SELANGOR | BERANANG,Freehold,Terrace House,357.0,11,465000.0
+Kuala Lumpur,KUALA LUMPUR | BATU CAVES,Leasehold,Terrace House,586.0,11,590000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,248.0,11,290000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN,Freehold,Terrace House,397.0,11,568000.0
+Melaka,MELAKA | BERTAM,Mixed,Semi D,204.0,11,320000.0
+Sarawak,SARAWAK | BINTULU,Leasehold,Semi D,250.0,11,500000.0
+Penang,PENANG | SUNGAI BAKAP,Freehold,Semi D,345.0,11,560000.0
+Perak,PERAK | TAIPING,Freehold,Semi D,128.0,11,369900.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Terrace House,231.0,11,390000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,168.0,11,290000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,325.0,11,500000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,211.0,11,399880.0
+Perak,PERAK | BATU KURAU,Freehold,Cluster House,177.0,11,318800.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN 2,Freehold,Semi D,236.0,11,755000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN 2,Freehold,Bungalow,207.0,11,580000.0
+Perak,PERAK | GOPENG,Leasehold,Terrace House,117.0,11,140000.0
+Penang,PENANG | BUTTERWORTH,Freehold,Terrace House,778.0,11,1230800.0
+Negeri Sembilan,NEGERI SEMBILAN | SENAWANG,Leasehold,Terrace House,244.0,11,397083.0
+Pahang,PAHANG | PEKAN,Freehold,Terrace House,186.0,11,260000.0
+Negeri Sembilan,NEGERI SEMBILAN | BUKIT KEPAYANG,Freehold,Terrace House,209.0,11,260000.0
+Pahang,PAHANG | CHENOR,Leasehold,Terrace House,158.0,11,243750.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Semi D,374.0,11,575000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Leasehold,Semi D,173.0,11,375000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,182.0,11,435240.0
+Johor,JOHOR | SEGAMAT,Freehold,Terrace House,190.0,11,363500.0
+Perak,PERAK | KAMPAR,Leasehold,Terrace House,171.0,11,239800.0
+Selangor,SELANGOR | ULU LANGAT,Freehold,Semi D,760.0,11,1150000.0
+Pahang,PAHANG | SUNGAI KARANG,Leasehold,Terrace House,134.0,11,340000.0
+Selangor,SELANGOR | SEPANG,Leasehold,Terrace House,272.0,11,381000.0
+Kedah,KEDAH | KUALA KEDAH,Freehold,Semi D,148.0,11,350260.0
+Perak,PERAK | BAGAN SERAI,Freehold,Semi D,187.0,11,317800.0
+Perak,PERAK | SIMPANG,Freehold,Terrace House,187.0,11,288000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,183.0,11,280000.0
+Melaka,MELAKA | JASIN,Leasehold,Cluster House,144.0,11,220000.0
+Perak,PERAK | TAMBUN,Leasehold,Terrace House,294.0,11,608000.0
+Selangor,SELANGOR | KLANG,Freehold,Semi D,334.0,11,1120000.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,290.0,11,488000.0
+Pahang,PAHANG | RAUB,Leasehold,Terrace House,168.0,11,200000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,329.0,11,860000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Terrace House,500.0,11,530000.0
+Johor,JOHOR | PONTIAN,Freehold,Semi D,234.0,11,366000.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Semi D,538.0,11,756000.0
+Johor,JOHOR | MERSING,Freehold,Terrace House,214.0,11,260000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Semi D,289.0,11,738000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Terrace House,507.0,11,700000.0
+Johor,JOHOR | MUAR,Freehold,Terrace House,282.0,11,498000.0
+Penang,PENANG | SUNGAI BAKAP,Freehold,Semi D,246.0,11,670000.0
+Melaka,MELAKA | BATU BERENDAM,Leasehold,Terrace House,250.0,11,388000.0
+Melaka,MELAKA | BATU BERENDAM,Mixed,Terrace House,269.0,11,380000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,155.0,11,175000.0
+Johor,JOHOR | MASAI,Mixed,Terrace House,393.0,11,780000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Terrace House,321.0,11,450000.0
+Selangor,SELANGOR | DENGKIL,Freehold,Terrace House,393.0,11,685000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,151.0,11,275000.0
+Melaka,MELAKA | BACHANG,Leasehold,Terrace House,219.0,11,300000.0
+Selangor,SELANGOR | BALAKONG,Leasehold,Terrace House,322.0,11,330000.0
+Negeri Sembilan,NEGERI SEMBILAN | SEREMBAN,Freehold,Terrace House,238.0,11,275000.0
+Negeri Sembilan,NEGERI SEMBILAN | BANDAR SRI SENDAYAN,Freehold,Terrace House,309.0,11,580000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,254.0,11,600000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,268.0,11,400000.0
+Selangor,SELANGOR | BANDAR SUNGAI LONG,Freehold,Terrace House,508.0,11,748000.0
+Perak,PERAK | IPOH,Leasehold,Semi D,146.0,11,250000.0
+Selangor,SELANGOR | PETALING JAYA,Mixed,Bungalow,162.0,11,695000.0
+Selangor,SELANGOR | ULU LANGAT,Leasehold,Terrace House,250.0,11,280000.0
+Pahang,PAHANG | MENTAKAB,Freehold,Terrace House,186.0,11,137000.0
+Melaka,MELAKA | BUKIT RAMBAI,Freehold,Semi D,182.0,11,280000.0
+Kuala Lumpur,KUALA LUMPUR | SEGAMBUT,Leasehold,Terrace House,441.0,11,650000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Terrace House,405.0,11,420000.0
+Penang,PENANG | KEPALA BATAS,Freehold,Semi D,215.0,11,310000.0
+Selangor,SELANGOR | SUNGAI BULOH,Leasehold,Terrace House,463.0,11,575000.0
+Perak,PERAK | ULU BERNAM,Leasehold,Terrace House,179.0,11,260000.0
+Sarawak,SARAWAK | BINTULU,Leasehold,Terrace House,196.0,11,270000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,186.0,11,260000.0
+Penang,PENANG | JURU,Freehold,Terrace House,375.0,11,625000.0
+Kedah,KEDAH | KULIM,Freehold,Terrace House,318.0,11,395000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,180.0,11,240000.0
+Perak,PERAK | BATU GAJAH,Freehold,Terrace House,320.0,11,825510.0
+Kedah,KEDAH | POKOK SENA,Freehold,Terrace House,267.0,11,326800.0
+Negeri Sembilan,NEGERI SEMBILAN | REMBAU,Freehold,Semi D,128.0,11,280000.0
+Negeri Sembilan,NEGERI SEMBILAN | TAMPIN,Freehold,Terrace House,159.0,11,200000.0
+Selangor,SELANGOR | SUNGAI BULOH,Freehold,Terrace House,464.0,11,872000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,427.0,11,630000.0
+Selangor,SELANGOR | MUTIARA DAMANSARA,Freehold,Bungalow,858.0,11,1430000.0
+Melaka,MELAKA | SUNGEI BARU TENGAH,Freehold,Terrace House,118.0,11,240000.0
+Pahang,PAHANG | KUALA LIPIS,Freehold,Terrace House,202.0,11,289000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Semi D,100.0,11,235000.0
+Sarawak,SARAWAK | KUCHING,Mixed,Terrace House,362.0,11,730000.0
+Melaka,MELAKA | BUKIT BARU,Mixed,Terrace House,169.0,11,300000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Mixed,Terrace House,122.0,11,190000.0
+Melaka,MELAKA | BERTAM,Mixed,Terrace House,207.0,11,300000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,131.0,11,230000.0
+Pahang,PAHANG | MENTAKAB,Freehold,Terrace House,185.0,11,308000.0
+Selangor,SELANGOR | KAPAR,Leasehold,Terrace House,276.0,11,360000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,310.0,11,350000.0
+Perak,PERAK | CHEMOR,Freehold,Terrace House,190.0,11,255000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,234.0,11,380000.0
+Johor,JOHOR | SIMPANG RENGAM,Freehold,Terrace House,231.0,11,405900.0
+Selangor,SELANGOR | CHERAS,Mixed,Terrace House,473.0,11,830000.0
+Negeri Sembilan,NEGERI SEMBILAN | SIKAMAT,Freehold,Cluster House,129.0,11,143000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,310.0,11,375000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Freehold,Terrace House,219.0,11,390000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,192.0,11,200000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Semi D,299.0,11,495000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,179.0,11,400000.0
+Johor,JOHOR | SKUDAI,Freehold,Cluster House,426.0,11,650000.0
+Johor,JOHOR | SKUDAI,Freehold,Semi D,264.0,11,900000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Terrace House,515.0,11,915000.0
+Terengganu,TERENGGANU | KERTEH,Mixed,Bungalow,83.0,11,360000.0
+Sarawak,SARAWAK | MIRI,Leasehold,Bungalow,114.0,11,680000.0
+Kuala Lumpur,KUALA LUMPUR | BATU CAVES,Leasehold,Terrace House,442.0,11,820000.0
+Sabah,SABAH | SANDAKAN,Leasehold,Terrace House,322.0,11,400000.0
+Johor,JOHOR | SKUDAI,Freehold,Cluster House,357.0,11,600000.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Freehold,Terrace House,248.0,11,320000.0
+Selangor,SELANGOR | BANGI,Leasehold,Terrace House,360.0,11,360000.0
+Perak,PERAK | TAIPING,Freehold,Semi D,193.0,11,405000.0
+Selangor,SELANGOR | BANGI,Leasehold,Terrace House,406.0,11,550000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Terrace House,362.0,11,625000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,260.0,11,439800.0
+Johor,JOHOR | MUAR,Freehold,Semi D,259.0,11,560000.0
+Perak,PERAK | SIMPANG PULAI,Leasehold,Terrace House,220.0,11,310000.0
+Kedah,KEDAH | JITRA,Freehold,Semi D,267.0,11,410400.0
+Melaka,MELAKA | BUKIT BARU,Freehold,Terrace House,227.0,11,438000.0
+Selangor,SELANGOR | TELOK PANGLIMA GARANG,Freehold,Semi D,277.0,11,365000.0
+Johor,JOHOR | SENAI,Freehold,Terrace House,259.0,11,270000.0
+Johor,JOHOR | TAMPOI,Freehold,Terrace House,357.0,11,335000.0
+Melaka,MELAKA | DURIAN TUNGGAL,Freehold,Terrace House,188.0,11,320000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,254.0,11,410000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Semi D,366.0,11,675000.0
+Perak,PERAK | PARIT BUNTAR,Freehold,Terrace House,357.0,11,498800.0
+Johor,JOHOR | KOTA TINGGI,Freehold,Terrace House,167.0,11,340000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Semi D,250.0,11,615000.0
+Selangor,SELANGOR | SEPANG,Leasehold,Terrace House,156.0,11,400000.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Terrace House,209.0,11,300000.0
+Sarawak,SARAWAK | MIRI,Leasehold,Terrace House,179.0,11,180000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,338.0,11,440000.0
+Sabah,SABAH | KOTA KINABALU,Leasehold,Semi D,256.0,11,950000.0
+Johor,JOHOR | TEBRAU,Freehold,Flat,263.0,11,150000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Flat,292.0,11,212000.0
+Sabah,SABAH | SANDAKAN,Leasehold,Flat,228.0,11,125000.0
+Penang,PENANG | BATU KAWAN,Freehold,Service Residence,628.0,11,320000.0
+Selangor,SELANGOR | KAJANG,Freehold,Apartment,198.0,11,220000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Flat,305.0,11,245000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Condominium,279.0,11,499000.0
+Selangor,SELANGOR | SUBANG JAYA,Leasehold,Condominium,372.0,11,500000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Apartment,471.0,11,380000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Condominium,601.0,11,873000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Apartment,418.0,11,400000.0
+Penang,PENANG | AYER ITAM,Leasehold,Apartment,392.0,11,278000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Condominium,324.0,11,450000.0
+Penang,PENANG | AYER ITAM,Freehold,Apartment,436.0,11,250000.0
+Kuala Lumpur,KUALA LUMPUR | KUCHAI LAMA,Leasehold,Condominium,287.0,11,280000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Apartment,195.0,11,158000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Leasehold,Condominium,370.0,11,450000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Flat,242.0,11,138000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Flat,243.0,11,139900.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Apartment,327.0,11,380000.0
+Selangor,SELANGOR | CHERAS,Freehold,Condominium,403.0,11,400000.0
+Selangor,SELANGOR | BANDAR SUNWAY,Leasehold,Apartment,392.0,11,380000.0
+Johor,JOHOR | SKUDAI,Freehold,Condominium,334.0,11,370000.0
+Kuala Lumpur,KUALA LUMPUR | AMPANG HILIR,Freehold,Condominium,1224.0,11,3200728.0
+Selangor,SELANGOR | PUCHONG,Leasehold,Service Residence,459.0,11,470000.0
+Johor,JOHOR | MASAI,Freehold,Apartment,260.0,11,210000.0
+Selangor,SELANGOR | KEPONG,Freehold,Apartment,353.0,11,320000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Condominium,392.0,11,400000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Freehold,Condominium,417.0,11,485000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Flat,315.0,11,200000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Apartment,488.0,11,225000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Condominium,303.0,11,320000.0
+Penang,PENANG | PERAI,Freehold,Apartment,314.0,11,280000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Condominium,541.0,11,840000.0
+Kuala Lumpur,KUALA LUMPUR | DESA PETALING,Leasehold,Flat,216.0,11,130000.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Service Residence,1038.0,11,4045824.0
+Kuala Lumpur,KUALA LUMPUR | DESA PARKCITY,Freehold,Condominium,787.0,11,1380000.0
+Penang,PENANG | AYER ITAM,Freehold,Flat,402.0,11,270000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Condominium,314.0,11,265000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Condominium,408.0,11,470000.0
+Kuala Lumpur,KUALA LUMPUR | SEGAMBUT,Freehold,Condominium,619.0,11,1050000.0
+Johor,JOHOR | TAMPOI,Leasehold,Apartment,285.0,11,285000.0
+Selangor,SELANGOR | DAMANSARA DAMAI,Leasehold,Flat,205.0,11,133000.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Service Residence,304.0,11,170000.0
+Pahang,PAHANG | GENTING HIGHLANDS,Freehold,Apartment,650.0,11,550000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Apartment,358.0,11,520000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Condominium,367.0,11,350000.0
+Selangor,SELANGOR | SERENDAH,Freehold,Apartment,54.0,11,36000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Condominium,321.0,11,300000.0
+Penang,PENANG | TANJONG TOKONG,Freehold,Apartment,410.0,11,268000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,346.0,11,300000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Condominium,451.0,11,410000.0
+Johor,JOHOR | JOHOR BAHRU,Leasehold,Flat,264.0,11,200000.0
+Kuala Lumpur,KUALA LUMPUR | AMPANG,Freehold,Service Residence,431.0,11,400000.0
+Penang,PENANG | BAYAN BARU,Freehold,Condominium,518.0,11,485000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT BINTANG,Freehold,Service Residence,902.0,11,510000.0
+Selangor,SELANGOR | BANDAR SUNWAY,Leasehold,Condominium,520.0,11,830000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Condominium,370.0,11,470000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Condominium,362.0,11,426000.0
+Selangor,SELANGOR | SUBANG JAYA,Freehold,Service Residence,880.0,11,455000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,280.0,11,300000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Flat,376.0,11,300000.0
+Kuala Lumpur,KUALA LUMPUR | CITY CENTRE,Freehold,Condominium,417.0,11,460000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Condominium,302.0,11,528000.0
+Selangor,SELANGOR | BATU CAVES,Freehold,Flat,253.0,11,170000.0
+Penang,PENANG | AYER ITAM,Freehold,Flat,232.0,11,138000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Leasehold,Flat,353.0,11,197000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Condominium,455.0,11,465000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Apartment,224.0,11,210000.0
+Kuala Lumpur,KUALA LUMPUR | MONT KIARA,Freehold,Condominium,561.0,11,1120000.0
+Perak,PERAK | TAMBUN,Leasehold,Apartment,287.0,11,250000.0
+Melaka,MELAKA | MELAKA CITY,Leasehold,Apartment,440.0,11,478000.0
+Pahang,PAHANG | BENTONG,Freehold,Apartment,298.0,11,210000.0
+Kuala Lumpur,KUALA LUMPUR | TAMAN DESA,Freehold,Condominium,442.0,11,540000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Flat,186.0,11,100000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT BINTANG,Leasehold,Service Residence,1515.0,11,5460000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Condominium,400.0,11,450000.0
+Selangor,SELANGOR | RAWANG,Leasehold,Flat,207.0,11,165000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Apartment,345.0,11,295000.0
+Selangor,SELANGOR | CHERAS,Freehold,Flat,218.0,11,165000.0
+Selangor,SELANGOR | SERENDAH,Leasehold,Apartment,117.0,11,85000.0
+Penang,PENANG | PERAI,Freehold,Flat,133.0,11,70000.0
+Penang,PENANG | BAYAN LEPAS,Freehold,Condominium,527.0,11,639700.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Service Residence,415.0,11,210000.0
+Penang,PENANG | BUTTERWORTH,Freehold,Apartment,294.0,11,220000.0
+Selangor,SELANGOR | KLANG,Freehold,Apartment,398.0,11,300000.0
+Kuala Lumpur,KUALA LUMPUR | BUKIT JALIL,Freehold,Condominium,621.0,11,950000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Leasehold,Condominium,371.0,11,450000.0
+Penang,PENANG | BAYAN BARU,Leasehold,Condominium,476.0,11,498000.0
+Penang,PENANG | SUNGAI DUA,Leasehold,Apartment,375.0,11,250000.0
+Selangor,SELANGOR | AMPANG,Leasehold,Apartment,322.0,11,305000.0
+Johor,JOHOR | JOHOR BAHRU,Freehold,Apartment,260.0,11,350000.0
+Selangor,SELANGOR | ARA DAMANSARA,Leasehold,Condominium,400.0,11,420000.0
+Kuala Lumpur,KUALA LUMPUR | DUTAMAS,Freehold,Condominium,913.0,11,1765800.0
+Penang,PENANG | BATU KAWAN,Leasehold,Apartment,333.0,11,330000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Flat,165.0,11,110000.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Service Residence,400.0,11,400000.0
+Kuala Lumpur,KUALA LUMPUR | SETAPAK,Leasehold,Condominium,455.0,11,493000.0
+Sarawak,SARAWAK | SIBU,Leasehold,Apartment,593.0,11,450000.0
+Kuala Lumpur,KUALA LUMPUR | KLCC,Freehold,Condominium,459.0,11,430000.0
+Selangor,SELANGOR | GLENMARIE,Freehold,Service Residence,708.0,11,560000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Flat,250.0,11,162500.0
+Johor,JOHOR | TEBRAU,Freehold,Flat,228.0,11,150000.0
+Selangor,SELANGOR | SEMENYIH,Freehold,Terrace House,277.0,10,561000.0
+Selangor,SELANGOR | PUCHONG,Freehold,Terrace House,475.0,10,1075000.0
+Kedah,KEDAH | TELOI KIRI,Freehold,Semi D,122.0,10,195000.0
+Kuala Lumpur,KUALA LUMPUR | SRI HARTAMAS,Freehold,Terrace House,866.0,10,1807500.0
+Melaka,MELAKA | ALOR GAJAH,Freehold,Cluster House,173.0,10,205000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,77.0,10,97500.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Terrace House,282.0,10,279000.0
+Melaka,MELAKA | SUNGEI BARU TENGAH,Freehold,Terrace House,174.0,10,260000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Semi D,414.0,10,690000.0
+Kedah,KEDAH | KOTA SARANG SEMUT,Freehold,Terrace House,173.0,10,225000.0
+Selangor,SELANGOR | BANGI,Leasehold,Terrace House,365.0,10,440000.0
+Melaka,MELAKA | DUYONG,Mixed,Terrace House,187.0,10,245000.0
+Penang,PENANG | TELUK KUMBAR,Freehold,Terrace House,536.0,10,750000.0
+Selangor,SELANGOR | ULU KLANG,Leasehold,Terrace House,359.0,10,640000.0
+Selangor,SELANGOR | ULU KLANG,Freehold,Terrace House,611.0,10,1260000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Semi D,194.0,10,220000.0
+Kuala Lumpur,KUALA LUMPUR | JALAN KLANG LAMA (OLD KLANG ROAD),Freehold,Terrace House,417.0,10,575000.0
+Selangor,SELANGOR | ULU KLANG,Leasehold,Terrace House,452.0,10,600000.0
+Selangor,SELANGOR | SHAH ALAM,Leasehold,Bungalow,400.0,10,591500.0
+Selangor,SELANGOR | PETALING JAYA,Freehold,Semi D,472.0,10,842500.0
+Selangor,SELANGOR | TANJONG DUABELAS,Leasehold,Terrace House,244.0,10,435000.0
+Kedah,KEDAH | BANDAR BAHARU,Freehold,Semi D,152.0,10,438488.0
+Pahang,PAHANG | MENTAKAB,Freehold,Terrace House,146.0,10,257500.0
+Kedah,KEDAH | POKOK SENA,Freehold,Cluster House,156.0,10,408900.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,426.0,10,500000.0
+Negeri Sembilan,NEGERI SEMBILAN | GEMAS,Freehold,Terrace House,246.0,10,350000.0
+Selangor,SELANGOR | KAPAR,Leasehold,Terrace House,246.0,10,332500.0
+Selangor,SELANGOR | SUNGAI BESAR,Leasehold,Terrace House,147.0,10,343440.0
+Melaka,MELAKA | MELAKA CITY,Freehold,Semi D,147.0,10,250000.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Semi D,348.0,10,512500.0
+Kedah,KEDAH | LUNAS,Freehold,Semi D,270.0,10,445000.0
+Selangor,SELANGOR | KLANG,Freehold,Semi D,349.0,10,506100.0
+Johor,JOHOR | BATU PAHAT,Freehold,Semi D,311.0,10,646076.0
+Johor,JOHOR | TANGKAK,Freehold,Terrace House,104.0,10,100000.0
+Negeri Sembilan,NEGERI SEMBILAN | RANTAU,Freehold,Semi D,143.0,10,401531.0
+Kedah,KEDAH | KUALA KEDAH,Freehold,Semi D,147.0,10,379505.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,198.0,10,372500.0
+Negeri Sembilan,NEGERI SEMBILAN | GEMAS,Leasehold,Terrace House,64.0,10,90000.0
+Kuala Lumpur,KUALA LUMPUR | CHERAS,Freehold,Terrace House,978.0,10,1770000.0
+Pahang,PAHANG | SUNGAI KARANG,Freehold,Semi D,121.0,10,380000.0
+Selangor,SELANGOR | SEPANG,Leasehold,Terrace House,211.0,10,395000.0
+Selangor,SELANGOR | KAJANG,Freehold,Terrace House,561.0,10,752400.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,532.0,10,1205000.0
+Pahang,PAHANG | KUANTAN,Freehold,Semi D,184.0,10,289000.0
+Melaka,MELAKA | MERLIMAU,Freehold,Cluster House,147.0,10,398800.0
+Perak,PERAK | GERIK,Freehold,Terrace House,189.0,10,265000.0
+Kedah,KEDAH | KULIM,Freehold,Terrace House,242.0,10,383000.0
+Sarawak,SARAWAK | SRI AMAN,Mixed,Terrace House,106.0,10,295000.0
+Negeri Sembilan,NEGERI SEMBILAN | SIKAMAT,Mixed,Terrace House,247.0,10,356500.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,175.0,10,266500.0
+Negeri Sembilan,NEGERI SEMBILAN | AMPANGAN,Freehold,Terrace House,418.0,10,614500.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,165.0,10,285000.0
+Melaka,MELAKA | BUKIT RAMBAI,Freehold,Semi D,126.0,10,422300.0
+Negeri Sembilan,NEGERI SEMBILAN | RASAH,Freehold,Semi D,335.0,10,1103000.0
+Pahang,PAHANG | KUALA LIPIS,Freehold,Semi D,115.0,10,326300.0
+Pahang,PAHANG | KUANTAN,Freehold,Terrace House,169.0,10,314500.0
+Negeri Sembilan,NEGERI SEMBILAN | SENAWANG,Leasehold,Terrace House,224.0,10,295000.0
+Kedah,KEDAH | LUNAS,Freehold,Semi D,303.0,10,490000.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Terrace House,233.0,10,357900.0
+Perak,PERAK | SITIAWAN,Freehold,Cluster House,138.0,10,220000.0
+Selangor,SELANGOR | KAPAR,Freehold,Semi D,161.0,10,504850.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,462.0,10,627000.0
+Negeri Sembilan,NEGERI SEMBILAN | LUKUT,Freehold,Terrace House,217.0,10,418000.0
+Johor,JOHOR | BATU PAHAT,Freehold,Terrace House,341.0,10,594150.0
+Perak,PERAK | TRONOH,Leasehold,Terrace House,218.0,10,305000.0
+Penang,PENANG | PENAGA,Freehold,Semi D,214.0,10,499000.0
+Negeri Sembilan,NEGERI SEMBILAN | PORT DICKSON,Freehold,Terrace House,209.0,10,292045.0
+Selangor,SELANGOR | DENGKIL,Leasehold,Terrace House,457.0,10,640000.0
+Melaka,MELAKA | KUALA SUNGAI BARU,Freehold,Terrace House,216.0,10,334000.0
+Selangor,SELANGOR | KAPAR,Mixed,Terrace House,322.0,10,423250.0
+Penang,PENANG | BUKIT MERTAJAM,Freehold,Cluster House,330.0,10,414500.0
+Johor,JOHOR | TEBRAU,Freehold,Terrace House,413.0,10,906950.0
+Kelantan,KELANTAN | MACHANG,Freehold,Bungalow,97.0,10,342500.0
+Selangor,SELANGOR | AMPANG,Leasehold,Bungalow,128.0,10,372500.0
+Perak,PERAK | PARIT BUNTAR,Leasehold,Semi D,212.0,10,210000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,180.0,10,288000.0
+Melaka,MELAKA | BUKIT KATIL,Freehold,Semi D,136.0,10,200000.0
+Penang,PENANG | NIBONG TEBAL,Freehold,Cluster House,251.0,10,310500.0
+Pahang,PAHANG | KUANTAN,Leasehold,Terrace House,159.0,10,202500.0
+Melaka,MELAKA | BATU BERENDAM,Leasehold,Terrace House,211.0,10,256500.0
+Selangor,SELANGOR | CYBERJAYA,Freehold,Town House,209.0,10,352500.0
+Kedah,KEDAH | SUNGAI PETANI,Freehold,Semi D,131.0,10,420000.0
+Pahang,PAHANG | RAUB,Freehold,Terrace House,251.0,10,272500.0
+Perak,PERAK | TAMBUN,Leasehold,Terrace House,177.0,10,194000.0
+Penang,PENANG | SIMPANG AMPAT,Freehold,Terrace House,533.0,10,815000.0
+Negeri Sembilan,NEGERI SEMBILAN | NILAI,Freehold,Terrace House,177.0,10,310000.0
+Johor,JOHOR | ULU TIRAM,Freehold,Terrace House,393.0,10,580000.0
+Johor,JOHOR | PASIR GUDANG,Freehold,Terrace House,286.0,10,497250.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Bungalow,274.0,10,865000.0
+Selangor,SELANGOR | SEPANG,Leasehold,Terrace House,200.0,10,499500.0
+Pahang,PAHANG | KUANTAN,Leasehold,Semi D,96.0,10,200000.0
+Penang,PENANG | SUNGAI DUA,Freehold,Terrace House,596.0,10,865000.0
+Sarawak,SARAWAK | KOTA SAMARAHAN,Leasehold,Semi D,152.0,10,341500.0
+Kedah,KEDAH | KUALA KEDAH,Freehold,Semi D,186.0,10,347500.0
+Johor,JOHOR | KULAI,Freehold,Terrace House,307.0,10,318000.0
+Johor,JOHOR | ISKANDAR PUTERI (NUSAJAYA),Freehold,Terrace House,358.0,10,385000.0
+Perak,PERAK | BATU GAJAH,Leasehold,Terrace House,164.0,10,230000.0
+Johor,JOHOR | TEBRAU,Mixed,Semi D,256.0,10,425000.0
+Selangor,SELANGOR | PETALING JAYA,Leasehold,Bungalow,254.0,10,1237500.0
+Selangor,SELANGOR | IJOK,Leasehold,Semi D,263.0,10,700000.0
+Sarawak,SARAWAK | KUCHING,Leasehold,Terrace House,187.0,10,245000.0
+Pahang,PAHANG | BENTONG,Freehold,Terrace House,309.0,10,460000.0
+Perak,PERAK | SUNGAI SIPUT,Leasehold,Terrace House,77.0,10,115000.0
+Johor,JOHOR | KLUANG,Freehold,Terrace House,179.0,10,240000.0
+Selangor,SELANGOR | SETIA ALAM,Freehold,Semi D,473.0,10,789000.0
+Selangor,SELANGOR | DENGKIL,Freehold,Semi D,233.0,10,910500.0
+Melaka,MELAKA | PAYA RUMPUT,Leasehold,Semi D,165.0,10,235000.0
+Melaka,MELAKA | TANJONG MINYAK,Freehold,Terrace House,311.0,10,488000.0
+Johor,JOHOR | SENAI,Freehold,Terrace House,278.0,10,280000.0
+Selangor,SELANGOR | KLANG,Freehold,Terrace House,410.0,10,655000.0
+Perak,PERAK | IPOH,Freehold,Terrace House,224.0,10,337500.0
+Perak,PERAK | IPOH,Leasehold,Semi D,195.0,10,290000.0
+Sarawak,SARAWAK | SIBU,Leasehold,Terrace House,272.0,10,480000.0
+Perak,PERAK | IPOH,Leasehold,Terrace House,261.0,10,449000.0
