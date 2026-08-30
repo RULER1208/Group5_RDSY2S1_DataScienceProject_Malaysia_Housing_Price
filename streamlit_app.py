@@ -986,19 +986,13 @@ div.st-key-generate_estimate button:active { transform:translateY(0) scale(.995)
 .mh-model-name { color:var(--ink); font-size:1.75rem; font-weight:850; margin:4px 0 8px; }
 .mh-badge { display:inline-block; padding:5px 9px; border-radius:999px; background:#DBEAFE; color:#1D4ED8; font-size:.72rem; font-weight:850; }
 .mh-limitations { padding:18px 20px; margin-top:20px; background:#FFFBEB; border:1px solid #FDE68A; border-radius:17px; color:#78350F; }
-.mh-footer { margin-top:36px; padding:18px 22px; border-radius:18px;
-    background:#FFFFFF; border:1px solid var(--line);
-    color:var(--muted); display:flex; align-items:center; justify-content:space-between; gap:18px;
-    box-shadow:0 8px 22px rgba(23,35,59,.06); border-top:3px solid var(--blue); }
-.mh-footer .brand { color:var(--ink); font-weight:800; letter-spacing:.01em; }
-.mh-footer .sub { color:var(--muted); font-size:.84rem; }
 
 @media (max-width:900px) {
     .stTabs [role="tablist"] { flex-wrap:wrap!important; }
     .stTabs [role="tablist"]::before { width:100%; min-width:0; }
     .mh-stats, .mh-metric-row { grid-template-columns:1fr 1fr; }
     .mh-chip { width:100%; justify-content:center; }
-    .mh-result-top, .mh-footer { flex-direction:column; align-items:flex-start; }
+    .mh-result-top { flex-direction:column; align-items:flex-start; }
     .mh-result-badge { width:100%; min-width:auto; }
 }
 @media (max-width:600px) {
@@ -1013,7 +1007,7 @@ div.st-key-generate_estimate button:active { transform:translateY(0) scale(.995)
 /* Keep this block last in the stylesheet: it re-asserts the light theme
    with !important so no leftover/cached dark-navy rule (top nav, metric
    cards, footer, map-legend borders) can win the cascade. */
-.stTabs [role="tablist"], .mh-metric, .mh-footer { background-image:none!important; }
+.stTabs [role="tablist"], .mh-metric { background-image:none!important; }
 .stTabs [role="tablist"] { background-color:#FFFFFF!important; border-color:var(--line)!important; }
 .stTabs [role="tablist"]::before { color:var(--ink)!important; border-right-color:var(--line)!important; }
 .stTabs [role="tab"] { color:var(--muted)!important; }
@@ -1021,9 +1015,6 @@ div.st-key-generate_estimate button:active { transform:translateY(0) scale(.995)
 .mh-metric { background-color:#FFFFFF!important; border-color:var(--line)!important; }
 .mh-metric .k, .mh-metric .hint { color:var(--muted)!important; }
 .mh-metric .v { color:var(--ink)!important; }
-.mh-footer { background-color:#FFFFFF!important; border-color:var(--line)!important; color:var(--muted)!important; }
-.mh-footer .brand { color:var(--ink)!important; }
-.mh-footer .sub { color:var(--muted)!important; }
 .mh-map-legend .state-dot { border-color:#93C5FD!important; }
 </style>
 """, unsafe_allow_html=True)
@@ -3716,6 +3707,75 @@ def insights_page(data):
             ("Median transactions", f"{subset['Transactions'].median():,.0f}", "Observed volume"),
         ])
 
+        scenarios = st.session_state.get("saved_scenarios", [])
+        st.markdown("### Compare saved estimate")
+
+        if not scenarios:
+            st.info("No saved estimate yet. Save a scenario on the Price Prediction page to compare it with historical records.")
+        else:
+            scenario_labels = []
+            for index, scenario in enumerate(scenarios, start=1):
+                scenario_labels.append(
+                    f"{index}. {scenario['area']}, {scenario['state']} · "
+                    f"{scenario['ptype']} · {scenario['tenure']} · "
+                    f"RM {scenario['prediction']:,.0f}"
+                )
+
+            selected_scenario_label = st.selectbox(
+                "Saved estimate",
+                scenario_labels,
+                key="market_saved_scenario",
+            )
+            selected_index = scenario_labels.index(selected_scenario_label)
+            scenario = scenarios[selected_index]
+
+            exact_match = data[
+                data["State"].eq(scenario["state"])
+                & data["Area_Clean"].eq(clean_area_name(scenario["area"]))
+                & data["Primary_Type"].eq(scenario["ptype"])
+                & data["Tenure"].eq(scenario["tenure"])
+            ].copy()
+
+            if exact_match.empty:
+                st.info(
+                    "No exact historical records were found for this State, Area, Property Type and Tenure combination."
+                )
+            else:
+                historical_median = float(exact_match["Median_Price"].median())
+                estimated_price = float(scenario["prediction"])
+                difference_rm = estimated_price - historical_median
+                difference_pct = (difference_rm / historical_median * 100) if historical_median else 0.0
+                historical_min = float(exact_match["Median_Price"].min())
+                historical_max = float(exact_match["Median_Price"].max())
+
+                metric_cards([
+                    ("Saved estimate", f"RM {estimated_price:,.0f}", "Model estimate"),
+                    ("Historical median", f"RM {historical_median:,.0f}", "Exact matching records"),
+                    ("Difference", f"{difference_pct:+.1f}%", f"{difference_rm:+,.0f} RM"),
+                    ("Matching records", f"{len(exact_match):,}", "Exact matches"),
+                ])
+
+                st.caption(
+                    f"Historical matched-price range: RM {historical_min:,.0f} – RM {historical_max:,.0f}. "
+                    "This comparison uses historical records only; it does not retrain the model."
+                )
+
+                if HAS_PLOTLY:
+                    comparison_chart = go.Figure(go.Bar(
+                        x=["Saved estimate", "Historical median"],
+                        y=[estimated_price, historical_median],
+                        text=[f"RM {estimated_price:,.0f}", f"RM {historical_median:,.0f}"],
+                        textposition="outside",
+                        hovertemplate="%{x}<br>RM %{y:,.0f}<extra></extra>",
+                    ))
+                    comparison_chart.update_layout(
+                        title="Saved estimate vs historical median",
+                        showlegend=False,
+                        height=430,
+                    )
+                    comparison_chart.update_yaxes(title_text="Price (RM)")
+                    render_plotly(comparison_chart)
+
         export_columns = [
             c for c in [
                 "Township", "Area_Clean", "State", "Primary_Type", "Tenure",
@@ -3994,6 +4054,8 @@ def model_report_page(results):
                     visible=True,
                 ),
                 name="Group CV RMSE",
+                text=[f"RM {value:,.0f}" for value in compare["Group_CV_RMSE_mean"]],
+                textposition="outside",
                 hovertemplate="%{x}<br>CV RMSE: RM %{y:,.0f}<extra></extra>",
             ))
             fig_cv.update_layout(
@@ -4024,6 +4086,11 @@ def model_report_page(results):
                 color="Metric",
                 barmode="group",
                 title="Training vs test RMSE",
+                text="RM",
+            )
+            fig_rmse.update_traces(
+                texttemplate="RM %{text:,.0f}",
+                textposition="outside",
             )
             fig_rmse.update_yaxes(title_text="RMSE (RM)")
             render_plotly(fig_rmse)
@@ -4048,6 +4115,11 @@ def model_report_page(results):
                 color="Metric",
                 barmode="group",
                 title="MAE comparison",
+                text="RM",
+            )
+            fig_mae.update_traces(
+                texttemplate="RM %{text:,.0f}",
+                textposition="outside",
             )
             fig_mae.update_yaxes(title_text="MAE (RM)")
             render_plotly(fig_mae)
@@ -4070,6 +4142,11 @@ def model_report_page(results):
                 color="Metric",
                 barmode="group",
                 title="R² comparison",
+                text="R²",
+            )
+            fig_r2.update_traces(
+                texttemplate="%{text:.3f}",
+                textposition="outside",
             )
             fig_r2.update_yaxes(
                 title_text="R²",
@@ -4108,27 +4185,19 @@ def model_report_page(results):
                 hide_index=True,
             )
 
-    sections = {
-        "Performance": [
-            (25, "Cross-validation and test RMSE"),
-            (26, "Unseen-area fold stability"),
-            (27, "Train-test overfitting check"),
-        ],
-        "Diagnostics and dependency": [
-            (28, "Median PSF dependency"),
-            (29, "Prediction diagnostics"),
-        ],
-        "Importance": [
-            (30, "Permutation importance"),
-            (31, "Grouped native importance"),
-        ],
-    }
-    section = st.selectbox(
-        "Diagnostic section",
-        list(sections),
-        key="model_report_section",
-    )
-    for figure_number, title in sections[section]:
+    st.markdown("### Model Evaluation Details")
+
+    evaluation_figures = [
+        (25, "Cross-validation and test RMSE"),
+        (26, "Unseen-area fold stability"),
+        (27, "Train-test overfitting check"),
+        (28, "Median PSF dependency"),
+        (29, "Prediction diagnostics"),
+        (30, "Permutation importance"),
+        (31, "Grouped native importance"),
+    ]
+
+    for figure_number, title in evaluation_figures:
         description = MODEL_FIGURE_DESCRIPTIONS.get(figure_number, "")
         st.markdown(
             f'<div class="mh-figure-card"><div class="mh-figure-title">'
@@ -4184,13 +4253,6 @@ def main():
         insights_page(data)
     with report_tab:
         model_report_page(results)
-    st.markdown(
-        f'<div class="mh-footer"><div><div class="brand">{svg_icon("home",19)} Malaysia Housing Estimator</div>'
-        '<div class="sub">Nationwide map · validated model and evaluation outputs</div></div>'
-        '<div class="sub">BMDS2003 · Data Science Prototype</div></div>',
-        unsafe_allow_html=True,
-    )
-
 
 if __name__ == "__main__":
     main()
