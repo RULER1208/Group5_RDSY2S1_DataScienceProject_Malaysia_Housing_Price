@@ -2,7 +2,7 @@
 BMDS2003 Data Science - Deployment Prototype
 Malaysia Housing Median Price Estimator
 
-Run locally:  streamlit run my_UI_latestfinal_live_mapfixed.py
+Run locally:  streamlit run my_UI_latestfinal_live_flyingrestored.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -2165,14 +2165,20 @@ def attach_spider_fly_marker(
         destination_label = str(current_state)
         arrived_message = f"I have arrived {current_state}! Pick an area."
 
-    # Keep Spider-Man anchored to the real state/area coordinate.  The map now
-    # opens directly on the selected location so the character never appears to
-    # float at the screen centre or disappear off-screen during Streamlit reruns.
-    has_flight = False
-    start_center = fixed_center
-    target_center = fixed_center
-    target_zoom = int(getattr(malaysia_map, "options", {}).get("zoom", 9) or 9)
-    duration = 0.0
+    # Keep Spider-Man anchored to real map coordinates, but restore the one-time
+    # fly animation when the user searches, clicks a state, or clicks an area.
+    has_flight = bool(fly_request)
+
+    if has_flight:
+        start_center = list(fly_request.get("from_center", default_center))
+        target_center = list(fly_request.get("to_center", fixed_center))
+        target_zoom = int(fly_request.get("to_zoom", 9))
+        duration = max(1.2, float(fly_request.get("duration", 3.0)))
+    else:
+        start_center = fixed_center
+        target_center = fixed_center
+        target_zoom = int(getattr(malaysia_map, "options", {}).get("zoom", 9) or 9)
+        duration = 0.0
 
     initial_message = (
         f"Flying to {destination_label}..."
