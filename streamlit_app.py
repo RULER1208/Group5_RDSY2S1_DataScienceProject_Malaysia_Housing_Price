@@ -1139,8 +1139,6 @@ def reset_location_state():
     st.session_state["address_feedback"] = None
     st.session_state["last_prediction"] = None
     st.session_state["last_map_popup"] = None
-    st.session_state["location_state_select"] = None
-    st.session_state["location_area_select"] = None
 
 def analyze_address(available_states):
     addr_raw = st.session_state.get("address_input", "")
@@ -1223,10 +1221,6 @@ def analyze_address(available_states):
             st.session_state["address_feedback"] = (
                 "info", f"Matched state **{matched_state}**. Pick an area on the map below."
             )
-        # Address search runs as a callback, so it can safely synchronise the
-        # fallback widgets before Streamlit redraws them.
-        st.session_state["location_state_select"] = matched_state
-        st.session_state["location_area_select"] = matched_area
     else:
         st.session_state["address_feedback"] = (
             "warning",
@@ -1288,27 +1282,6 @@ def render_stepper(current_state, current_area, prediction):
     st.markdown(f'<div class="mh-stepper">{html}</div>', unsafe_allow_html=True)
 
 
-def update_location_from_fallback(state_value, area_value):
-    current_state = st.session_state.get("selected_state")
-    current_area = st.session_state.get("selected_area")
-    if state_value != current_state:
-        st.session_state["pending_location"] = (state_value, None)
-        st.session_state["map_center"] = STATE_COORDS.get(state_value, [4.2105, 108.9758])
-        st.session_state["map_zoom"] = 8 if state_value else 6
-        clear_last_prediction()
-        return True
-    if area_value != current_area:
-        st.session_state["selected_area"] = area_value
-        clear_last_prediction()
-        if state_value and area_value:
-            coordinates, _ = get_area_map_coords(area_value, state_value)
-            if coordinates:
-                st.session_state["map_center"] = coordinates
-                st.session_state["map_zoom"] = 12
-        return True
-    return False
-
-
 def render_result(saved):
     lower = max(0.0, saved["prediction"] - saved["mae_test"])
     upper = saved["prediction"] + saved["mae_test"]
@@ -1331,7 +1304,7 @@ def render_result(saved):
         f'<div class="sub">{escape(saved["area"])}, {escape(saved["state"])} · '
         f'{escape(saved["ptype"])} · {escape(saved["tenure"])}</div>'
         f'<div class="mh-range">Expected range: RM {lower/1000:,.0f}K – RM {upper/1000:,.0f}K</div>'
-        '</div><div class="mh-result-badge"><div class="kicker">Recommended model</div>'
+        '</div><div class="mh-result-badge"><div class="kicker">Selected model</div>'
         f'<div class="model">{escape(saved["model_name"])}</div></div></div>'
         '<div class="mh-stats">'
         f'<div class="mh-stat"><div class="k">Location</div><div class="v">{escape(saved["state"])}</div></div>'
@@ -1345,27 +1318,26 @@ def render_result(saved):
 
 def prediction_page(data, results):
     recommended = selected_model_name(results)
+    model_options = results["Model"].astype(str).tolist()
     available_states = sorted(STATE_COORDS)
     ptypes = sorted(data["Primary_Type"].dropna().astype(str).unique())
     tenure_options = sorted(data["Tenure"].dropna().astype(str).unique())
     defaults = {
         "selected_state": None, "selected_area": None, "selected_ptype": ptypes[0],
         "selected_tenure": tenure_options[0], "address_input": "", "address_feedback": None,
-        "last_prediction": None, "last_map_popup": None, "saved_scenarios": [],
+        "selected_prediction_model": recommended, "last_prediction": None,
+        "last_map_popup": None, "saved_scenarios": [],
     }
     for key, value in defaults.items():
         st.session_state.setdefault(key, value)
 
-    # A map event arrives after the fallback widgets have already been drawn.
-    # Apply it at the beginning of the next rerun to avoid mutating live widget
-    # state and to prevent a dropdown from undoing the map selection.
+    # A map event arrives near the end of a run. Apply it once at the beginning
+    # of the next run so a click cannot create a repeated rerun loop.
     pending_location = st.session_state.pop("pending_location", None)
     if pending_location:
         pending_state, pending_area = pending_location
         st.session_state["selected_state"] = pending_state
         st.session_state["selected_area"] = pending_area
-        st.session_state["location_state_select"] = pending_state
-        st.session_state["location_area_select"] = pending_area
 
     current_state = st.session_state["selected_state"]
     current_area = st.session_state["selected_area"]
@@ -1377,7 +1349,7 @@ def prediction_page(data, results):
         unsafe_allow_html=True,
     )
     render_stepper(current_state, current_area, st.session_state.get("last_prediction"))
-    section_header(1, "Select location", "Search by postcode or choose a state and area using the fast selector or map.", "location")
+    section_header(1, "Select location", "Search by address or postcode, or select the location directly on the map.", "location")
 
     search_col, button_col = st.columns([5, 1.15])
     with search_col:
@@ -1391,38 +1363,7 @@ def prediction_page(data, results):
         kind, message = feedback
         {"success": st.success, "info": st.info, "warning": st.warning}.get(kind, st.info)(message)
 
-    selector_col, map_col = st.columns([1, 2.25], gap="large")
-    with selector_col:
-        st.markdown(
-            f'<div class="mh-panel-title">{svg_icon("pin", 19)} Fast location selector</div>'
-            '<div class="mh-help">Use these dropdowns if you prefer not to use the map.</div>',
-            unsafe_allow_html=True,
-        )
-        state_options = [None] + available_states
-        selected_state = st.selectbox(
-            "State", state_options, index=state_options.index(current_state) if current_state in state_options else 0,
-            format_func=lambda value: "Select a state" if value is None else value, key="location_state_select",
-        )
-        area_options = [None] + (get_areas_for_state(selected_state) if selected_state else [])
-        selected_area = st.selectbox(
-            "Area", area_options, index=area_options.index(current_area) if current_area in area_options else 0,
-            format_func=lambda value: "Select an area" if value is None else value, key="location_area_select",
-            disabled=selected_state is None,
-        )
-        if update_location_from_fallback(selected_state, selected_area):
-            st.rerun()
-        st.markdown(
-            f'<div class="mh-chiprow"><span class="mh-chip">{svg_icon("location",16)} '
-            f'<strong>State:</strong> {escape(current_state or "Not selected")}</span>'
-            f'<span class="mh-chip">{svg_icon("pin",16)} <strong>Area:</strong> '
-            f'{escape(current_area or "Not selected")}</span></div>', unsafe_allow_html=True,
-        )
-        st.button("Reset location", use_container_width=True, on_click=reset_location_state, key="reset_location")
-        st.markdown(
-            f'<div class="mh-help">{svg_icon("info",15)} Verified areas come from the dataset or known '
-            'coordinates. Approximate areas remain selectable but may be less precise.</div>', unsafe_allow_html=True,
-        )
-
+    map_col = st.container()
     with map_col:
         with st.expander("Use map selection", expanded=True):
             if HAS_INTERACTIVE_MAP:
@@ -1484,12 +1425,27 @@ def prediction_page(data, results):
                             clear_last_prediction()
                             st.rerun()
             else:
-                st.info("Interactive map packages are unavailable. The fast location selector remains fully functional.")
+                st.error("Interactive map packages are unavailable. Install folium and streamlit-folium to select a location.")
+
+    chip_col, reset_col = st.columns([5, 1])
+    with chip_col:
+        st.markdown(
+            f'<div class="mh-chiprow"><span class="mh-chip">{svg_icon("location",16)} '
+            f'<strong>State:</strong> {escape(current_state or "Not selected")}</span>'
+            f'<span class="mh-chip">{svg_icon("pin",16)} <strong>Area:</strong> '
+            f'{escape(current_area or "Not selected")}</span></div>', unsafe_allow_html=True,
+        )
+    with reset_col:
+        st.button("Reset location", use_container_width=True, on_click=reset_location_state, key="reset_location")
+    st.markdown(
+        f'<div class="mh-help">{svg_icon("info",15)} Verified areas come from the dataset or known '
+        'coordinates. Approximate map pins remain selectable but may be less precise.</div>', unsafe_allow_html=True,
+    )
 
     current_state = st.session_state["selected_state"]
     current_area = st.session_state["selected_area"]
     st.markdown('<hr class="mh-rule">', unsafe_allow_html=True)
-    section_header(2, "Choose property", "Set the four property inputs used alongside the selected location.", "building")
+    section_header(2, "Choose property", "Choose the property details and prediction model.", "building")
     field_label("Property type")
     property_columns = st.columns(min(len(ptypes), 5), gap="small")
     for index, property_type in enumerate(ptypes):
@@ -1509,7 +1465,7 @@ def prediction_page(data, results):
 
     reference = market_reference(data, current_state, current_area,
         st.session_state["selected_ptype"], st.session_state["selected_tenure"])
-    tenure_col, psf_col, transaction_col = st.columns([1.3, 1, 1])
+    tenure_col, psf_col = st.columns([1.3, 1])
     with tenure_col:
         field_label("Tenure")
         st.markdown('<div class="tenure-hint">Tenure is the ownership status of the property.</div>', unsafe_allow_html=True)
@@ -1529,17 +1485,30 @@ def prediction_page(data, results):
         psf = st.number_input("PSF", min_value=1, step=10, value=int(round(data["Median_PSF"].median())),
             key="pred_psf", label_visibility="collapsed", on_change=clear_last_prediction)
         st.caption("Use market median PSF for the selected area and property type.")
-    with transaction_col:
-        field_label("Transactions")
-        transactions = st.number_input("Transactions", min_value=0, step=1,
-            value=int(round(data["Transactions"].median())), key="pred_transactions",
-            label_visibility="collapsed", on_change=clear_last_prediction)
-        st.caption("Historical transaction volume used by the model.")
+
+    field_label("Prediction model")
+    selected_model = st.selectbox(
+        "Prediction model",
+        model_options,
+        key="selected_prediction_model",
+        label_visibility="collapsed",
+        on_change=clear_last_prediction,
+        help="Choose which trained model should generate the estimate.",
+    )
+    selected_metrics = results.loc[results["Model"].eq(selected_model)].iloc[0]
+    if selected_model == recommended:
+        st.caption(f"Recommended model · Test MAE RM {selected_metrics['MAE_test']/1000:,.1f}K · Test R² {selected_metrics['R2_test']:.3f}")
+    else:
+        st.caption(f"Test MAE RM {selected_metrics['MAE_test']/1000:,.1f}K · Test R² {selected_metrics['R2_test']:.3f} · Recommended: {recommended}")
 
     psf_confirmed = st.checkbox("I confirm that Median PSF is independently known before prediction.",
         key="pred_psf_confirmed", help="Do not derive PSF from the Median Price being predicted.", on_change=clear_last_prediction)
-    st.caption(f"Reference: RM {reference['psf']:,}/sq ft and {reference['transactions']:,} transactions "
-               f"from the {reference['label']} ({reference['rows']:,} record(s)).")
+    st.caption(f"PSF reference: RM {reference['psf']:,}/sq ft from the {reference['label']} "
+               f"({reference['rows']:,} record(s)).")
+    # The fitted pipelines still require Transactions. It is intentionally not
+    # a user input: the app supplies the median from the closest matching
+    # historical market reference to keep the interface simple and consistent.
+    model_transactions = reference["transactions"]
     area_pool = data
     if current_state:
         area_pool = area_pool[area_pool["State"].eq(current_state)]
@@ -1555,27 +1524,35 @@ def prediction_page(data, results):
         st.warning(f"This PSF is far from the relevant market median of approximately RM {market_median:,.0f}/sq ft. Please verify it.")
 
     st.markdown('<hr class="mh-rule">', unsafe_allow_html=True)
-    section_header(3, "Generate estimate", "Create the estimate after confirming every model input.", "money")
+    section_header(3, "Generate estimate", "Create the estimate using the selected model.", "money")
     if st.button("Generate price estimate  →", type="primary", use_container_width=True, key="generate_estimate"):
         if not current_state or not current_area:
             st.error("Please select both a state and an area before predicting.")
         elif not psf_confirmed:
             st.error("Please confirm that Median PSF is independently known before prediction.")
         else:
-            model = load_model(recommended)
+            try:
+                model = load_model(selected_model)
+            except Exception as error:
+                st.error(
+                    f"Unable to load {selected_model}. The saved model file is incompatible or damaged. "
+                    "Use the matching requirements.txt and replace that model file before trying again."
+                )
+                st.caption(f"Technical detail: {type(error).__name__}: {error}")
+                return
             area_key = create_area_key(current_state, current_area)
             features = pd.DataFrame([{
                 "State": current_state, "Area_Key": area_key, "Tenure": tenure,
                 "Primary_Type": st.session_state["selected_ptype"], "Median_PSF": psf,
-                "Transactions": transactions,
+                "Transactions": model_transactions,
             }])[MODEL_FEATURES]
             with st.spinner("Calculating estimate..."):
                 prediction = float(model.predict(features)[0])
-            metrics = results.loc[results["Model"].eq(recommended)].iloc[0]
+            metrics = results.loc[results["Model"].eq(selected_model)].iloc[0]
             st.session_state["last_prediction"] = {
                 "prediction": prediction, "state": current_state, "area": current_area,
                 "ptype": st.session_state["selected_ptype"], "tenure": tenure, "psf": psf,
-                "transactions": transactions, "model_name": recommended,
+                "transactions": model_transactions, "model_name": selected_model,
                 "rmse_test": float(metrics["RMSE_test"]), "mae_test": float(metrics["MAE_test"]),
                 "r2_test": float(metrics["R2_test"]),
                 "dataset_supported": area_key in set(data["Area_Key"].astype(str)),
@@ -1587,17 +1564,17 @@ def prediction_page(data, results):
         render_result(saved)
         with st.expander("How this estimate is calculated"):
             st.markdown(
-                "The saved model receives exactly six inputs: **State, Area Key, Tenure, Primary Type, "
-                "Median PSF, and Transactions**. Categorical values pass through the trained encoder; "
-                "the fitted estimator then predicts the township-level median price. The expected range "
-                "adds and subtracts the model's held-out test MAE from the point estimate."
+                "The selected trained model uses the mapped location, tenure, property type, and Median PSF. "
+                "Its required historical transaction statistic is supplied automatically from the closest "
+                "matching dataset segment, so the user does not need to enter it. The expected range adds "
+                "and subtracts that model's held-out test MAE from the point estimate."
             )
         save_col, clear_col = st.columns([1, 1])
         with save_col:
             if st.button("Save scenario", use_container_width=True, key="save_scenario"):
                 scenarios = list(st.session_state.get("saved_scenarios", []))
-                signature = (saved["state"], saved["area"], saved["ptype"], saved["tenure"], saved["psf"], saved["transactions"])
-                if signature not in {(s["state"], s["area"], s["ptype"], s["tenure"], s["psf"], s["transactions"]) for s in scenarios}:
+                signature = (saved["state"], saved["area"], saved["ptype"], saved["tenure"], saved["psf"], saved["model_name"])
+                if signature not in {(s["state"], s["area"], s["ptype"], s["tenure"], s["psf"], s["model_name"]) for s in scenarios}:
                     scenarios.append(dict(saved))
                     st.session_state["saved_scenarios"] = scenarios[-3:]
                     st.rerun()
@@ -1620,7 +1597,7 @@ def prediction_page(data, results):
         comparison = pd.DataFrame([{
             "Location": f"{s['area']}, {s['state']}", "Property type": s["ptype"],
             "Tenure": s["tenure"], "Median PSF (RM)": s["psf"],
-            "Transactions": s["transactions"], "Estimated price (RM)": round(s["prediction"]),
+            "Model": s["model_name"], "Estimated price (RM)": round(s["prediction"]),
         } for s in scenarios])
         st.dataframe(comparison, use_container_width=True, hide_index=True,
                      column_config={"Estimated price (RM)": st.column_config.NumberColumn(format="RM %,.0f")})
