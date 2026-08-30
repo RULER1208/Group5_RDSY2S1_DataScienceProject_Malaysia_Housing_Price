@@ -4,6 +4,7 @@ Malaysia Housing Median Price Estimator
 
 Run locally:  streamlit run my_UI2_location_persistence_jinjang_fixed.py
 """
+# Build: figures-exact-map-poi-fixed
 from __future__ import annotations
 from pathlib import Path
 from html import escape
@@ -2753,8 +2754,17 @@ def prediction_page(data, results):
                 if coords:
                     marker_rows.append((current_area, coords[0], coords[1], approx, get_area_source(current_state, current_area)))
 
+            searched_point = st.session_state.get("searched_point")
+
             for disp_area, lat, lon, is_approx, area_kind in marker_rows:
-                is_sel = disp_area == current_area
+                # When a building/POI search gives an exact coordinate, keep the
+                # generic housing-area pin as a normal reference pin.  The exact
+                # searched coordinate becomes the selected point instead.  This
+                # avoids showing two different green "selected" locations.
+                is_sel = (
+                    disp_area == current_area
+                    and not searched_point
+                )
                 pin_note = "Approximate position · click to select" if is_approx else "Click to select"
                 folium.CircleMarker(
                     location=[lat, lon],
@@ -2768,17 +2778,20 @@ def prediction_page(data, results):
                     popup=f"AREA:{disp_area}",
                 ).add_to(marker_cluster)
 
-            searched_point = st.session_state.get("searched_point")
             if searched_point and current_state:
                 folium.CircleMarker(
                     location=[searched_point["lat"], searched_point["lon"]],
-                    radius=10,
+                    radius=8,
                     color="#0F766E",
                     weight=3,
                     fill=True,
-                    fill_color="#0D9488",
+                    fill_color="#10B981",
                     fill_opacity=0.95,
-                    tooltip=folium.Tooltip(f"<b>Searched address</b><br>{escape(str(searched_point.get('label', '')))}", sticky=True),
+                    tooltip=folium.Tooltip(
+                        f"<b>Selected searched location</b><br>{escape(str(searched_point.get('label', '')))}"
+                        + (f"<br>Housing area: {escape(str(current_area))}, {escape(str(current_state))}" if current_area else ""),
+                        sticky=True,
+                    ),
                     popup="SEARCHED_POINT",
                 ).add_to(malaysia_map)
 
