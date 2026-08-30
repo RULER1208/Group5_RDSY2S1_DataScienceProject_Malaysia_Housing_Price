@@ -899,6 +899,47 @@ div[data-testid="stNumberInputContainer"], div[data-baseweb="input"] { backgroun
 .stButton>button[kind="primary"]:hover { background:var(--blue-dark); border-color:var(--blue-dark); }
 button[kind="secondary"] { border-radius:14px!important; }
 
+/* ---------- LIGHT MICRO-INTERACTIONS ---------- */
+div[class*="st-key-btn_"] button {
+    transition:transform .16s cubic-bezier(.22,1,.36,1), box-shadow .16s ease,
+        border-color .16s ease, background-color .16s ease!important;
+}
+div[class*="st-key-btn_"] button:hover { transform:translateY(-2px); }
+div[class*="st-key-btn_"] button[kind="primary"] {
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(47,143,104,.14)!important;
+}
+div[class*="st-key-btn_"] button:active { transform:translateY(0) scale(.985); }
+
+div[class*="st-key-tenure_btn_"] button {
+    transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .15s ease,
+        border-color .15s ease, background-color .15s ease!important;
+}
+div[class*="st-key-tenure_btn_"] button:hover { transform:translateY(-1px); }
+div[class*="st-key-tenure_btn_"] button[kind="primary"] {
+    transform:translateY(-1px);
+    box-shadow:0 5px 12px rgba(47,143,104,.12)!important;
+}
+div[class*="st-key-tenure_btn_"] button:active { transform:scale(.985); }
+
+div.st-key-generate_estimate button {
+    transition:transform .16s cubic-bezier(.22,1,.36,1), box-shadow .16s ease,
+        background-color .16s ease!important;
+}
+div.st-key-generate_estimate button:hover {
+    transform:translateY(-2px);
+    box-shadow:0 13px 24px rgba(79,111,234,.23)!important;
+}
+div.st-key-generate_estimate button:active { transform:translateY(0) scale(.995); }
+
+@media (prefers-reduced-motion:reduce) {
+    div[class*="st-key-btn_"] button,
+    div[class*="st-key-tenure_btn_"] button,
+    div.st-key-generate_estimate button {
+        transition:none!important; transform:none!important;
+    }
+}
+
 /* ---------- NEW UI RESULT CARD KEPT ---------- */
 .mh-result { margin-top:22px; padding:28px; background:linear-gradient(135deg,#FFFFFF,#F0FDFA);
     border:1px solid #99F6E4; border-left:5px solid var(--teal); border-radius:24px; box-shadow:var(--shadow); }
@@ -1521,38 +1562,195 @@ def render_stepper(current_state, current_area, prediction):
     st.markdown(f'<div class="mh-stepper">{html}</div>', unsafe_allow_html=True)
 
 
-def render_result(saved):
-    lower = max(0.0, saved["prediction"] - saved["mae_test"])
-    upper = saved["prediction"] + saved["mae_test"]
-    warning = ""
+def render_result(saved, animate=True):
+    """Render the prediction card with one-time browser-native animations."""
+    prediction = float(saved["prediction"])
+    mae = float(saved["mae_test"])
+    lower = max(0.0, prediction - mae)
+    upper = prediction + mae
+
+    # Add breathing room around the MAE interval so the range meter reads well.
+    ruler_min = max(0.0, lower - mae * 0.55)
+    ruler_max = upper + mae * 0.55
+    ruler_span = max(ruler_max - ruler_min, 1.0)
+    lower_pct = max(0.0, min(100.0, ((lower - ruler_min) / ruler_span) * 100))
+    upper_pct = max(0.0, min(100.0, ((upper - ruler_min) / ruler_span) * 100))
+    prediction_pct = max(0.0, min(100.0, ((prediction - ruler_min) / ruler_span) * 100))
+    range_width = max(0.0, upper_pct - lower_pct)
+
     if not saved["dataset_supported"]:
-        warning = (
-            f'<div class="mh-warning">{svg_icon("warning", 20)}<div><strong>Lower-confidence area.</strong> '
-            'This area is outside the 2025 training dataset. The model uses unseen/infrequent-area '
-            'handling, so accuracy may be lower.</div></div>'
+        warning_html = (
+            '<div class="result-warning"><div class="warning-icon">!</div><div>'
+            '<strong>Lower-confidence area.</strong><br>'
+            'This area is outside the 2025 training dataset. The model uses '
+            'unseen/infrequent-area handling, so prediction accuracy may be lower.'
+            '</div></div>'
         )
     elif not saved["model_supported"]:
-        warning = (
-            f'<div class="mh-warning">{svg_icon("info", 20)}<div>This area exists in the dataset but '
-            'was held outside this model’s training areas during evaluation. Unseen-area handling is used.</div></div>'
+        warning_html = (
+            '<div class="result-warning"><div class="warning-icon">i</div><div>'
+            'This area exists in the dataset but was outside this model\'s training '
+            'areas during evaluation. Unseen-area handling is used.'
+            '</div></div>'
         )
-    html = (
-        '<div class="mh-result" id="estimate-result"><div class="mh-result-top"><div>'
-        '<div class="cap">Estimated median price</div>'
-        f'<div class="price">RM {saved["prediction"]:,.0f}</div>'
-        f'<div class="sub">{escape(saved["area"])}, {escape(saved["state"])} · '
-        f'{escape(saved["ptype"])} · {escape(saved["tenure"])}</div>'
-        f'<div class="mh-range">Expected range: RM {lower/1000:,.0f}K – RM {upper/1000:,.0f}K</div>'
-        '</div><div class="mh-result-badge"><div class="kicker">Selected model</div>'
-        f'<div class="model">{escape(saved["model_name"])}</div></div></div>'
-        '<div class="mh-stats">'
-        f'<div class="mh-stat"><div class="k">Location</div><div class="v">{escape(saved["state"])}</div></div>'
-        f'<div class="mh-stat"><div class="k">Median PSF input</div><div class="v">RM {saved["psf"]:,.0f}</div></div>'
-        f'<div class="mh-stat"><div class="k">Test MAE</div><div class="v">RM {saved["mae_test"]/1000:,.1f}K</div></div>'
-        f'<div class="mh-stat"><div class="k">Test R²</div><div class="v">{saved["r2_test"]:.3f}</div></div>'
-        f'</div>{warning}<div class="mh-disclaimer">This is an estimated median price, not a final market valuation.</div></div>'
-    )
-    st.markdown(html, unsafe_allow_html=True)
+    else:
+        warning_html = ""
+
+    duration = 950 if animate else 0
+    entrance_duration = 450 if animate else 0
+    animation_class = "animate-result" if animate else ""
+    should_animate = "true" if animate else "false"
+
+    html = f"""
+    <div class="housing-result-root">
+      <style>
+        * {{ box-sizing:border-box; }}
+        body {{ margin:0; background:transparent; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#1E293B; }}
+
+        .housing-result-card {{
+          position:relative; width:100%; padding:28px 30px 26px; overflow:hidden;
+          background:linear-gradient(135deg,#FFFFFF 0%,#F8FFFD 60%,#F0FDFA 100%);
+          border:1px solid #99F6E4; border-left:5px solid #0D9488; border-radius:24px;
+          box-shadow:0 12px 30px rgba(23,35,59,.10);
+        }}
+        .housing-result-card.animate-result {{
+          animation:resultEntrance {entrance_duration}ms cubic-bezier(.22,1,.36,1) both;
+        }}
+        @keyframes resultEntrance {{ from {{ opacity:0; transform:translateY(18px); }} to {{ opacity:1; transform:translateY(0); }} }}
+
+        .result-top {{ display:flex; justify-content:space-between; align-items:flex-start; gap:28px; }}
+        .result-main {{ flex:1; min-width:0; }}
+        .result-cap {{ color:#0D9488; font-size:12px; font-weight:850; letter-spacing:.11em; text-transform:uppercase; }}
+        .result-price {{ color:#0F172A; font-size:clamp(42px,6vw,62px); line-height:1; font-weight:850; margin:12px 0 10px; letter-spacing:-.035em; font-variant-numeric:tabular-nums; }}
+        .result-location {{ color:#475569; font-size:15px; line-height:1.5; }}
+        .model-badge {{ min-width:205px; padding:15px 17px; background:rgba(255,255,255,.92); border:1px solid #DDE3EC; border-radius:15px; }}
+        .model-kicker {{ color:#667085; font-size:11px; font-weight:750; letter-spacing:.09em; text-transform:uppercase; }}
+        .model-name {{ color:#0F172A; font-size:16px; font-weight:800; margin-top:6px; overflow-wrap:anywhere; }}
+
+        .range-panel {{ margin-top:25px; padding:18px 18px 17px; background:#FFFFFF; border:1px solid #DDE3EC; border-radius:16px; }}
+        .range-header {{ display:flex; justify-content:space-between; gap:20px; align-items:center; margin-bottom:18px; }}
+        .range-title {{ color:#334155; font-size:13px; font-weight:800; }}
+        .range-value {{ padding:6px 10px; color:#0F766E; background:#CCFBF1; border-radius:9px; font-size:12px; font-weight:800; white-space:nowrap; }}
+        .ruler {{ position:relative; height:72px; margin:0 7px; }}
+        .track {{ position:absolute; left:0; right:0; top:29px; height:8px; border-radius:999px; background:#E8EDF3; overflow:hidden; }}
+        .track-shine {{ position:absolute; inset:0; width:100%; opacity:.55; background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent); transform:translateX(-100%); }}
+        .animate-result .track-shine {{ animation:shine 900ms ease 280ms 1; }}
+        @keyframes shine {{ to {{ transform:translateX(100%); }} }}
+        .expected-range {{ position:absolute; top:29px; left:{lower_pct:.4f}%; height:8px; width:{range_width:.4f}%; border-radius:999px; background:linear-gradient(90deg,#99F6E4,#2DD4BF); transform-origin:center; }}
+        .animate-result .expected-range {{ animation:rangeExpand {duration}ms cubic-bezier(.22,1,.36,1) both; }}
+        @keyframes rangeExpand {{ from {{ transform:scaleX(0); opacity:.25; }} to {{ transform:scaleX(1); opacity:1; }} }}
+        .prediction-marker {{ position:absolute; top:18px; left:{prediction_pct:.4f}%; width:22px; height:22px; border-radius:50%; background:#0D9488; border:4px solid #FFFFFF; box-shadow:0 2px 7px rgba(15,118,110,.30); transform:translateX(-50%); }}
+        .prediction-marker::after {{ content:""; position:absolute; width:7px; height:7px; border-radius:50%; background:#FFFFFF; left:50%; top:50%; transform:translate(-50%,-50%); }}
+        .animate-result .prediction-marker {{ animation:markerSlide {duration}ms cubic-bezier(.22,1,.36,1) both; }}
+        @keyframes markerSlide {{ from {{ left:0%; opacity:0; }} to {{ left:{prediction_pct:.4f}%; opacity:1; }} }}
+        .marker-line {{ position:absolute; top:39px; left:{prediction_pct:.4f}%; height:10px; width:2px; background:#0D9488; transform:translateX(-50%); }}
+        .marker-label {{ position:absolute; top:51px; left:{prediction_pct:.4f}%; transform:translateX(-50%); color:#0F766E; font-size:11px; font-weight:850; white-space:nowrap; }}
+        .ruler-min,.ruler-max {{ position:absolute; top:0; color:#7C8799; font-size:11px; font-weight:650; }}
+        .ruler-min {{ left:0; }} .ruler-max {{ right:0; }}
+
+        .stats {{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:18px; }}
+        .stat {{ padding:13px 14px; background:rgba(255,255,255,.94); border:1px solid #DDE3EC; border-radius:14px; }}
+        .stat-k {{ color:#667085; font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }}
+        .stat-v {{ color:#0F172A; margin-top:5px; font-size:15px; font-weight:850; overflow-wrap:anywhere; }}
+        .animate-result .stat {{ opacity:0; animation:statEntrance 380ms ease forwards; }}
+        .animate-result .stat:nth-child(1) {{ animation-delay:420ms; }}
+        .animate-result .stat:nth-child(2) {{ animation-delay:500ms; }}
+        .animate-result .stat:nth-child(3) {{ animation-delay:580ms; }}
+        .animate-result .stat:nth-child(4) {{ animation-delay:660ms; }}
+        @keyframes statEntrance {{ from {{ opacity:0; transform:translateY(8px); }} to {{ opacity:1; transform:translateY(0); }} }}
+
+        .result-warning {{ display:flex; gap:11px; margin-top:14px; padding:13px 15px; color:#92400E; background:#FFFBEB; border:1px solid #FDE68A; border-radius:13px; font-size:13px; line-height:1.5; }}
+        .warning-icon {{ display:flex; align-items:center; justify-content:center; flex:0 0 23px; width:23px; height:23px; border-radius:50%; background:#FEF3C7; color:#92400E; font-weight:900; }}
+        .result-disclaimer {{ color:#667085; margin-top:14px; font-size:12px; }}
+
+        @media (max-width:720px) {{
+          .housing-result-card {{ padding:22px 19px; }}
+          .result-top {{ flex-direction:column; }}
+          .model-badge {{ width:100%; min-width:0; }}
+          .stats {{ grid-template-columns:1fr 1fr; }}
+          .result-price {{ font-size:42px; }}
+        }}
+        @media (max-width:460px) {{
+          .stats {{ grid-template-columns:1fr; }}
+          .range-header {{ align-items:flex-start; flex-direction:column; gap:7px; }}
+        }}
+        @media (prefers-reduced-motion:reduce) {{
+          *,*::before,*::after {{ animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }}
+        }}
+      </style>
+
+      <div class="housing-result-card {animation_class}">
+        <div class="result-top">
+          <div class="result-main">
+            <div class="result-cap">Estimated median price</div>
+            <div class="result-price" id="animatedHousePrice">RM {prediction:,.0f}</div>
+            <div class="result-location">{escape(saved["area"])}, {escape(saved["state"])} &nbsp;·&nbsp; {escape(saved["ptype"])} &nbsp;·&nbsp; {escape(saved["tenure"])}</div>
+          </div>
+          <div class="model-badge">
+            <div class="model-kicker">Selected model</div>
+            <div class="model-name">{escape(saved["model_name"])}</div>
+          </div>
+        </div>
+
+        <div class="range-panel">
+          <div class="range-header">
+            <div class="range-title">Expected price range</div>
+            <div class="range-value">RM {lower/1000:,.0f}K – RM {upper/1000:,.0f}K</div>
+          </div>
+          <div class="ruler">
+            <div class="ruler-min">RM {ruler_min/1000:,.0f}K</div>
+            <div class="ruler-max">RM {ruler_max/1000:,.0f}K</div>
+            <div class="track"><div class="track-shine"></div></div>
+            <div class="expected-range"></div>
+            <div class="prediction-marker"></div>
+            <div class="marker-line"></div>
+            <div class="marker-label">Prediction</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><div class="stat-k">Location</div><div class="stat-v">{escape(saved["state"])}</div></div>
+          <div class="stat"><div class="stat-k">Median PSF input</div><div class="stat-v">RM {saved["psf"]:,.0f}</div></div>
+          <div class="stat"><div class="stat-k">Test MAE</div><div class="stat-v">RM {saved["mae_test"]/1000:,.1f}K</div></div>
+          <div class="stat"><div class="stat-k">Test R²</div><div class="stat-v">{saved["r2_test"]:.3f}</div></div>
+        </div>
+        {warning_html}
+        <div class="result-disclaimer">This is an estimated median price, not a final market valuation.</div>
+      </div>
+
+      <script>
+        (function() {{
+          const shouldAnimate = {should_animate};
+          const finalPrice = {prediction:.8f};
+          const duration = {duration};
+          const priceNode = document.getElementById("animatedHousePrice");
+          if (!priceNode) return;
+
+          function formatRM(value) {{
+            return "RM " + Math.round(value).toLocaleString("en-MY");
+          }}
+          if (!shouldAnimate || duration === 0) {{
+            priceNode.textContent = formatRM(finalPrice);
+            return;
+          }}
+
+          priceNode.textContent = "RM 0";
+          const startTime = performance.now();
+          function easeOutCubic(t) {{ return 1 - Math.pow(1 - t, 3); }}
+          function animatePrice(now) {{
+            const progress = Math.min((now - startTime) / duration, 1);
+            priceNode.textContent = formatRM(finalPrice * easeOutCubic(progress));
+            if (progress < 1) requestAnimationFrame(animatePrice);
+            else priceNode.textContent = formatRM(finalPrice);
+          }}
+          requestAnimationFrame(animatePrice);
+        }})();
+      </script>
+    </div>
+    """
+
+    component_height = 525 if warning_html else 455
+    st.components.v1.html(html, height=component_height, scrolling=False)
 
 
 def prediction_page(data, results):
@@ -1574,6 +1772,7 @@ def prediction_page(data, results):
         "last_map_popup": None,
         "searched_point": None,
         "saved_scenarios": [],
+        "just_predicted": False,
     }
     for key, value in defaults.items():
         st.session_state.setdefault(key, value)
@@ -1912,10 +2111,14 @@ def prediction_page(data, results):
                 "dataset_supported": area_key in set(data["Area_Key"].astype(str)),
                 "model_supported": model_has_seen_area(model, area_key),
             }
+            # Consumed once by the result renderer below. This prevents the
+            # count-up/range animation from replaying on unrelated Streamlit reruns.
+            st.session_state["just_predicted"] = True
 
     saved = st.session_state.get("last_prediction")
     if saved:
-        render_result(saved)
+        just_predicted = st.session_state.pop("just_predicted", False)
+        render_result(saved, animate=just_predicted)
         with st.expander("How this estimate is calculated"):
             st.markdown(
                 "The selected trained model uses the mapped location, tenure, property type, and Median PSF. "
