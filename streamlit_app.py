@@ -7,6 +7,7 @@ Run locally:  streamlit run streamlit_app.py
 from __future__ import annotations
 from pathlib import Path
 from html import escape
+from difflib import SequenceMatcher
 import inspect
 import joblib
 import pandas as pd
@@ -1355,29 +1356,191 @@ def match_area_text(addr_norm: str, preferred_states=None):
 
 
 @st.cache_data(show_spinner=False, ttl=60 * 60 * 24 * 14)
-def geocode_malaysia_location(query: str):
+def geocode_malaysia_candidates(query: str):
+    """Return several Malaysia-only Nominatim candidates instead of trusting the first hit.
+
+    The old UI accepted exactly_one=True, so nonsense text such as ``xyz`` could be
+    mapped to an unrelated place.  This function deliberately returns a shortlist;
+    the caller then validates how strongly each result matches the user's words.
+    """
     if not HAS_GEOPY or not query:
-        return None
+        return []
     try:
-        geolocator = Nominatim(user_agent="malaysia_housing_estimator_student", timeout=2)
-        loc = geolocator.geocode(f"{query}, Malaysia", country_codes="my", addressdetails=True, exactly_one=True, limit=1)
-        if not loc:
-            return None
-        raw = getattr(loc, "raw", {}) or {}
-        details = raw.get("address", {}) or {}
-        return {
-            "lat": float(loc.latitude),
-            "lon": float(loc.longitude),
-            "display_name": raw.get("display_name") or query,
-            "state_raw": details.get("state") or details.get("region") or "",
-            "area_raw": (
-                details.get("suburb") or details.get("town") or details.get("city") or
-                details.get("municipality") or details.get("county") or details.get("district") or
-                details.get("village") or details.get("neighbourhood") or ""
-            ),
-        }
+        geolocator = Nominatim(
+            user_agent="malaysia_housing_estimator_student",
+            timeout=3,
+        )
+        locations = geolocator.geocode(
+            f"{query}, Malaysia",
+            country_codes="my",
+            addressdetails=True,
+            namedetails=True,
+            exactly_one=False,
+            limit=6,
+        )
+        if not locations:
+            return []
+        if not isinstance(locations, (list, tuple)):
+            locations = [locations]
+
+        candidates = []
+        for loc in locations:
+            raw = getattr(loc, "raw", {}) or {}
+            details = raw.get("address", {}) or {}
+            namedetails = raw.get("namedetails", {}) or {}
+            display_text = raw.get("display_name") or getattr(loc, "address", "") or query
+            primary_name = (
+                namedetails.get("name")
+                or details.get("amenity")
+                or details.get("building")
+                or details.get("tourism")
+                or str(display_text).split(",", 1)[0]
+            )
+            candidates.append({
+                "lat": float(loc.latitude),
+                "lon": float(loc.longitude),
+                "display_name": str(display_text),
+                "primary_name": str(primary_name or ""),
+                "state_raw": details.get("state") or details.get("region") or "",
+                "area_raw": (
+                    details.get("suburb") or details.get("quarter") or details.get("neighbourhood") or
+                    details.get("village") or details.get("town") or details.get("city_district") or
+                    details.get("city") or details.get("municipality") or details.get("county") or
+                    details.get("district") or ""
+                ),
+                "postcode": details.get("postcode") or "",
+                "category": raw.get("category") or raw.get("class") or "",
+                "type": raw.get("type") or "",
+                "importance": float(raw.get("importance") or 0.0),
+                "namedetails": {str(k): str(v) for k, v in namedetails.items() if v},
+            })
+        return candidates
     except Exception:
+        return []
+
+
+def _compact_lookup_text(value: str) -> str:
+    """Normalised text without spaces, useful for acronyms such as TAR UMT/TARUMT."""
+    return normalise_lookup_text(value).replace(" ", "")
+
+
+def geocode_query_score(query: str, candidate: dict) -> float:
+    """Estimate whether a Nominatim result genuinely resembles the user's query.
+
+    This is intentionally conservative.  A geocoder result is not accepted merely
+    because it exists in Malaysia; the searched words must also appear in, or closely
+    resemble, the returned POI/place name.  This prevents ``xyz -> Sibu`` style jumps.
+    """
+    q = normalise_lookup_text(query)
+    q_compact = _compact_lookup_text(query)
+    if not q or not q_compact:
+        return 0.0
+
+    name = normalise_lookup_text(candidate.get("primary_name", ""))
+    display = normalise_lookup_text(candidate.get("display_name", ""))
+    named_values = [normalise_lookup_text(v) for v in (candidate.get("namedetails") or {}).values()]
+    texts = [t for t in [name, display, *named_values] if t]
+    if not texts:
+        return 0.0
+
+    compact_texts = [t.replace(" ", "") for t in texts]
+    exact_phrase = any(contains_lookup_phrase(t, q) for t in texts)
+    compact_exact = len(q_compact) >= 4 and any(q_compact in t for t in compact_texts)
+
+    q_tokens = [token for token in q.split() if len(token) >= 2]
+    candidate_tokens = set(" ".join(texts).split())
+    token_coverage = (
+        sum(1 for token in q_tokens if token in candidate_tokens) / len(q_tokens)
+        if q_tokens else 0.0
+    )
+
+    # Compare primarily with the returned POI/place name, then the whole display label.
+    name_ratio = SequenceMatcher(None, q_compact, name.replace(" ", "")).ratio() if name else 0.0
+    display_head = display.split(" ")[:8]
+    display_ratio = SequenceMatcher(None, q_compact, "".join(display_head)).ratio() if display_head else 0.0
+    fuzzy = max(name_ratio, display_ratio)
+
+    score = 0.0
+    if exact_phrase:
+        score += 100.0
+    elif compact_exact:
+        score += 96.0
+    else:
+        score += 52.0 * token_coverage
+        score += 42.0 * fuzzy
+
+    # A little preference for Nominatim's own ranking, but never enough to rescue
+    # a semantically unrelated candidate.
+    score += min(6.0, max(0.0, float(candidate.get("importance", 0.0))) * 10.0)
+
+    # Very short arbitrary strings are especially dangerous unless they literally
+    # occur in the returned place name/display label.
+    if len(q_compact) <= 3 and not exact_phrase:
+        score = min(score, 35.0)
+
+    return round(score, 3)
+
+
+def validated_geocode_candidates(query: str):
+    """Return only candidates that are strongly supported by the typed query."""
+    # Three-character free-text searches are too ambiguous for POI geocoding.
+    # Useful Malaysian abbreviations such as KL/PJ/USJ/KLCC are already handled
+    # by the deterministic state/area alias lookup before this function runs.
+    if len(_compact_lookup_text(query)) <= 3:
+        return []
+
+    ranked = []
+    seen = set()
+    for candidate in geocode_malaysia_candidates(query):
+        score = geocode_query_score(query, candidate)
+        if score < 72.0:
+            continue
+        key = (
+            round(float(candidate["lat"]), 5),
+            round(float(candidate["lon"]), 5),
+            normalise_lookup_text(candidate.get("display_name", "")),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        item = dict(candidate)
+        item["query_score"] = score
+        ranked.append(item)
+    ranked.sort(key=lambda item: (item["query_score"], item.get("importance", 0.0)), reverse=True)
+    return ranked[:5]
+
+
+def resolve_candidate_state(candidate: dict, available_states):
+    state_norm = normalise_lookup_text(candidate.get("state_raw", ""))
+    if not state_norm:
         return None
+    for state_name in available_states:
+        state_name_norm = normalise_lookup_text(state_name)
+        if contains_lookup_phrase(state_norm, state_name_norm) or contains_lookup_phrase(state_name_norm, state_norm):
+            return state_name
+    return match_state_text(state_norm)
+
+
+def resolve_candidate_area(candidate: dict, state_name: str | None):
+    """Translate a geocoder locality into the map/model area vocabulary when possible."""
+    raw_area = str(candidate.get("area_raw", "") or "").strip()
+    if not raw_area:
+        return None
+    preferred = [state_name] if state_name else []
+    area_state, area_name = match_area_text(normalise_lookup_text(raw_area), preferred_states=preferred)
+    if area_state and area_name and (not state_name or area_state == state_name):
+        return area_name
+    # Preserve nationwide prediction support for a genuine geocoded locality even
+    # when it is not present in our dataset/official lookup tables.
+    return display_name(clean_area_name(raw_area))
+
+
+def candidate_label(candidate: dict) -> str:
+    primary = str(candidate.get("primary_name") or "").strip()
+    display_text = str(candidate.get("display_name") or "").strip()
+    if primary and primary.lower() not in display_text.lower():
+        return f"{primary} — {display_text}"
+    return display_text or primary or "Possible Malaysia location"
 
 
 def model_default_name(results: pd.DataFrame) -> str:
@@ -1404,6 +1567,95 @@ def reset_location_state():
     st.session_state["last_map_popup"] = None
     st.session_state["searched_point"] = None
     st.session_state["map_fly_request"] = None
+    st.session_state["location_candidates"] = []
+    st.session_state["location_candidate_query"] = ""
+
+
+def _apply_location_match(
+    *,
+    matched_state,
+    matched_area,
+    searched_point,
+    previous_map_center,
+    previous_map_zoom,
+    feedback_message,
+):
+    """Commit one validated location and prepare the one-time Spider-Man/map flight."""
+    st.session_state["last_prediction"] = None
+    st.session_state["selected_state"] = matched_state
+    st.session_state["selected_area"] = matched_area
+    st.session_state["searched_point"] = searched_point
+    st.session_state["location_candidates"] = []
+    st.session_state["location_candidate_query"] = ""
+
+    target_center = STATE_COORDS.get(matched_state, [4.2105, 108.9758])
+    target_zoom = 8
+
+    if matched_area:
+        if searched_point:
+            target_center = [searched_point["lat"], searched_point["lon"]]
+            target_zoom = 14
+        else:
+            coords, _ = get_area_map_coords(matched_area, matched_state)
+            if coords:
+                target_center = list(coords)
+                target_zoom = 12
+    elif searched_point:
+        target_center = [searched_point["lat"], searched_point["lon"]]
+        target_zoom = 13
+
+    st.session_state["address_feedback"] = feedback_message
+    st.session_state["map_center"] = list(target_center)
+    st.session_state["map_zoom"] = int(target_zoom)
+    st.session_state["map_fly_request"] = {
+        "from_center": list(previous_map_center),
+        "from_zoom": int(previous_map_zoom),
+        "to_center": list(target_center),
+        "to_zoom": int(target_zoom),
+        "duration": 3.4,
+    }
+
+
+def apply_geocode_candidate(candidate: dict, available_states):
+    """Apply a candidate that has already passed query relevance validation."""
+    previous_map_center = list(st.session_state.get("map_center", [4.2105, 108.9758]))
+    previous_map_zoom = int(st.session_state.get("map_zoom", 6))
+
+    matched_state = resolve_candidate_state(candidate, available_states)
+    if not matched_state:
+        st.session_state["address_feedback"] = (
+            "warning",
+            "The place looks relevant, but its Malaysian state could not be verified. Please choose the location on the map.",
+        )
+        return
+
+    matched_area = resolve_candidate_area(candidate, matched_state)
+    searched_point = {
+        "lat": float(candidate["lat"]),
+        "lon": float(candidate["lon"]),
+        "label": candidate.get("display_name") or candidate.get("primary_name") or "Searched location",
+    }
+
+    place_name = str(candidate.get("primary_name") or "").strip()
+    if matched_area:
+        if place_name and normalise_lookup_text(place_name) != normalise_lookup_text(matched_area):
+            message = (
+                "success",
+                f"Found **{place_name}**. Housing area used: **{matched_area}, {matched_state}**.",
+            )
+        else:
+            message = ("success", f"Matched **{matched_area}, {matched_state}**.")
+    else:
+        message = ("info", f"Matched state **{matched_state}**. Pick an area on the map below.")
+
+    _apply_location_match(
+        matched_state=matched_state,
+        matched_area=matched_area,
+        searched_point=searched_point,
+        previous_map_center=previous_map_center,
+        previous_map_zoom=previous_map_zoom,
+        feedback_message=message,
+    )
 
 
 def analyze_address(available_states):
@@ -1411,21 +1663,17 @@ def analyze_address(available_states):
     addr_norm = normalise_lookup_text(addr_raw)
     if not addr_norm:
         st.session_state["address_feedback"] = None
+        st.session_state["location_candidates"] = []
         return
 
-    matched_state = None
-    matched_area = None
-    match_source = None
-    searched_point = None
+    # Starting a new search invalidates any older ambiguity shortlist.
+    st.session_state["location_candidates"] = []
+    st.session_state["location_candidate_query"] = ""
 
-    # Preserve the currently displayed map view. When a search succeeds we render
-    # this old view first, then let Leaflet smoothly fly to the detected area.
-    # This avoids the "blank frame -> already arrived" feeling caused by rebuilding
-    # the Streamlit/Folium iframe directly at a far-away high zoom level.
     previous_map_center = list(st.session_state.get("map_center", [4.2105, 108.9758]))
     previous_map_zoom = int(st.session_state.get("map_zoom", 6))
 
-    # Fast offline signals first: area text, state text and postcode ranges.
+    # 1) Trust deterministic local evidence first: a known area, state, or postcode.
     postcode_match = re.search(r"\b\d{5}\b", str(addr_raw))
     postcode_state = get_state_from_postcode(postcode_match.group()) if postcode_match else None
     text_state = match_state_text(addr_norm)
@@ -1433,100 +1681,69 @@ def analyze_address(available_states):
     area_state, area_name = match_area_text(addr_norm, preferred_states=preferred_states)
 
     if area_state and area_name:
-        matched_state = area_state
-        matched_area = area_name
-        match_source = "locality"
-    elif postcode_state:
-        matched_state = postcode_state
-        match_source = "postcode"
-    elif text_state:
-        matched_state = text_state
-        match_source = "state"
+        _apply_location_match(
+            matched_state=area_state,
+            matched_area=area_name,
+            searched_point=None,
+            previous_map_center=previous_map_center,
+            previous_map_zoom=previous_map_zoom,
+            feedback_message=("success", f"Matched **{area_name}, {area_state}**."),
+        )
+        return
 
-    # Optional live geocoding is only used after clicking Search Location.
-    # It is cached, Malaysia-restricted, and never runs during map rendering.
-    should_geocode = HAS_GEOPY and (not matched_area or len(addr_norm.split()) >= 3)
-    if should_geocode:
-        geo = geocode_malaysia_location(addr_raw)
-        if geo:
-            searched_point = {"lat": geo["lat"], "lon": geo["lon"], "label": geo["display_name"]}
-            geo_state_norm = normalise_lookup_text(geo.get("state_raw", ""))
-            geo_state = None
-            for state_name in available_states:
-                if contains_lookup_phrase(geo_state_norm, state_name) or contains_lookup_phrase(state_name, geo_state_norm):
-                    geo_state = state_name
-                    break
-            if not geo_state:
-                geo_state = match_state_text(geo_state_norm)
+    # A pure/clear state name is deterministic.  A postcode also gives a reliable
+    # state, but not necessarily an exact area, so the user can choose the area map pin.
+    if postcode_state or text_state:
+        matched_state = postcode_state or text_state
+        _apply_location_match(
+            matched_state=matched_state,
+            matched_area=None,
+            searched_point=None,
+            previous_map_center=previous_map_center,
+            previous_map_zoom=previous_map_zoom,
+            feedback_message=("info", f"Matched state **{matched_state}**. Pick an area on the map below."),
+        )
+        return
 
-            if geo_state:
-                # Geocoded state improves postcode-only matches, but a strong local
-                # area match such as Setapak still keeps its known state.
-                if not matched_area:
-                    matched_state = geo_state
-                    match_source = "geocode"
-                elif matched_state == postcode_state and text_state and text_state != postcode_state and area_state != postcode_state:
-                    matched_state = geo_state
-
-            if geo.get("area_raw"):
-                raw_area_norm = normalise_lookup_text(geo["area_raw"])
-                preferred = [state for state in [matched_state, geo_state, postcode_state, text_state] if state]
-                geo_area_state, geo_area = match_area_text(raw_area_norm, preferred_states=preferred)
-                if geo_area_state and geo_area and not matched_area:
-                    matched_state, matched_area = geo_area_state, geo_area
-                    match_source = "geocode"
-                elif not matched_area and matched_state:
-                    # Keep Malaysia-wide coverage even when the exact place is not in
-                    # the housing dataset or official list. The model can still handle
-                    # this as an unseen/infrequent area.
-                    matched_area = display_name(clean_area_name(geo["area_raw"]))
-                    match_source = "geocode-custom"
-
-    if matched_state:
-        st.session_state["last_prediction"] = None
-        st.session_state["selected_state"] = matched_state
-        st.session_state["searched_point"] = searched_point
-
-        target_center = STATE_COORDS.get(matched_state, [4.2105, 108.9758])
-        target_zoom = 8
-
-        if matched_area:
-            st.session_state["selected_area"] = matched_area
-            if searched_point:
-                target_center = [searched_point["lat"], searched_point["lon"]]
-                target_zoom = 14
-            else:
-                coords, _ = get_area_map_coords(matched_area, matched_state)
-                if coords:
-                    target_center = list(coords)
-                    target_zoom = 12
-            st.session_state["address_feedback"] = ("success", f"Matched **{matched_area}, {matched_state}**.")
-        else:
-            st.session_state["selected_area"] = None
-            if searched_point:
-                target_center = [searched_point["lat"], searched_point["lon"]]
-                target_zoom = 13
-            st.session_state["address_feedback"] = (
-                "info", f"Matched state **{matched_state}**. Pick an area on the map below."
-            )
-
-        # Save the final view for future reruns, but on the very next render start
-        # from the PREVIOUS view and animate to this target over ~2.8 seconds.
-        st.session_state["map_center"] = list(target_center)
-        st.session_state["map_zoom"] = int(target_zoom)
-        st.session_state["map_fly_request"] = {
-            "from_center": previous_map_center,
-            "from_zoom": previous_map_zoom,
-            "to_center": list(target_center),
-            "to_zoom": int(target_zoom),
-            "duration": 3.4,
-        }
-    else:
+    # 2) POI/building/free-text search: get several Malaysia candidates, then reject
+    # results whose returned name does not actually resemble what the user typed.
+    candidates = validated_geocode_candidates(addr_raw) if HAS_GEOPY else []
+    if not candidates:
         st.session_state["searched_point"] = None
         st.session_state["address_feedback"] = (
             "warning",
-            "Couldn't recognise that address or postcode. Try a postcode, township name, or select the location on the map.",
+            f"Couldn't confidently recognise **{escape(str(addr_raw))}**. Try an area, postcode, building name, or select the location on the map.",
         )
+        return
+
+    # If several candidates are nearly tied, do not silently choose one.  This is
+    # useful for organisations with multiple campuses/branches and similarly named POIs.
+    top_score = float(candidates[0]["query_score"])
+    plausible = [c for c in candidates if top_score - float(c["query_score"]) <= 8.0]
+    distinct = []
+    seen_places = set()
+    for candidate in plausible:
+        state = resolve_candidate_state(candidate, available_states)
+        key = (
+            state,
+            normalise_lookup_text(candidate.get("area_raw", "")),
+            round(float(candidate["lat"]), 3),
+            round(float(candidate["lon"]), 3),
+        )
+        if key not in seen_places:
+            seen_places.add(key)
+            distinct.append(candidate)
+
+    if len(distinct) > 1:
+        st.session_state["location_candidates"] = distinct[:5]
+        st.session_state["location_candidate_query"] = str(addr_raw)
+        st.session_state["address_feedback"] = (
+            "info",
+            "Several believable locations were found. Please choose the correct one below before the map moves.",
+        )
+        return
+
+    apply_geocode_candidate(candidates[0], available_states)
 
 # ---------------------------------------------------------------------------
 # PAGE 1 - PREDICTION INTERFACE
@@ -2157,6 +2374,8 @@ def prediction_page(data, results):
         "last_map_popup": None,
         "searched_point": None,
         "map_fly_request": None,
+        "location_candidates": [],
+        "location_candidate_query": "",
         "saved_scenarios": [],
         "just_predicted": False,
     }
@@ -2210,7 +2429,7 @@ def prediction_page(data, results):
     with search_col:
         st.text_input(
             "Enter your address or postcode to auto-detect location, or click the map below:",
-            placeholder="e.g. 45400 or Sekinchan, Selangor",
+            placeholder="e.g. 45400, Setapak, or a building/condo name",
             key="address_input",
         )
     with button_col:
@@ -2233,6 +2452,31 @@ def prediction_page(data, results):
             st.info(msg, icon="ℹ️")
         else:
             st.warning(msg, icon="⚠️")
+
+    # Ambiguous POI/building searches are never auto-accepted.  The user chooses
+    # the intended result first; only then does Spider-Man fly to that location.
+    candidates = st.session_state.get("location_candidates", [])
+    if candidates:
+        st.markdown("**Choose the correct location:**")
+        candidate_indexes = list(range(len(candidates)))
+        chosen_index = st.radio(
+            "Possible locations",
+            candidate_indexes,
+            format_func=lambda i: candidate_label(candidates[i]),
+            key="location_candidate_choice",
+            label_visibility="collapsed",
+        )
+        choose_col, cancel_col = st.columns([1.35, 1])
+        with choose_col:
+            if st.button("Use selected location", type="primary", use_container_width=True, key="use_location_candidate"):
+                apply_geocode_candidate(candidates[int(chosen_index)], available_states)
+                st.rerun()
+        with cancel_col:
+            if st.button("Cancel search", use_container_width=True, key="cancel_location_candidates"):
+                st.session_state["location_candidates"] = []
+                st.session_state["location_candidate_query"] = ""
+                st.session_state["address_feedback"] = None
+                st.rerun()
 
     if HAS_INTERACTIVE_MAP:
         # A successful search/click can request a one-time Leaflet fly animation.
@@ -2334,8 +2578,8 @@ def prediction_page(data, results):
             "<div class='mh-map-legend'>"
             "<span class='legend-title'>Map pins:</span>"
             "<span class='legend-item'><span class='legend-dot state-dot'></span>State</span>"
-            "<span class='legend-item'><span class='legend-dot verified-dot'></span>Verified area</span>"
-            "<span class='legend-item'><span class='legend-dot approx-dot'></span>Approximate position</span>"
+            "<span class='legend-item'><span class='legend-dot verified-dot'></span>Known map location</span>"
+            "<span class='legend-item'><span class='legend-dot approx-dot'></span>Estimated map location</span>"
             "<span class='legend-item'><span class='legend-dot selected-dot'></span>Selected area</span>"
             "</div>",
             unsafe_allow_html=True,
@@ -2392,9 +2636,9 @@ def prediction_page(data, results):
     with col_loc2:
         st.button("Reset Location", use_container_width=True, on_click=reset_location_state, key="reset_location")
     st.markdown(
-        "<div class='mh-help'>ⓘ Verified areas come from the dataset or known coordinates. "
-        "Approximate and custom searched locations remain selectable for nationwide Malaysia prediction, "
-        "but the result may have lower confidence when the area is not in the training dataset.</div>",
+        "<div class='mh-help'>ⓘ Map-pin colours describe coordinate accuracy, not dataset membership. "
+        "Known map locations use verified coordinates; estimated map locations use a fallback position. "
+        "All selectable locations can still be used for nationwide Malaysia prediction.</div>",
         unsafe_allow_html=True,
     )
 
