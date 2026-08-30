@@ -1162,31 +1162,55 @@ def model_has_seen_area(model, area_key: str) -> bool:
     except Exception:
         return False
 
-@st.cache_data(show_spinner=False)
 def get_area_coords(area_name: str, state_name: str):
     """Return a verified precomputed coordinate without network calls."""
-    if state_name in HARDCODED_AREAS and area_name in HARDCODED_AREAS[state_name]:
-        return HARDCODED_AREAS[state_name][area_name]
-    if area_name == state_name:
-        return STATE_COORDS.get(state_name)
+    state_name = str(state_name or "").strip()
+    area_name = str(area_name or "").strip()
+
+    state_areas = HARDCODED_AREAS.get(state_name, {})
+
+    if area_name in state_areas:
+        return list(state_areas[area_name])
+
+    wanted = clean_area_name(area_name).lower()
+
+    for known_area, coords in state_areas.items():
+        if clean_area_name(known_area).lower() == wanted:
+            return list(coords)
+
+    if clean_area_name(area_name).lower() == clean_area_name(state_name).lower():
+        coords = STATE_COORDS.get(state_name)
+        return list(coords) if coords else None
+
     return None
 
-@st.cache_data(show_spinner=False)
+
 def get_area_map_coords(area_name: str, state_name: str):
-    """Always return a map pin while preserving whether its position is verified."""
+    """Return the best available coordinate for an area."""
     real = get_area_coords(area_name, state_name)
+
     if real:
         return real, False
 
-    # If live geocoding is unavailable, keep the area selectable but mark the pin
-    # as approximate rather than pretending the fallback coordinate is exact.
     base = STATE_COORDS.get(state_name)
+
     if not base:
         return None, True
-    h = int(hashlib.md5(f"{state_name}|{area_name}".encode("utf-8")).hexdigest(), 16)
+
+    h = int(
+        hashlib.md5(
+            f"{state_name}|{area_name}".encode("utf-8")
+        ).hexdigest(),
+        16,
+    )
+
     lat_offset = (((h % 1000) / 999) - 0.5) * 0.55
     lon_offset = ((((h // 1000) % 1000) / 999) - 0.5) * 0.75
-    return [base[0] + lat_offset, base[1] + lon_offset], True
+
+    return [
+        base[0] + lat_offset,
+        base[1] + lon_offset,
+    ], True
 
 def field_label(text: str) -> None:
     st.markdown(f'<div class="mh-label">{text}</div>', unsafe_allow_html=True)
@@ -1204,14 +1228,27 @@ def get_property_label(ptype: str) -> str:
     return f"{get_property_icon(ptype)}\n{ptype}"
 
 
-@st.cache_data(show_spinner=False)
 def get_area_marker_data(state_name: str):
-    """Cache the small marker table for one selected state."""
+    """Build the marker table using the latest coordinates."""
     marker_rows = []
+
     for area_name in get_areas_for_state(state_name):
-        coordinates, approximate = get_area_map_coords(area_name, state_name)
+        coordinates, approximate = get_area_map_coords(
+            area_name,
+            state_name,
+        )
+
         if coordinates:
-            marker_rows.append((area_name, coordinates[0], coordinates[1], approximate, get_area_source(state_name, area_name)))
+            marker_rows.append(
+                (
+                    area_name,
+                    coordinates[0],
+                    coordinates[1],
+                    approximate,
+                    get_area_source(state_name, area_name),
+                )
+            )
+
     return marker_rows
 
 @st.cache_data(show_spinner=False)
@@ -1816,13 +1853,31 @@ def analyze_address(available_states):
     area_state, area_name = match_area_text(addr_norm, preferred_states=preferred_states)
 
     if area_state and area_name:
+        area_coords, _ = get_area_map_coords(
+            area_name,
+            area_state,
+        )
+
+        direct_area_point = None
+
+        if area_coords:
+            direct_area_point = {
+                "lat": float(area_coords[0]),
+                "lon": float(area_coords[1]),
+                "label": f"{area_name}, {area_state}",
+                "area_reference": True,
+            }
+
         _apply_location_match(
             matched_state=area_state,
             matched_area=area_name,
-            searched_point=None,
+            searched_point=direct_area_point,
             previous_map_center=previous_map_center,
             previous_map_zoom=previous_map_zoom,
-            feedback_message=("success", f"Matched **{area_name}, {area_state}**."),
+            feedback_message=(
+                "success",
+                f"Matched **{area_name}, {area_state}**.",
+            ),
         )
         return
 
