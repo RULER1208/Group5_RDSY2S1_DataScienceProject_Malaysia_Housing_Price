@@ -2,7 +2,7 @@
 BMDS2003 Data Science - Deployment Prototype
 Malaysia Housing Median Price Estimator
 
-Run locally:  streamlit run streamlit_app_spider_navigator.py
+Run locally:  streamlit run streamlit_app.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -13,7 +13,6 @@ import pandas as pd
 import streamlit as st
 import hashlib
 import re
-import json
 
 try:
     import plotly.express as px
@@ -1404,7 +1403,7 @@ def reset_location_state():
     st.session_state["last_prediction"] = None
     st.session_state["last_map_popup"] = None
     st.session_state["searched_point"] = None
-    st.session_state["map_travel_request"] = None
+    st.session_state["map_fly_request"] = None
 
 
 def analyze_address(available_states):
@@ -1485,7 +1484,6 @@ def analyze_address(available_states):
 
     if matched_state:
         st.session_state["last_prediction"] = None
-        st.session_state["last_map_popup"] = None
         st.session_state["selected_state"] = matched_state
         st.session_state["searched_point"] = searched_point
 
@@ -1516,11 +1514,12 @@ def analyze_address(available_states):
         # from the PREVIOUS view and animate to this target over ~2.8 seconds.
         st.session_state["map_center"] = list(target_center)
         st.session_state["map_zoom"] = int(target_zoom)
-        st.session_state["map_travel_request"] = {
+        st.session_state["map_fly_request"] = {
             "from_center": previous_map_center,
             "from_zoom": previous_map_zoom,
             "to_center": list(target_center),
             "to_zoom": int(target_zoom),
+            "duration": 3.4,
         }
     else:
         st.session_state["searched_point"] = None
@@ -1618,8 +1617,8 @@ def render_result(saved, animate=True):
     else:
         warning_html = ""
 
-    duration = 3200 if animate else 0
-    entrance_duration = 850 if animate else 0
+    duration = 2300 if animate else 0
+    entrance_duration = 650 if animate else 0
     animation_class = "animate-result" if animate else ""
     should_animate = "true" if animate else "false"
 
@@ -1656,7 +1655,7 @@ def render_result(saved, animate=True):
         .ruler {{ position:relative; height:72px; margin:0 7px; }}
         .track {{ position:absolute; left:0; right:0; top:29px; height:8px; border-radius:999px; background:#E8EDF3; overflow:hidden; }}
         .track-shine {{ position:absolute; inset:0; width:100%; opacity:.55; background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent); transform:translateX(-100%); }}
-        .animate-result .track-shine {{ animation:shine 2500ms ease 650ms 1; }}
+        .animate-result .track-shine {{ animation:shine 1900ms ease 520ms 1; }}
         @keyframes shine {{ to {{ transform:translateX(100%); }} }}
         .expected-range {{ position:absolute; top:29px; left:{lower_pct:.4f}%; height:8px; width:{range_width:.4f}%; border-radius:999px; background:linear-gradient(90deg,#99F6E4,#2DD4BF); transform-origin:center; }}
         .animate-result .expected-range {{ animation:rangeExpand {duration}ms cubic-bezier(.22,1,.36,1) both; }}
@@ -1675,10 +1674,10 @@ def render_result(saved, animate=True):
         .stat-k {{ color:#667085; font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }}
         .stat-v {{ color:#0F172A; margin-top:5px; font-size:15px; font-weight:850; overflow-wrap:anywhere; }}
         .animate-result .stat {{ opacity:0; animation:statEntrance 520ms ease forwards; }}
-        .animate-result .stat:nth-child(1) {{ animation-delay:1450ms; }}
-        .animate-result .stat:nth-child(2) {{ animation-delay:1800ms; }}
-        .animate-result .stat:nth-child(3) {{ animation-delay:2150ms; }}
-        .animate-result .stat:nth-child(4) {{ animation-delay:2500ms; }}
+        .animate-result .stat:nth-child(1) {{ animation-delay:900ms; }}
+        .animate-result .stat:nth-child(2) {{ animation-delay:1120ms; }}
+        .animate-result .stat:nth-child(3) {{ animation-delay:1340ms; }}
+        .animate-result .stat:nth-child(4) {{ animation-delay:1560ms; }}
         @keyframes statEntrance {{ from {{ opacity:0; transform:translateY(8px); }} to {{ opacity:1; transform:translateY(0); }} }}
 
         .result-warning {{ display:flex; gap:11px; margin-top:14px; padding:13px 15px; color:#92400E; background:#FFFBEB; border:1px solid #FDE68A; border-radius:13px; font-size:13px; line-height:1.5; }}
@@ -1776,346 +1775,324 @@ def render_result(saved, animate=True):
 
 
 
-def attach_spider_map_guide(
+def attach_spider_fly_marker(
     malaysia_map,
-    travel_request,
+    fly_request,
     current_state,
     current_area,
-    final_map_center,
-    final_map_zoom,
 ):
-    """Add a lightweight map-loading shield and Spider-Man-style travel guide.
+    """Attach a non-blocking Spider-Man-style navigator directly to Leaflet.
 
-    Why this exists:
-    Streamlit/Folium rebuilds its iframe after a location search. On slower tile
-    connections that can briefly expose the iframe background before OSM tiles
-    appear. The loading shield intentionally covers that moment, then the guide
-    performs a two-stage journey: Malaysia -> state -> selected area.
-
-    The mascot is an original inline SVG web-slinger mask (no remote image file),
-    so it loads immediately and adds no network request of its own.
+    Important design choices:
+    - There is NO loading shield, so the map can never get stuck behind a
+      "Preparing the map..." layer.
+    - The mascot is a Leaflet marker with ``interactive:false``. It therefore
+      does not block state/area markers and users can keep selecting locations
+      on the map exactly as before.
+    - When idle, the mascot follows the centre of the map and asks where to go.
+    - When a state/area is selected or searched, the mascot follows a curved
+      geographic path while Leaflet smoothly flies to the destination.
     """
     map_var = malaysia_map.get_name()
 
-    state_name = str(current_state or "")
-    area_name = str(current_area or "")
-    has_trip = bool(travel_request)
-    trip_mode = "area" if has_trip and area_name else ("state" if has_trip and state_name else "idle")
-
-    state_center = STATE_COORDS.get(state_name, final_map_center)
-    target_center = (
-        travel_request.get("to_center", final_map_center)
-        if travel_request
-        else final_map_center
-    )
-    target_zoom = int(
-        travel_request.get("to_zoom", final_map_zoom)
-        if travel_request
-        else final_map_zoom
-    )
-
-    # Start from the previous view when a new journey is requested. This gives
-    # Leaflet time to show already-cached/coarser tiles before zooming deeper.
-    if travel_request:
-        start_center = travel_request.get("from_center", [4.2105, 108.9758])
-        start_zoom = int(travel_request.get("from_zoom", 6))
+    has_flight = bool(fly_request)
+    if fly_request:
+        target_center = fly_request.get("to_center", [4.2105, 108.9758])
+        target_zoom = int(fly_request.get("to_zoom", 9))
+        duration = float(fly_request.get("duration", 3.0))
     else:
-        start_center = final_map_center
-        start_zoom = int(final_map_zoom)
+        target_center = None
+        target_zoom = 9
+        duration = 0.0
 
-    if has_trip:
-        initial_message = "Where do we want to go?"
-        initial_pos = 6
-    elif area_name:
-        initial_message = f"I have arrived {area_name}!"
-        initial_pos = 88
-    elif state_name:
-        initial_message = f"We are in {state_name}. Pick an area!"
-        initial_pos = 49
+    if current_area:
+        destination_label = str(current_area)
+        idle_message = f"I have arrived {current_area}!"
+    elif current_state:
+        destination_label = str(current_state)
+        idle_message = f"I have arrived {current_state}! Pick an area."
     else:
-        initial_message = "Where do we want to go?"
-        initial_pos = 6
+        destination_label = ""
+        idle_message = "Where do we want to go?"
 
-    # JSON encoding is used for JavaScript literals so locality names containing
-    # punctuation cannot break the injected script.
-    state_js = json.dumps(state_name)
-    area_js = json.dumps(area_name)
-    mode_js = json.dumps(trip_mode)
-    initial_message_js = json.dumps(initial_message)
+    if has_flight:
+        target_lat = float(target_center[0])
+        target_lon = float(target_center[1])
+    else:
+        target_lat = 0.0
+        target_lon = 0.0
 
-    state_lat, state_lon = float(state_center[0]), float(state_center[1])
-    target_lat, target_lon = float(target_center[0]), float(target_center[1])
+    # Use JSON literals for dynamic strings so apostrophes and punctuation in
+    # Malaysian place names cannot break the injected JavaScript.
+    import json as _json
+    destination_js = _json.dumps(destination_label)
+    idle_message_js = _json.dumps(idle_message)
+    has_flight_js = "true" if has_flight else "false"
 
-    overlay = f"""
+    html = f"""
     <style>
-      html, body {{ background:#EAF0F7 !important; }}
-      .folium-map {{ background:#EAF0F7 !important; }}
-
-      #mhMapLoadingShield {{
-        position:absolute; inset:0; z-index:9997;
-        display:flex; align-items:center; justify-content:center;
-        background:linear-gradient(135deg,#F7FAFE 0%,#E8EEF6 100%);
-        opacity:1; transition:opacity .38s ease;
-        pointer-events:none;
+      /* The marker itself must never steal clicks from the real map pins. */
+      .mh-spider-divicon,
+      .mh-spider-divicon * {{
+        pointer-events:none !important;
+        user-select:none !important;
       }}
-      #mhMapLoadingShield.hide {{ opacity:0; }}
-      #mhMapLoadingShield .loader-card {{
-        display:flex; align-items:center; gap:12px;
-        padding:13px 17px; border-radius:15px;
-        background:rgba(255,255,255,.94); border:1px solid #D8E0EA;
-        box-shadow:0 10px 28px rgba(23,35,59,.09);
-        color:#475569; font:700 13px/1.25 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      .mh-spider-divicon {{
+        background:transparent !important;
+        border:none !important;
+        overflow:visible !important;
       }}
-      #mhMapLoadingShield .loader-dot {{
-        width:11px; height:11px; border-radius:50%; background:#4F6FEA;
-        box-shadow:0 0 0 0 rgba(79,111,234,.30);
-        animation:mhMapPulse 1.15s ease-out infinite;
+      .mh-spider-wrap {{
+        position:relative;
+        width:64px;
+        height:64px;
+        overflow:visible;
+        filter:drop-shadow(0 7px 8px rgba(23,35,59,.22));
+        transform-origin:50% 65%;
       }}
-      @keyframes mhMapPulse {{
-        0% {{ box-shadow:0 0 0 0 rgba(79,111,234,.30); }}
-        70% {{ box-shadow:0 0 0 12px rgba(79,111,234,0); }}
-        100% {{ box-shadow:0 0 0 0 rgba(79,111,234,0); }}
+      .mh-spider-mask {{
+        width:64px;
+        height:64px;
+        display:block;
       }}
-
-      #mhSpiderGuide {{
-        position:absolute; top:14px; left:50%; transform:translateX(-50%);
-        z-index:10000; width:min(560px,calc(100% - 112px));
-        pointer-events:none; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      .mh-spider-bubble {{
+        position:absolute;
+        left:50%;
+        bottom:72px;
+        transform:translateX(-50%);
+        min-width:148px;
+        max-width:220px;
+        padding:8px 11px;
+        border:1px solid #D7DEE9;
+        border-radius:13px;
+        background:rgba(255,255,255,.97);
+        box-shadow:0 8px 20px rgba(23,35,59,.13);
+        color:#172033;
+        font:800 12px/1.25 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        text-align:center;
+        white-space:normal;
       }}
-      #mhSpiderGuide .guide-card {{
-        display:grid; grid-template-columns:52px minmax(0,1fr); gap:12px;
-        align-items:center; padding:10px 14px 11px;
-        background:rgba(255,255,255,.96); border:1px solid #D8E0EA;
-        border-radius:17px; box-shadow:0 8px 24px rgba(23,35,59,.12);
-        backdrop-filter:blur(5px);
+      .mh-spider-bubble::after {{
+        content:"";
+        position:absolute;
+        left:50%;
+        bottom:-7px;
+        width:12px;
+        height:12px;
+        transform:translateX(-50%) rotate(45deg);
+        background:#FFFFFF;
+        border-right:1px solid #D7DEE9;
+        border-bottom:1px solid #D7DEE9;
       }}
-      #mhSpiderGuide .hero-icon {{
-        width:48px; height:48px; display:grid; place-items:center;
-        border-radius:15px; background:#FFF1F2; border:1px solid #FECDD3;
+      .mh-spider-wrap.mh-flying {{
+        animation:mhSpiderSwing .42s ease-in-out infinite alternate;
       }}
-      #mhSpiderGuide .speech {{ min-width:0; }}
-      #mhSpiderGuide .speaker {{
-        color:#64748B; font-size:10px; font-weight:850; letter-spacing:.09em;
-        text-transform:uppercase; margin-bottom:3px;
+      .mh-spider-wrap.mh-arrived {{
+        animation:mhSpiderArrive .62s cubic-bezier(.22,1,.36,1) 1;
       }}
-      #mhSpiderGuide .message {{
-        color:#172033; font-size:14px; font-weight:800; line-height:1.28;
-        white-space:normal; overflow-wrap:anywhere;
+      @keyframes mhSpiderSwing {{
+        from {{ transform:rotate(-9deg) translateY(1px) scale(.97); }}
+        to   {{ transform:rotate(9deg) translateY(-7px) scale(1.03); }}
       }}
-      #mhSpiderGuide .travel-track {{
-        position:relative; height:42px; margin:8px 10px 0;
+      @keyframes mhSpiderArrive {{
+        0%   {{ transform:scale(.82) rotate(-6deg); }}
+        55%  {{ transform:scale(1.18) rotate(4deg); }}
+        100% {{ transform:scale(1) rotate(0); }}
       }}
-      #mhSpiderGuide .track-line {{
-        position:absolute; left:6%; right:8%; top:16px; height:3px;
-        border-radius:999px; background:#D9E1EB;
-      }}
-      #mhSpiderGuide .track-progress {{
-        position:absolute; left:6%; top:16px; height:3px; width:0;
-        border-radius:999px; background:#4F6FEA;
-        transition:width 2.35s cubic-bezier(.22,1,.36,1);
-      }}
-      #mhSpiderGuide .track-node {{
-        position:absolute; top:11px; width:13px; height:13px; border-radius:50%;
-        background:#FFF; border:3px solid #B8C4D4; transform:translateX(-50%);
-        transition:border-color .25s ease,background .25s ease,transform .25s ease;
-      }}
-      #mhSpiderGuide .track-node.active {{
-        background:#4F6FEA; border-color:#4F6FEA; transform:translateX(-50%) scale(1.08);
-      }}
-      #mhSpiderGuide .node-my {{ left:6%; }}
-      #mhSpiderGuide .node-state {{ left:49%; }}
-      #mhSpiderGuide .node-area {{ left:88%; }}
-      #mhSpiderGuide .node-label {{
-        position:absolute; top:27px; transform:translateX(-50%); color:#64748B;
-        font-size:9px; font-weight:750; max-width:100px; white-space:nowrap;
-        overflow:hidden; text-overflow:ellipsis;
-      }}
-      #mhSpiderGuide .label-my {{ left:6%; }}
-      #mhSpiderGuide .label-state {{ left:49%; }}
-      #mhSpiderGuide .label-area {{ left:88%; }}
-      #mhSpiderTraveller {{
-        position:absolute; left:{initial_pos}%; top:-3px; width:38px; height:38px;
-        transform:translateX(-50%); z-index:3;
-        filter:drop-shadow(0 5px 5px rgba(23,35,59,.18));
-        transition:left 2.35s cubic-bezier(.22,1,.36,1);
-      }}
-      #mhSpiderTraveller.swinging {{ animation:mhSwing .48s ease-in-out infinite alternate; }}
-      #mhSpiderTraveller.arrived {{ animation:mhArrive .55s cubic-bezier(.22,1,.36,1) 1; }}
-      @keyframes mhSwing {{ from {{ transform:translateX(-50%) rotate(-7deg) translateY(0); }} to {{ transform:translateX(-50%) rotate(7deg) translateY(-5px); }} }}
-      @keyframes mhArrive {{ 0% {{ transform:translateX(-50%) scale(.9); }} 55% {{ transform:translateX(-50%) scale(1.18); }} 100% {{ transform:translateX(-50%) scale(1); }} }}
-
-      #mhSpiderGuide .spidey-svg {{ width:100%; height:100%; display:block; }}
       @media (max-width:650px) {{
-        #mhSpiderGuide {{ width:calc(100% - 90px); top:10px; }}
-        #mhSpiderGuide .guide-card {{ grid-template-columns:44px minmax(0,1fr); padding:9px 11px 10px; }}
-        #mhSpiderGuide .hero-icon {{ width:42px; height:42px; }}
-        #mhSpiderGuide .message {{ font-size:12px; }}
-        #mhSpiderGuide .node-label {{ font-size:8px; max-width:72px; }}
+        .mh-spider-wrap {{ width:54px; height:54px; }}
+        .mh-spider-mask {{ width:54px; height:54px; }}
+        .mh-spider-bubble {{ bottom:62px; min-width:130px; max-width:180px; font-size:11px; }}
       }}
       @media (prefers-reduced-motion:reduce) {{
-        #mhSpiderTraveller, #mhSpiderGuide .track-progress {{ transition:none !important; animation:none !important; }}
-        #mhMapLoadingShield .loader-dot {{ animation:none !important; }}
+        .mh-spider-wrap {{ animation:none !important; }}
       }}
     </style>
 
-    <div id="mhMapLoadingShield">
-      <div class="loader-card"><span class="loader-dot"></span><span>Preparing the map...</span></div>
-    </div>
-
-    <div id="mhSpiderGuide" aria-live="polite">
-      <div class="guide-card">
-        <div class="hero-icon" aria-hidden="true">
-          <svg class="spidey-svg" viewBox="0 0 64 64" role="img" aria-label="Web-slinger guide">
-            <defs><linearGradient id="mhMaskGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EF4444"/><stop offset="1" stop-color="#BE123C"/></linearGradient></defs>
-            <circle cx="32" cy="32" r="25" fill="url(#mhMaskGrad)" stroke="#172554" stroke-width="2.4"/>
-            <path d="M13 30h38M32 7v50M18 16c8 7 20 7 28 0M16 45c10-7 22-7 32 0M12 24c13 3 27 3 40 0M12 39c13-3 27-3 40 0" fill="none" stroke="#172554" stroke-width="1.2" opacity=".65"/>
-            <path d="M18 29c4-7 9-10 14-10-1 9-5 15-12 18z" fill="#F8FAFC" stroke="#172554" stroke-width="2"/>
-            <path d="M46 29c-4-7-9-10-14-10 1 9 5 15 12 18z" fill="#F8FAFC" stroke="#172554" stroke-width="2"/>
-          </svg>
-        </div>
-        <div class="speech">
-          <div class="speaker">Spider-Man map guide</div>
-          <div class="message" id="mhSpiderMessage">{escape(initial_message)}</div>
-        </div>
-      </div>
-
-      <div class="travel-track" aria-hidden="true">
-        <div class="track-line"></div>
-        <div class="track-progress" id="mhSpiderProgress"></div>
-        <span class="track-node node-my active" id="mhNodeMY"></span>
-        <span class="track-node node-state {'active' if (state_name and not has_trip) else ''}" id="mhNodeState"></span>
-        <span class="track-node node-area {'active' if (area_name and not has_trip) else ''}" id="mhNodeArea"></span>
-        <span class="node-label label-my">Malaysia</span>
-        <span class="node-label label-state">{escape(state_name or 'State')}</span>
-        <span class="node-label label-area">{escape(area_name or 'Area')}</span>
-        <div id="mhSpiderTraveller" class="{'arrived' if (area_name and not has_trip) else ''}">
-          <svg class="spidey-svg" viewBox="0 0 64 64" aria-hidden="true">
-            <circle cx="32" cy="32" r="25" fill="#E11D48" stroke="#172554" stroke-width="2.4"/>
-            <path d="M13 30h38M32 7v50M18 16c8 7 20 7 28 0M16 45c10-7 22-7 32 0" fill="none" stroke="#172554" stroke-width="1.2" opacity=".65"/>
-            <path d="M18 29c4-7 9-10 14-10-1 9-5 15-12 18zM46 29c-4-7-9-10-14-10 1 9 5 15 12 18z" fill="#F8FAFC" stroke="#172554" stroke-width="2"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
     <script>
-    (function() {{
-      const mapMode = {mode_js};
-      const stateName = {state_js};
-      const areaName = {area_js};
-      const initialMessage = {initial_message_js};
-      const stateCenter = [{state_lat:.7f}, {state_lon:.7f}];
-      const areaCenter = [{target_lat:.7f}, {target_lon:.7f}];
-      const areaZoom = {target_zoom};
-      const guide = document.getElementById('mhSpiderGuide');
-      const msg = document.getElementById('mhSpiderMessage');
-      const traveller = document.getElementById('mhSpiderTraveller');
-      const progress = document.getElementById('mhSpiderProgress');
-      const stateNode = document.getElementById('mhNodeState');
-      const areaNode = document.getElementById('mhNodeArea');
-      const shield = document.getElementById('mhMapLoadingShield');
-      let tripStarted = false;
+    (function waitForHousingSpider(attempt) {{
+      try {{
+        if (typeof {map_var} !== 'undefined' && {map_var} && typeof L !== 'undefined') {{
+          const mapObj = {map_var};
+          if (mapObj.__mhSpiderInstalled) return;
+          mapObj.__mhSpiderInstalled = true;
 
-      function setMessage(value) {{ if (msg) msg.textContent = value; }}
-      function moveTraveller(percent, progressWidth) {{
-        if (traveller) traveller.style.left = percent + '%';
-        if (progress) progress.style.width = progressWidth + '%';
-      }}
-      function finishShield() {{
-        if (!shield) return;
-        shield.classList.add('hide');
-        setTimeout(function() {{ if (shield && shield.parentNode) shield.parentNode.removeChild(shield); }}, 420);
-      }}
-      function arrive(label) {{
-        if (traveller) {{ traveller.classList.remove('swinging'); traveller.classList.add('arrived'); }}
-        setMessage('I have arrived ' + label + '!');
-      }}
+          const hasFlight = {has_flight_js};
+          const target = L.latLng({target_lat:.7f}, {target_lon:.7f});
+          const targetZoom = {target_zoom};
+          const durationSec = {duration:.3f};
+          const durationMs = Math.max(400, durationSec * 1000);
+          const destination = {destination_js};
+          const idleMessage = {idle_message_js};
 
-      function startTrip(mapObj) {{
-        if (tripStarted) return;
-        tripStarted = true;
-        finishShield();
+          const spiderHTML = `
+            <div class="mh-spider-wrap" id="mhSpiderWrap">
+              <div class="mh-spider-bubble" id="mhSpiderBubble"></div>
+              <svg class="mh-spider-mask" viewBox="0 0 64 64" aria-hidden="true">
+                <defs>
+                  <linearGradient id="mhSpiderMaskGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#F43F5E"></stop>
+                    <stop offset="1" stop-color="#BE123C"></stop>
+                  </linearGradient>
+                </defs>
+                <circle cx="32" cy="32" r="25.5" fill="url(#mhSpiderMaskGradient)" stroke="#172554" stroke-width="2.5"></circle>
+                <path d="M32 7v50M8 32h48M13 20c12 5 26 5 38 0M13 44c12-5 26-5 38 0M19 11c2 12 2 30 0 42M45 11c-2 12-2 30 0 42" fill="none" stroke="#172554" stroke-width="1.15" opacity=".62"></path>
+                <path d="M17.5 28.5c4.8-7.7 9.7-10.2 14.2-10.7-.7 8.8-4.6 15.2-11.7 19.2z" fill="#F8FAFC" stroke="#172554" stroke-width="2"></path>
+                <path d="M46.5 28.5c-4.8-7.7-9.7-10.2-14.2-10.7.7 8.8 4.6 15.2 11.7 19.2z" fill="#F8FAFC" stroke="#172554" stroke-width="2"></path>
+              </svg>
+            </div>`;
 
-        if (mapMode === 'area') {{
-          setMessage('Swinging to ' + stateName + '...');
-          if (traveller) traveller.classList.add('swinging');
-          moveTraveller(49, 43);
-          if (stateNode) stateNode.classList.add('active');
-          try {{
-            mapObj.stop();
-            mapObj.flyTo(stateCenter, 8, {{animate:true, duration:2.45, easeLinearity:0.16}});
-          }} catch (e) {{}}
+          const spiderIcon = L.divIcon({{
+            className:'mh-spider-divicon',
+            html:spiderHTML,
+            iconSize:[64,64],
+            iconAnchor:[32,32]
+          }});
 
-          setTimeout(function() {{
-            setMessage('Going deeper into ' + areaName + '...');
-            moveTraveller(88, 82);
-            if (areaNode) areaNode.classList.add('active');
-            try {{
-              mapObj.stop();
-              mapObj.flyTo(areaCenter, areaZoom, {{animate:true, duration:2.75, easeLinearity:0.14}});
-            }} catch (e) {{}}
-          }}, 2750);
+          // Start exactly at the current visible centre. When there is no flight,
+          // the marker is kept centred even if the user pans/zooms manually.
+          const marker = L.marker(mapObj.getCenter(), {{
+            icon:spiderIcon,
+            interactive:false,
+            keyboard:false,
+            riseOnHover:false,
+            zIndexOffset:5000
+          }}).addTo(mapObj);
 
-          setTimeout(function() {{ arrive(areaName); }}, 5800);
-          return;
-        }}
+          let flying = false;
+          let frameId = null;
+          let trail = null;
 
-        if (mapMode === 'state') {{
-          setMessage('Swinging to ' + stateName + '...');
-          if (traveller) traveller.classList.add('swinging');
-          moveTraveller(49, 43);
-          if (stateNode) stateNode.classList.add('active');
-          try {{
-            mapObj.stop();
-            mapObj.flyTo(stateCenter, areaZoom, {{animate:true, duration:2.85, easeLinearity:0.16}});
-          }} catch (e) {{}}
-          setTimeout(function() {{
-            if (traveller) {{ traveller.classList.remove('swinging'); traveller.classList.add('arrived'); }}
-            setMessage('We have reached ' + stateName + '. Pick an area!');
-          }}, 3100);
-          return;
-        }}
-
-        setMessage(initialMessage);
-        if (areaName) {{ moveTraveller(88,82); if (stateNode) stateNode.classList.add('active'); if (areaNode) areaNode.classList.add('active'); }}
-        else if (stateName) {{ moveTraveller(49,43); if (stateNode) stateNode.classList.add('active'); }}
-        else {{ moveTraveller(6,0); }}
-      }}
-
-      function waitForTiles(mapObj, attempt) {{
-        const tileReady = document.querySelector('.leaflet-tile-loaded');
-        if (tileReady || attempt >= 34) {{
-          // Give the browser one short paint so the user never sees a raw blank frame.
-          setTimeout(function() {{ startTrip(mapObj); }}, 180);
-          return;
-        }}
-        setTimeout(function() {{ waitForTiles(mapObj, attempt + 1); }}, 100);
-      }}
-
-      function waitForMap(attempt) {{
-        try {{
-          if (typeof {map_var} !== 'undefined' && {map_var}) {{
-            {map_var}.whenReady(function() {{ waitForTiles({map_var}, 0); }});
-            return;
+          function markerElement() {{ return marker.getElement(); }}
+          function wrapElement() {{
+            const el = markerElement();
+            return el ? el.querySelector('.mh-spider-wrap') : null;
           }}
-        }} catch (e) {{}}
-        if (attempt < 60) setTimeout(function() {{ waitForMap(attempt + 1); }}, 100);
-        else {{ finishShield(); }}
-      }}
+          function bubbleElement() {{
+            const el = markerElement();
+            return el ? el.querySelector('.mh-spider-bubble') : null;
+          }}
+          function setMessage(value) {{
+            const bubble = bubbleElement();
+            if (bubble) bubble.textContent = value;
+          }}
+          function keepSpiderCentred() {{
+            if (!flying) marker.setLatLng(mapObj.getCenter());
+          }}
 
-      // Absolute fallback: never leave the loading shield visible forever.
-      setTimeout(function() {{
-        if (!tripStarted) {{
-          try {{ if (typeof {map_var} !== 'undefined' && {map_var}) startTrip({map_var}); else finishShield(); }} catch (e) {{ finishShield(); }}
+          mapObj.on('move', keepSpiderCentred);
+          mapObj.on('zoom', keepSpiderCentred);
+
+          // Leaflet may not have attached the marker DOM element until the next
+          // paint. Retrying briefly makes the speech bubble reliable.
+          function setInitialMessage(attemptNo) {{
+            if (bubbleElement()) {{ setMessage(idleMessage); return; }}
+            if (attemptNo < 20) setTimeout(function() {{ setInitialMessage(attemptNo + 1); }}, 50);
+          }}
+          setInitialMessage(0);
+
+          function easeInOutCubic(t) {{
+            return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+          }}
+
+          function startFlight() {{
+            if (!hasFlight || flying) return;
+            flying = true;
+
+            const start = marker.getLatLng();
+            const deltaLat = target.lat - start.lat;
+            const deltaLng = target.lng - start.lng;
+            const distance = Math.sqrt(deltaLat*deltaLat + deltaLng*deltaLng);
+            // A small arc makes the motion read as a flight/swing rather than a
+            // straight sliding pin. Bound it so East Malaysia trips stay sane.
+            const arc = Math.min(.60, Math.max(.035, distance * .075));
+            const startTime = performance.now();
+            let lastTrailPoint = -1;
+
+            const wrap = wrapElement();
+            if (wrap) {{
+              wrap.classList.remove('mh-arrived');
+              wrap.classList.add('mh-flying');
+            }}
+            setMessage(destination ? ('Flying to ' + destination + '...') : 'Here we go!');
+
+            trail = L.polyline([start], {{
+              color:'#E11D48',
+              weight:3,
+              opacity:.55,
+              dashArray:'6 10',
+              interactive:false,
+              lineCap:'round'
+            }}).addTo(mapObj);
+
+            // Start the camera shortly after the mascot launches. The map remains
+            // fully interactive once the flight finishes.
+            setTimeout(function() {{
+              try {{
+                mapObj.stop();
+                mapObj.flyTo(target, targetZoom, {{
+                  animate:true,
+                  duration:durationSec,
+                  easeLinearity:.16,
+                  noMoveStart:false
+                }});
+              }} catch (e) {{}}
+            }}, 180);
+
+            function tick(now) {{
+              const raw = Math.min((now - startTime) / durationMs, 1);
+              const eased = easeInOutCubic(raw);
+              const lift = Math.sin(Math.PI * raw) * arc;
+              const lat = start.lat + deltaLat * eased + lift;
+              const lng = start.lng + deltaLng * eased;
+              const point = L.latLng(lat, lng);
+              marker.setLatLng(point);
+
+              // Do not push hundreds of points into Leaflet; roughly 40 samples
+              // are enough for a smooth-looking web trail.
+              const bucket = Math.floor(raw * 40);
+              if (trail && bucket !== lastTrailPoint) {{
+                trail.addLatLng(point);
+                lastTrailPoint = bucket;
+              }}
+
+              if (raw < 1) {{
+                frameId = requestAnimationFrame(tick);
+              }} else {{
+                marker.setLatLng(target);
+                flying = false;
+                const arrivedWrap = wrapElement();
+                if (arrivedWrap) {{
+                  arrivedWrap.classList.remove('mh-flying');
+                  arrivedWrap.classList.add('mh-arrived');
+                }}
+                setMessage(destination ? ('I have arrived ' + destination + '!') : 'I have arrived!');
+                setTimeout(function() {{
+                  if (trail) {{ try {{ mapObj.removeLayer(trail); }} catch (e) {{}} trail = null; }}
+                }}, 1100);
+              }}
+            }}
+
+            frameId = requestAnimationFrame(tick);
+          }}
+
+          if (hasFlight) {{
+            // Let the initial map paint first. This is intentionally NOT tied to
+            // tile-loaded events, so slow tiles can never leave the UI stuck.
+            setTimeout(startFlight, 420);
+          }}
+          return;
         }}
-      }}, 4300);
+      }} catch (e) {{}}
 
-      waitForMap(0);
-    }})();
+      if (attempt < 60) {{
+        setTimeout(function() {{ waitForHousingSpider(attempt + 1); }}, 100);
+      }}
+    }})(0);
     </script>
     """
-    malaysia_map.get_root().html.add_child(folium.Element(overlay))
 
+    malaysia_map.get_root().html.add_child(folium.Element(html))
 
 def prediction_page(data, results):
     recommended = selected_model_name(results)
@@ -2135,7 +2112,7 @@ def prediction_page(data, results):
         "last_prediction": None,
         "last_map_popup": None,
         "searched_point": None,
-        "map_travel_request": None,
+        "map_fly_request": None,
         "saved_scenarios": [],
         "just_predicted": False,
     }
@@ -2214,49 +2191,34 @@ def prediction_page(data, results):
             st.warning(msg, icon="⚠️")
 
     if HAS_INTERACTIVE_MAP:
-        # A search or map click creates a one-time travel request. The map starts
-        # from the previous view, while the Spider-Man-style guide masks any tile
-        # loading gap and takes the user through Malaysia -> state -> area.
-        travel_request = st.session_state.pop("map_travel_request", None)
+        # A successful search/click can request a one-time Leaflet fly animation.
+        # The request is popped here so ordinary Streamlit reruns remain static.
+        fly_request = st.session_state.pop("map_fly_request", None)
 
         final_map_center = st.session_state.get(
             "map_center",
-            [4.2105, 108.9758]
-            if not current_state
-            else STATE_COORDS.get(current_state, [4.2105, 108.9758]),
+            [4.2105, 108.9758] if not current_state else STATE_COORDS.get(current_state, [4.2105, 108.9758]),
         )
-        final_map_zoom = int(st.session_state.get("map_zoom", 6 if not current_state else 9))
+        final_map_zoom = st.session_state.get("map_zoom", 6 if not current_state else 9)
 
-        if travel_request:
-            map_center = travel_request.get("from_center", [4.2105, 108.9758])
-            map_zoom = int(travel_request.get("from_zoom", 6))
+        if fly_request:
+            map_center = fly_request.get("from_center", final_map_center)
+            map_zoom = fly_request.get("from_zoom", max(6, int(final_map_zoom) - 3))
         else:
             map_center = final_map_center
             map_zoom = final_map_zoom
 
-        # Build the map without a default tile layer, then add OSM explicitly.
-        # This lets us use a slightly larger keep buffer and a neutral background,
-        # which reduces the visible "empty map" effect while zooming.
         malaysia_map = folium.Map(
             location=map_center,
             zoom_start=map_zoom,
-            tiles=None,
+            tiles="OpenStreetMap",
             control_scale=True,
             zoom_control=True,
             prefer_canvas=True,
             zoom_animation=True,
             fade_animation=True,
             marker_zoom_animation=True,
-            zoom_animation_threshold=8,
         )
-        folium.TileLayer(
-            tiles="OpenStreetMap",
-            name="OpenStreetMap",
-            control=False,
-            opacity=1,
-            keep_buffer=4,
-            update_when_idle=False,
-        ).add_to(malaysia_map)
 
         if not current_state:
             for state_name in available_states:
@@ -2268,46 +2230,16 @@ def prediction_page(data, results):
                     fill=True,
                     fill_color="#2F6FED",
                     fill_opacity=0.82,
-                    tooltip=folium.Tooltip(
-                        f"<b>{state_name}</b> (Click to select state)",
-                        sticky=True,
-                    ),
+                    tooltip=folium.Tooltip(f"<b>{state_name}</b> (Click to select state)", sticky=True),
                     popup=f"STATE:{state_name}",
                 ).add_to(malaysia_map)
         else:
-            # A state-centre marker gives the first stage of the journey a visible
-            # destination before the guide continues deeper into the chosen area.
-            state_center = STATE_COORDS.get(current_state)
-            if state_center:
-                folium.CircleMarker(
-                    location=state_center,
-                    radius=10,
-                    color="#3F5CC7",
-                    weight=2,
-                    fill=True,
-                    fill_color="#4F6FEA",
-                    fill_opacity=0.82,
-                    tooltip=folium.Tooltip(f"<b>{current_state}</b> state centre", sticky=True),
-                ).add_to(malaysia_map)
-
-            marker_cluster = MarkerCluster(
-                name="Areas",
-                options={"chunkedLoading": True, "disableClusteringAtZoom": 12},
-            ).add_to(malaysia_map)
+            marker_cluster = MarkerCluster(name="Areas", options={"chunkedLoading": True, "disableClusteringAtZoom": 12}).add_to(malaysia_map)
             marker_rows = list(get_area_marker_data(current_state))
-
             if current_area and current_area not in {row[0] for row in marker_rows}:
                 coords, approx = get_area_map_coords(current_area, current_state)
                 if coords:
-                    marker_rows.append(
-                        (
-                            current_area,
-                            coords[0],
-                            coords[1],
-                            approx,
-                            get_area_source(current_state, current_area),
-                        )
-                    )
+                    marker_rows.append((current_area, coords[0], coords[1], approx, get_area_source(current_state, current_area)))
 
             for disp_area, lat, lon, is_approx, area_kind in marker_rows:
                 is_sel = disp_area == current_area
@@ -2320,10 +2252,7 @@ def prediction_page(data, results):
                     fill=True,
                     fill_color="#10B981" if is_sel else ("#D0D5DD" if is_approx else "#F59E0B"),
                     fill_opacity=0.9 if is_sel else 0.75,
-                    tooltip=folium.Tooltip(
-                        f"<b>{disp_area}</b><br>{area_kind} · {pin_note}",
-                        sticky=True,
-                    ),
+                    tooltip=folium.Tooltip(f"<b>{disp_area}</b><br>{area_kind} · {pin_note}", sticky=True),
                     popup=f"AREA:{disp_area}",
                 ).add_to(marker_cluster)
 
@@ -2337,20 +2266,18 @@ def prediction_page(data, results):
                     fill=True,
                     fill_color="#0D9488",
                     fill_opacity=0.95,
-                    tooltip=folium.Tooltip(
-                        f"<b>Searched address</b><br>{escape(str(searched_point.get('label', '')))}",
-                        sticky=True,
-                    ),
+                    tooltip=folium.Tooltip(f"<b>Searched address</b><br>{escape(str(searched_point.get('label', '')))}", sticky=True),
                     popup="SEARCHED_POINT",
                 ).add_to(malaysia_map)
 
-        attach_spider_map_guide(
+        # Spider-Man-style navigator lives INSIDE the Leaflet map. It is
+        # non-interactive, so all original state/area pins remain clickable.
+        # It also owns the smooth map fly animation; no loading overlay is used.
+        attach_spider_fly_marker(
             malaysia_map,
-            travel_request,
+            fly_request,
             current_state,
             current_area,
-            final_map_center,
-            final_map_zoom,
         )
 
         st.markdown("<div class='mh-map-wrap'>", unsafe_allow_html=True)
@@ -2359,7 +2286,6 @@ def prediction_page(data, results):
             map_kwargs["returned_objects"] = ["last_object_clicked_popup"]
         map_event = st_folium(malaysia_map, **map_kwargs)
         st.markdown("</div>", unsafe_allow_html=True)
-
         st.markdown(
             "<div class='mh-map-legend'>"
             "<span class='legend-title'>Map pins:</span>"
@@ -2374,56 +2300,41 @@ def prediction_page(data, results):
         popup_txt = (map_event or {}).get("last_object_clicked_popup")
         if popup_txt and popup_txt != st.session_state.get("last_map_popup"):
             st.session_state["last_map_popup"] = popup_txt
-
             if popup_txt.startswith("STATE:"):
                 clicked_st = popup_txt.split(":", 1)[1]
                 if clicked_st != current_state:
                     old_center = list(st.session_state.get("map_center", [4.2105, 108.9758]))
                     old_zoom = int(st.session_state.get("map_zoom", 6))
                     target = list(STATE_COORDS.get(clicked_st, [4.2105, 108.9758]))
-
                     st.session_state["pending_location"] = (clicked_st, None)
                     st.session_state["map_center"] = target
                     st.session_state["map_zoom"] = 9
-                    st.session_state["map_travel_request"] = {
-                        "from_center": old_center,
-                        "from_zoom": old_zoom,
-                        "to_center": target,
-                        "to_zoom": 9,
+                    st.session_state["map_fly_request"] = {
+                        "from_center": old_center, "from_zoom": old_zoom,
+                        "to_center": target, "to_zoom": 9, "duration": 3.0,
                     }
                     st.session_state["searched_point"] = None
                     clear_last_prediction()
                     st.rerun()
-
             elif popup_txt.startswith("AREA:"):
                 clicked_area = popup_txt.split(":", 1)[1]
                 if clicked_area != current_area:
-                    old_center = list(
-                        st.session_state.get(
-                            "map_center",
-                            STATE_COORDS.get(current_state, [4.2105, 108.9758]),
-                        )
-                    )
+                    old_center = list(st.session_state.get("map_center", STATE_COORDS.get(current_state, [4.2105, 108.9758])))
                     old_zoom = int(st.session_state.get("map_zoom", 9))
+                    st.session_state["pending_location"] = (current_state, clicked_area)
                     coords, _ = get_area_map_coords(clicked_area, current_state)
                     target = list(coords) if coords else old_center
-
-                    st.session_state["pending_location"] = (current_state, clicked_area)
                     st.session_state["map_center"] = target
                     st.session_state["map_zoom"] = 12
-                    st.session_state["map_travel_request"] = {
-                        "from_center": old_center,
-                        "from_zoom": old_zoom,
-                        "to_center": target,
-                        "to_zoom": 12,
+                    st.session_state["map_fly_request"] = {
+                        "from_center": old_center, "from_zoom": old_zoom,
+                        "to_center": target, "to_zoom": 12, "duration": 2.8,
                     }
                     st.session_state["searched_point"] = None
                     clear_last_prediction()
                     st.rerun()
     else:
-        st.error(
-            "Interactive map packages are unavailable. Install folium and streamlit-folium to select a location."
-        )
+        st.error("Interactive map packages are unavailable. Install folium and streamlit-folium to select a location.")
 
     current_state = st.session_state["selected_state"]
     current_area = st.session_state["selected_area"]
